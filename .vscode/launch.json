@@ -1,4 +1,34 @@
 {
+<<<<<<< HEAD
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "ANPLMSGUI",
+            "request": "launch",
+            "mainClass": "ANPLMSGUI",
+            "projectName": "Java LMS_54104f1c"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "Main",
+            "projectName": "Java LMS_54104f1c",
+        }
+    ]
+}
+=======
     "version": "0.2.0",
     "configurations": [
         {
@@ -13,3 +43,4 @@
         }
     ]
 }
+>>>>>>> 7101f0fec39bf9861079dd7c90585390cc648b81
