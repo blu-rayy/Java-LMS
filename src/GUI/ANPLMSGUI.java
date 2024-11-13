@@ -11,6 +11,7 @@ public class ANPLMSGUI extends JFrame {
         setSize(1280, 720);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setResizable(false);
         setLayout(new BorderLayout()); // Change to BorderLayout for control over panel width
 
         // Left panel with icon and text
@@ -37,11 +38,11 @@ public class ANPLMSGUI extends JFrame {
         rightPanel.setBorder(BorderFactory.createLineBorder(new Color(168, 0, 255), 1));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(10, 0, 0, 0);
 
         // Login title
-        JLabel loginLabel = new JLabel("Login", JLabel.CENTER);
-        loginLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        JLabel loginLabel = new JLabel("Login", JLabel.LEFT);
+        loginLabel.setFont(new Font("Arial", Font.BOLD, 32));
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;

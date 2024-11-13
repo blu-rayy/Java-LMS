@@ -9,6 +9,7 @@ public class DashboardGUI extends JFrame {
         setSize(1280, 720);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setResizable(false);
         setLayout(new BorderLayout());
 
         // Top navigation panel
