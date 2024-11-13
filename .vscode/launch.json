@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch Program",
+            "request": "launch",
+            "mainClass": "Main",
+            "projectName": "JAVA-LMS",
+            "classPaths": [
+                "Libraries/sqlite-jdbc-<3.47.0.0>.jar"  // Ensure this points to your jar file
+            ]
+        }
+    ]
+}

@@ -9,6 +9,7 @@ public class Member extends Person {
         this.borrowedBooks = new ArrayList<>();
     }
 
+    // Method to get the list of borrowed books
     public List<Book> getBorrowedBooks() {
         return borrowedBooks;
     }
@@ -19,7 +20,7 @@ public class Member extends Person {
             borrowedBooks.add(book);
             return true;
         }
-        return false; // Return false if the book is not available
+        return false;
     }
 
     @Override
