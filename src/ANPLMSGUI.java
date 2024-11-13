@@ -1,7 +1,7 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.*;
 
 public class ANPLMSGUI extends JFrame {
     public ANPLMSGUI() {
@@ -38,7 +38,7 @@ public class ANPLMSGUI extends JFrame {
         gbc.insets = new Insets(5, 5, 5, 5);
 
         // Login title
-        JLabel loginLabel = new JLabel("Login", JLabel.CENTER);
+        JLabel loginLabel = new JLabel("Login", JLabel.LEFT);
         loginLabel.setFont(new Font("Arial", Font.BOLD, 18));
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -46,7 +46,7 @@ public class ANPLMSGUI extends JFrame {
         rightPanel.add(loginLabel, gbc);
 
         // Signup link
-        JLabel signupLabel = new JLabel("Don’t have an account? ");
+        JLabel signupLabel = new JLabel("Don’t have an account?");
         signupLabel.setForeground(Color.GRAY);
         gbc.gridy = 1;
         gbc.gridwidth = 1;
