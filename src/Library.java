@@ -33,5 +33,13 @@ public class Library {
     public void removeMember(Member member) {
         members.remove(member);
     }
-}
 
+    // Add librarian's borrowing and returning functionality
+    public boolean processBorrow(Librarian librarian, Member member, Book book) {
+        return librarian.processBorrow(member, book);
+    }
+
+    public void processReturn(Librarian librarian, Member member, Book book) {
+        librarian.processReturn(member, book);
+    }
+}
