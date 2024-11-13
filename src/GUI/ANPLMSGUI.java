@@ -6,6 +6,9 @@ import javax.swing.*;
 
 public class ANPLMSGUI extends JFrame {
     public ANPLMSGUI() {
+        // loads the new fonts on NewFont.java
+        NewFont.usingCustomFonts();
+
         // Set up the frame
         setTitle("ANP-LMS Login");
         setSize(1280, 720);
@@ -41,7 +44,7 @@ public class ANPLMSGUI extends JFrame {
 
         // Login title
         JLabel loginLabel = new JLabel("Login", JLabel.CENTER);
-        loginLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        loginLabel.setFont(new Font("Arimo", Font.BOLD, 24));
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
@@ -50,14 +53,14 @@ public class ANPLMSGUI extends JFrame {
         // Signup link
         JLabel signupLabel = new JLabel("Don’t have an account? ");
         signupLabel.setForeground(Color.GRAY);
-        signupLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        signupLabel.setFont(new Font("Arimo", Font.PLAIN, 16));
         gbc.gridy = 1;
         gbc.gridwidth = 1;
         rightPanel.add(signupLabel, gbc);
 
         JLabel signupLink = new JLabel("Sign-up");
         signupLink.setForeground(new Color(255, 136, 0));
-        signupLink.setFont(new Font("Arial", Font.BOLD, 16));
+        signupLink.setFont(new Font("Arimo", Font.ITALIC, 16));
         signupLink.setCursor(new Cursor(Cursor.HAND_CURSOR));
         signupLink.addMouseListener(new MouseAdapter() {
             @Override
@@ -73,22 +76,22 @@ public class ANPLMSGUI extends JFrame {
         gbc.gridy = 2;
         gbc.gridwidth = 2;
         JLabel usernameLabel = new JLabel("Username");
-        usernameLabel.setFont(new Font("Arial", Font.BOLD, 18)); // Larger font size
+        usernameLabel.setFont(new Font("Arimo", Font.BOLD, 18)); // Larger font size
         rightPanel.add(usernameLabel, gbc);
 
         JTextField usernameField = new JTextField(20); // Increased width
-        usernameField.setFont(new Font("Arial", Font.PLAIN, 18)); // Larger font size
+        usernameField.setFont(new Font("Arimo", Font.PLAIN, 18)); // Larger font size
         gbc.gridy = 3;
         rightPanel.add(usernameField, gbc);
 
         // Password field
         JLabel passwordLabel = new JLabel("Password");
-        passwordLabel.setFont(new Font("Arial", Font.BOLD, 18)); // Larger font size
+        passwordLabel.setFont(new Font("Arimo", Font.BOLD, 18)); // Larger font size
         gbc.gridy = 4;
         rightPanel.add(passwordLabel, gbc);
 
         JPasswordField passwordField = new JPasswordField(20); // Increased width
-        passwordField.setFont(new Font("Arial", Font.PLAIN, 18)); // Larger font size
+        passwordField.setFont(new Font("Arimo", Font.PLAIN, 18)); // Larger font size
         gbc.gridy = 5;
         rightPanel.add(passwordField, gbc);
 
@@ -96,7 +99,7 @@ public class ANPLMSGUI extends JFrame {
         JButton loginButton = new JButton("LOGIN");
         loginButton.setBackground(new Color(255, 136, 0));
         loginButton.setForeground(Color.WHITE);
-        loginButton.setFont(new Font("Arial", Font.BOLD, 20)); // Larger font size for the button
+        loginButton.setFont(new Font("Arimo", Font.BOLD, 20)); // Larger font size for the button
         gbc.gridy = 6;
         gbc.gridwidth = 2;
         rightPanel.add(loginButton, gbc);
@@ -135,7 +138,7 @@ public class ANPLMSGUI extends JFrame {
         signUpPanel.add(new JLabel("Username"), gbc);
 
         JTextField usernameField = new JTextField(15);
-        usernameField.setFont(new Font("Arial", Font.PLAIN, 18)); // Larger font for sign-up fields
+        usernameField.setFont(new Font("Arimo", Font.PLAIN, 18)); // Larger font for sign-up fields
         gbc.gridx = 1;
         signUpPanel.add(usernameField, gbc);
 
@@ -145,7 +148,7 @@ public class ANPLMSGUI extends JFrame {
         signUpPanel.add(new JLabel("Password"), gbc);
 
         JPasswordField passwordField = new JPasswordField(15);
-        passwordField.setFont(new Font("Arial", Font.PLAIN, 18)); // Larger font for sign-up fields
+        passwordField.setFont(new Font("Arimo", Font.PLAIN, 18)); // Larger font for sign-up fields
         gbc.gridx = 1;
         signUpPanel.add(passwordField, gbc);
 
@@ -155,7 +158,7 @@ public class ANPLMSGUI extends JFrame {
         signUpPanel.add(new JLabel("Confirm Password"), gbc);
 
         JPasswordField confirmPasswordField = new JPasswordField(15);
-        confirmPasswordField.setFont(new Font("Arial", Font.PLAIN, 18)); // Larger font for sign-up fields
+        confirmPasswordField.setFont(new Font("Arimo", Font.PLAIN, 18)); // Larger font for sign-up fields
         gbc.gridx = 1;
         signUpPanel.add(confirmPasswordField, gbc);
 
@@ -163,7 +166,7 @@ public class ANPLMSGUI extends JFrame {
         JButton signUpButton = new JButton("Sign-Up");
         signUpButton.setBackground(new Color(255, 136, 0));
         signUpButton.setForeground(Color.WHITE);
-        signUpButton.setFont(new Font("Arial", Font.BOLD, 20)); // Larger font size for sign-up button
+        signUpButton.setFont(new Font("Arimo", Font.BOLD, 20)); // Larger font size for sign-up button
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 2;
