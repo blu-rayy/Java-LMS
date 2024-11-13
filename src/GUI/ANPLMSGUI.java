@@ -38,7 +38,7 @@ public class ANPLMSGUI extends JFrame {
         // Right panel for login form
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new GridBagLayout());
-        rightPanel.setBorder(BorderFactory.createLineBorder(new Color(168, 0, 255), 1));
+        rightPanel.setBorder(null);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 0, 0, 0);
@@ -57,6 +57,7 @@ public class ANPLMSGUI extends JFrame {
         signupLabel.setFont(new Font("Arimo", Font.PLAIN, 16));
         gbc.gridy = 1;
         gbc.gridwidth = 1;
+        
         rightPanel.add(signupLabel, gbc);
 
         JLabel signupLink = new JLabel("Sign-up");
@@ -103,8 +104,11 @@ public class ANPLMSGUI extends JFrame {
         loginButton.setFont(new Font("Arimo", Font.BOLD, 20)); // Larger font size for the button
         gbc.gridy = 6;
         gbc.gridwidth = 2;
+        gbc.insets = new Insets(25, 0, 0, 0); // Add top padding between the password field and the button
+
         rightPanel.add(loginButton, gbc);
 
+        
         // Action listener for login button
         loginButton.addActionListener(e -> {
             String username = usernameField.getText();
