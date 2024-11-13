@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     // Use IntelliSense to learn about possible attributes.
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
@@ -27,3 +28,19 @@
         }
     ]
 }
+=======
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch Program",
+            "request": "launch",
+            "mainClass": "Main",
+            "projectName": "JAVA-LMS",
+            "classPaths": [
+                "Libraries/sqlite-jdbc-<3.47.0.0>.jar"  // Ensure this points to your jar file
+            ]
+        }
+    ]
+}
+>>>>>>> 7101f0fec39bf9861079dd7c90585390cc648b81

@@ -1,6 +1,7 @@
 {
     "java.project.sourcePaths": ["src"],
     "java.project.outputPath": "bin",
+<<<<<<< HEAD
     "java.project.referencedLibraries": {
         "include": [
             "lib/**/*.jar",
@@ -17,4 +18,10 @@
             "c:\\javafx-sdk-23.0.1\\lib\\javafx.web.jar"
         ]
     }
+=======
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "Libraries/sqlite-jdbc-<3.47.0.0>.jar"
+    ]
+>>>>>>> 7101f0fec39bf9861079dd7c90585390cc648b81
 }

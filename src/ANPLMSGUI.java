@@ -5,7 +5,8 @@ public class ANPLMSGUI extends JFrame {
     public ANPLMSGUI() {
         // Set up the frame
         setTitle("ANP-LMS Login");
-        setSize(500, 300);
+        setSize(1280, 720); // Set the desired size of the window
+        setResizable(false); // Make the window non-resizable
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new GridLayout(1, 2));
@@ -15,13 +16,15 @@ public class ANPLMSGUI extends JFrame {
         leftPanel.setBackground(new Color(255, 136, 0));
         leftPanel.setLayout(new BorderLayout());
 
-        // Icon and text in the center of the left panel
+        // Load the image
+        ImageIcon bookIcon = new ImageIcon("images/book_icon.png"); // Path to your image file
+        JLabel imageLabel = new JLabel(bookIcon, JLabel.CENTER);
+        
+        // Add icon and text to left panel
         JLabel iconLabel = new JLabel("ANP-LMS", JLabel.CENTER);
         iconLabel.setFont(new Font("Arial", Font.BOLD, 24));
         iconLabel.setForeground(Color.WHITE);
-        ImageIcon bookIcon = new ImageIcon("path_to_your_book_icon.png"); // Add a path to your book icon image
-        JLabel imageLabel = new JLabel(bookIcon, JLabel.CENTER);
-
+        
         leftPanel.add(imageLabel, BorderLayout.CENTER);
         leftPanel.add(iconLabel, BorderLayout.SOUTH);
 
