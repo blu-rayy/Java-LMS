@@ -31,7 +31,7 @@ public class ANPLMSGUI extends JFrame {
 
         // Load the image
         ImageIcon bookIcon = new ImageIcon("Logos/ANP white copy.png");
-        Image resizingBookIcon = bookIcon.getImage().getScaledInstance(350, 239, Image.SCALE_SMOOTH);
+        Image resizingBookIcon = bookIcon.getImage().getScaledInstance(250, 171, Image.SCALE_SMOOTH);
         ImageIcon resizedBookIcon = new ImageIcon(resizingBookIcon);
         JLabel imageLabel = new JLabel(resizedBookIcon, JLabel.CENTER);
         leftPanel.add(imageLabel, BorderLayout.CENTER);
