@@ -13,14 +13,14 @@ public class NewFont {
         try {
             // Define the font files
             File[] fontFiles = {
-                new File("C:\\Users\\otaku\\Documents\\VSC\\Java LMS\\Resources\\Arimo\\static\\Arimo-Bold.ttf"),
-                new File("C:\\Users\\otaku\\Documents\\VSC\\Java LMS\\Resources\\Arimo\\static\\Arimo-BoldItalic.ttf"),
-                new File("C:\\Users\\otaku\\Documents\\VSC\\Java LMS\\Resources\\Arimo\\static\\Arimo-Italic.ttf"),
-                new File("C:\\Users\\otaku\\Documents\\VSC\\Java LMS\\Resources\\Arimo\\static\\Arimo-Medium.ttf"),
-                new File("C:\\Users\\otaku\\Documents\\VSC\\Java LMS\\Resources\\Arimo\\static\\Arimo-MediumItalic.ttf"),
-                new File("C:\\Users\\otaku\\Documents\\VSC\\Java LMS\\Resources\\Arimo\\static\\Arimo-Regular.ttf"),
-                new File("C:\\Users\\otaku\\Documents\\VSC\\Java LMS\\Resources\\Arimo\\static\\Arimo-SemiBold.ttf"),
-                new File("C:\\Users\\otaku\\Documents\\VSC\\Java LMS\\Resources\\Arimo\\static\\Arimo-SemiBoldItalic.ttf")
+                new File("Resources/Arimo/static/Arimo-Bold.ttf"),
+                new File("Resources/Arimo/static/Arimo-BoldItalic.ttf"),
+                new File("Resources/Arimo/static/Arimo-Italic.ttf"),
+                new File("Resources/Arimo/static/Arimo-Medium.ttf"),
+                new File("Resources/Arimo/static/Arimo-MediumItalic.ttf"),
+                new File("Resources/Arimo/static/Arimo-Regular.ttf"),
+                new File("Resources/Arimo/static/Arimo-SemiBold.ttf"),
+                new File("Resources/Arimo/static/Arimo-SemiBoldItalic.ttf"),
             };
 
             // Register each font
