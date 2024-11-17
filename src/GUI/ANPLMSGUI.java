@@ -25,9 +25,14 @@ public class ANPLMSGUI extends JFrame {
         leftPanel.setPreferredSize(new Dimension(800, 720)); // Set custom width for the left panel
 
         // Load the image
-        ImageIcon bookIcon = new ImageIcon("your-image-path"); // Use your actual image path
-        JLabel imageLabel = new JLabel(bookIcon, JLabel.CENTER);
+        ImageIcon bookIcon = new ImageIcon("Logos/ANP white copy.png");
+        Image resizedBookIcon = bookIcon.getImage().getScaledInstance(350, 239, Image.SCALE_SMOOTH);
+        ImageIcon resizedIcon = new ImageIcon(resizedBookIcon);
+        JLabel imageLabel = new JLabel(resizedIcon, JLabel.CENTER);
+        leftPanel.add(imageLabel, BorderLayout.CENTER);
 
+
+        /* 
         // Center "ANP-LMS" text in the middle of the panel
         JLabel iconLabel = new JLabel("ANP-LMS", JLabel.CENTER);
         iconLabel.setFont(new Font("Arimo", Font.BOLD, 36));
@@ -35,6 +40,7 @@ public class ANPLMSGUI extends JFrame {
         
         leftPanel.add(imageLabel, BorderLayout.CENTER);
         leftPanel.add(iconLabel, BorderLayout.CENTER); //change this when meron nang logo
+        */
 
         // Right panel for login form
         JPanel rightPanel = new JPanel();
