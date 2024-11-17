@@ -1,11 +1,16 @@
 package GUI; 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalTime;
+import javax.swing.*;
 
-public class DashboardGUI extends JFrame {
-    public DashboardGUI(String username) {
+public class User_DashboardGUI extends JFrame {
+    public User_DashboardGUI(String username) {
+        // sets taskbar
+        ImageIcon taskbarIcon = new ImageIcon("Logos/ANP orange copy.png");
+        Image resizedTaskbarIcon = taskbarIcon.getImage().getScaledInstance(64, 43, Image.SCALE_SMOOTH);
+        setIconImage(resizedTaskbarIcon);
+        
         setTitle("ANP-LMS Dashboard");
         setSize(1280, 720);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -192,6 +197,6 @@ public class DashboardGUI extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new DashboardGUI("John Doe")); // Replace "John Doe" with the actual username
+        SwingUtilities.invokeLater(() -> new User_DashboardGUI("John Doe")); // Replace "John Doe" with the actual username
     }
 }
