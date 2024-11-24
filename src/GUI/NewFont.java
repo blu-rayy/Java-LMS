@@ -1,11 +1,8 @@
 package GUI;
 
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.GraphicsEnvironment;
-import java.io.File;
-import java.io.IOException;
-import javax.swing.JOptionPane;
+import java.awt.*;
+import java.io.*;
+import javax.swing.*;
 
 public class NewFont {
     public static void usingCustomFonts() {
@@ -37,6 +34,5 @@ public class NewFont {
 
     public static void main(String[] args) {
         usingCustomFonts();
-        // You can now use the fonts in your Java application
     }
 }
