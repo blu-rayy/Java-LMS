@@ -21,10 +21,10 @@ public class Admin_DashboardGUI extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         
-        // Set icon
-        ImageIcon taskbarIcon = new ImageIcon("Logos/ANP orange copy.png");
-        Image resizedTaskbarIcon = taskbarIcon.getImage().getScaledInstance(64, 43, Image.SCALE_SMOOTH);
-        setIconImage(resizedTaskbarIcon);
+        // // Set icon
+        // ImageIcon taskbarIcon = new ImageIcon("Logos/ANP orange copy.png");
+        // Image resizedTaskbarIcon = taskbarIcon.getImage().getScaledInstance(64, 43, Image.SCALE_SMOOTH);
+        // setIconImage(resizedTaskbarIcon);
         
         // Main panel with BorderLayout
         JPanel mainPanel = new JPanel(new BorderLayout());
