@@ -21,10 +21,10 @@ public class Admin_DashboardGUI extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         
-        // // Set icon
-        // ImageIcon taskbarIcon = new ImageIcon("Logos/ANP orange copy.png");
-        // Image resizedTaskbarIcon = taskbarIcon.getImage().getScaledInstance(64, 43, Image.SCALE_SMOOTH);
-        // setIconImage(resizedTaskbarIcon);
+        // Set icon
+        ImageIcon taskbarIcon = new ImageIcon("C:\\Users\\John Janiel\\Desktop\\ANP orange copy.png");
+        Image resizedTaskbarIcon = taskbarIcon.getImage().getScaledInstance(64, 43, Image.SCALE_SMOOTH);
+        setIconImage(resizedTaskbarIcon);
         
         // Main panel with BorderLayout
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -42,7 +42,6 @@ public class Admin_DashboardGUI extends JFrame {
     }
     
     private JPanel createNavigationPanel() {
-        // ... (previous navigation panel code remains the same) ...
         JPanel navPanel = new JPanel(new BorderLayout());
         navPanel.setBackground(Color.WHITE);
         navPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
@@ -51,19 +50,13 @@ public class Admin_DashboardGUI extends JFrame {
         JPanel leftNav = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
         leftNav.setBackground(Color.WHITE);
         
-        // Logo
-        ImageIcon logoIcon = new ImageIcon("Logos/ANP orange copy.png");
-        Image resizedLogo = logoIcon.getImage().getScaledInstance(40, 27, Image.SCALE_SMOOTH);
-        JLabel logoLabel = new JLabel(new ImageIcon(resizedLogo));
-        leftNav.add(logoLabel);
-        
         // Navigation menus
-        JComboBox<String> booksMenu = createNavMenu("Books", new String[]{"Title", "Author", "Genre"});
-        JComboBox<String> manageUserMenu = createNavMenu("Manage User", new String[]{"Add User", "Remove User", "Edit User"});
-        JButton inventoryBtn = createNavButton("Inventory");
+        JButton booksBtn = createNavButton("Books", "Books"); //connect this sa books window nung gitnang button
+        JButton manageUserBtn = createNavButton("Manage Users", "Manage Users"); //connect this sa users window nung gitnang button
+        JButton inventoryBtn = createNavButton("Inventory", "Inventory");
         
-        leftNav.add(booksMenu);
-        leftNav.add(manageUserMenu);
+        leftNav.add(booksBtn);
+        leftNav.add(manageUserBtn);
         leftNav.add(inventoryBtn);
         
         // Search bar
@@ -105,19 +98,19 @@ public class Admin_DashboardGUI extends JFrame {
         gbc.insets = new Insets(10, 20, 10, 20);
         
         Object[][] topStats = {
-            {"Users", "?", "Number of registered users", "UserStatsWindow"},
-            {"Checked Out", "?", "Number of books currently checked out", "CheckedOutWindow"},
-            {"Books Listed", "?", "Total number of books in system", "BooksListedWindow"},
-            {"Authors Listed", "?", "Total number of authors", "AuthorsListedWindow"}
+            {"Users", "UserStatsWindow"},
+            {"Checked Out", "CheckedOutWindow"},
+            {"Books Listed", "BooksListedWindow"},
+            {"Authors Listed", "AuthorsListedWindow"}
         };
         
         for (int i = 0; i < topStats.length; i++) {
             gbc.gridx = i;
             centerPanel.add(createStatBox(
-                (String)topStats[i][0], 
-                (String)topStats[i][1], 
-                (String)topStats[i][2],
-                (String)topStats[i][3]
+                (String) topStats[i][0],  // Title
+                "",                        // No value for now
+                (String) topStats[i][0],   // Tooltip matches the title
+                (String) topStats[i][1]    // Window class
             ), gbc);
         }
         
@@ -133,31 +126,43 @@ public class Admin_DashboardGUI extends JFrame {
         for (int i = 0; i < bottomButtons.length; i++) {
             gbc.gridx = i;
             centerPanel.add(createActionButton(
-                (String)bottomButtons[i][0],
-                (String)bottomButtons[i][1]
+                (String) bottomButtons[i][0],
+                (String) bottomButtons[i][1]
             ), gbc);
         }
         
         return centerPanel;
     }
     
-    private JComboBox<String> createNavMenu(String title, String[] items) {
-        JComboBox<String> menu = new JComboBox<>(items);
-        menu.insertItemAt(title, 0);
-        menu.setSelectedIndex(0);
-        menu.setBackground(Color.WHITE);
-        menu.setFont(new Font("Arimo", Font.PLAIN, 14));
-        return menu;
-    }
     
-    private JButton createNavButton(String text) {
+    private JButton createNavButton(String text, String windowTitle) {
         JButton button = new JButton(text);
         button.setBackground(Color.WHITE);
-        button.setBorderPainted(false);
         button.setFont(new Font("Arimo", Font.PLAIN, 14));
+        button.setBorderPainted(false); // Disable borders
+        button.setFocusPainted(false); // Disable focus highlight
+        button.setContentAreaFilled(false); // Remove background fill
+        button.setHorizontalAlignment(SwingConstants.LEFT); // Align text if necessary
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Change cursor to hand pointer on hover
+        button.addActionListener(e -> openWindow(windowTitle));
         return button;
     }
-    
+
+    private void openWindow(String title) {
+        JFrame newWindow = new JFrame(title);
+        newWindow.setSize(800, 600);
+        newWindow.setLocationRelativeTo(this);
+        newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JLabel contentLabel = new JLabel("Content for " + title + " will be implemented here");
+        contentLabel.setHorizontalAlignment(JLabel.CENTER);
+        contentLabel.setFont(new Font("Arimo", Font.PLAIN, 16));
+
+        newWindow.add(contentLabel);
+        newWindow.setVisible(true);
+    }
+
+    //square sa top right
     private JButton createProfileButton() {
         JButton profileBtn = new JButton();
         profileBtn.setPreferredSize(new Dimension(40, 40));
@@ -175,12 +180,15 @@ public class Admin_DashboardGUI extends JFrame {
         ));
         panel.setBackground(Color.WHITE);
         
+        // Title Label centered
         JLabel titleLabel = new JLabel(title);
         titleLabel.setFont(new Font("Arimo", Font.BOLD, 18));
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);  // Center the title
         
+        // Value label is empty for now
         JLabel valueLabel = new JLabel(value);
         valueLabel.setFont(new Font("Arimo", Font.BOLD, 36));
-        valueLabel.setHorizontalAlignment(JLabel.CENTER);
+        valueLabel.setHorizontalAlignment(JLabel.CENTER);  // Center the value text (even if empty)
         
         panel.add(titleLabel, BorderLayout.NORTH);
         panel.add(valueLabel, BorderLayout.CENTER);
@@ -204,6 +212,7 @@ public class Admin_DashboardGUI extends JFrame {
         
         return panel;
     }
+    
     
     private JPanel createActionButton(String text, String windowClass) {
         JPanel panel = new JPanel(new BorderLayout());
@@ -238,7 +247,7 @@ public class Admin_DashboardGUI extends JFrame {
         
         return panel;
     }
-    
+
     private void openWindow(String windowClass, String title) {
         JFrame newWindow = new JFrame(title);
         newWindow.setSize(800, 600);
@@ -246,7 +255,7 @@ public class Admin_DashboardGUI extends JFrame {
         newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
         // Set icon
-        ImageIcon taskbarIcon = new ImageIcon("Logos/ANP orange copy.png");
+        ImageIcon taskbarIcon = new ImageIcon("C:\\Users\\John Janiel\\Desktop\\ANP orange copy.png");
         Image resizedTaskbarIcon = taskbarIcon.getImage().getScaledInstance(64, 43, Image.SCALE_SMOOTH);
         newWindow.setIconImage(resizedTaskbarIcon);
         
