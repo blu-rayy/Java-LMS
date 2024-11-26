@@ -1,285 +1,227 @@
 package GUI;
 
 import javax.swing.*;
+import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.border.*;
 
 public class Admin_DashboardGUI extends JFrame {
-    private String adminName;
-    
-    public Admin_DashboardGUI(String username) {
-        this.adminName = username;
-        setupWindow();
+    private static final Color PRIMARY_COLOR = new Color(255, 136, 0);
+    private static final Color BACKGROUND_COLOR = Color.WHITE;
+    private static final Font TITLE_FONT = new Font("Segoe UI", Font.BOLD, 24);
+    private static final Font BUTTON_FONT = new Font("Segoe UI", Font.PLAIN, 14);
+
+    private final String adminName;
+
+    public Admin_DashboardGUI(String adminName) {
+        this.adminName = adminName;
+        initializeUI();
     }
-    
-    private void setupWindow() {
-        // Window setup
-        setTitle("ANP-LMS Admin Dashboard");
-        setSize(1280, 720);
+
+    private void initializeUI() {
+        setTitle("ANP LMS - Admin Dashboard");
+        setSize(1366, 768);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setResizable(false);
-        
-        // Set icon
+
+        //icon for taskbar and yung sa top left corner
         ImageIcon taskbarIcon = new ImageIcon("C:\\Users\\John Janiel\\Desktop\\ANP orange copy.png");
         Image resizedTaskbarIcon = taskbarIcon.getImage().getScaledInstance(64, 43, Image.SCALE_SMOOTH);
         setIconImage(resizedTaskbarIcon);
-        
-        // Main panel with BorderLayout
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        
-        // Top navigation panel
-        JPanel navPanel = createNavigationPanel();
-        mainPanel.add(navPanel, BorderLayout.NORTH);
-        
-        // Center panel for statistics and buttons
-        JPanel centerPanel = createCenterPanel();
-        mainPanel.add(centerPanel, BorderLayout.CENTER);
-        
+
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        mainPanel.setBackground(BACKGROUND_COLOR);
+
+        mainPanel.add(createTopNavigationPanel(), BorderLayout.NORTH);
+        mainPanel.add(createDashboardContentPanel(), BorderLayout.CENTER);
+
         add(mainPanel);
         setVisible(true);
     }
-    
-    private JPanel createNavigationPanel() {
-        JPanel navPanel = new JPanel(new BorderLayout());
-        navPanel.setBackground(Color.WHITE);
-        navPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-        
-        // Left side - Logo and nav items
-        JPanel leftNav = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
-        leftNav.setBackground(Color.WHITE);
-        
-        // Navigation menus
-        JButton booksBtn = createNavButton("Books", "Books"); //connect this sa books window nung gitnang button
-        JButton manageUserBtn = createNavButton("Manage Users", "Manage Users"); //connect this sa users window nung gitnang button
-        JButton inventoryBtn = createNavButton("Inventory", "Inventory");
-        
-        leftNav.add(booksBtn);
-        leftNav.add(manageUserBtn);
-        leftNav.add(inventoryBtn);
-        
-        // Search bar
-        JTextField searchBar = new JTextField(20);
-        searchBar.setBorder(BorderFactory.createCompoundBorder(
-            new LineBorder(new Color(255, 136, 0), 1, true),
-            BorderFactory.createEmptyBorder(5, 5, 5, 5)
-        ));
-        
-        // Right side - Search and profile
-        JPanel rightNav = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 0));
-        rightNav.setBackground(Color.WHITE);
-        rightNav.add(searchBar);
-        rightNav.add(createProfileButton());
-        
+
+    private JPanel createTopNavigationPanel() {
+        JPanel navPanel = new JPanel(new BorderLayout(10, 0));
+        navPanel.setBackground(BACKGROUND_COLOR);
+
+        // Left Navigation Buttons
+        JPanel leftNav = createLeftNavigationButtons();
+
+        // Search and Profile Area
+        JPanel rightNav = createRightNavigationPanel();
+
         navPanel.add(leftNav, BorderLayout.WEST);
         navPanel.add(rightNav, BorderLayout.EAST);
-        
+
         return navPanel;
     }
-    
-    private JPanel createCenterPanel() {
-        JPanel centerPanel = new JPanel(new GridBagLayout());
-        centerPanel.setBackground(Color.WHITE);
-        GridBagConstraints gbc = new GridBagConstraints();
-        
-        // Welcome message
-        JLabel welcomeLabel = new JLabel("Good Morning, Admin " + adminName + "!");
-        welcomeLabel.setFont(new Font("Arimo", Font.BOLD, 24));
-        gbc.gridwidth = 4;
-        gbc.insets = new Insets(20, 20, 40, 20);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        centerPanel.add(welcomeLabel, gbc);
-        
-        // Statistics boxes - top row
-        gbc.gridwidth = 1;
-        gbc.gridy = 1;
-        gbc.insets = new Insets(10, 20, 10, 20);
-        
-        Object[][] topStats = {
-            {"Users", "UserStatsWindow"},
-            {"Checked Out", "CheckedOutWindow"},
-            {"Books Listed", "BooksListedWindow"},
-            {"Authors Listed", "AuthorsListedWindow"}
-        };
-        
-        for (int i = 0; i < topStats.length; i++) {
-            gbc.gridx = i;
-            centerPanel.add(createStatBox(
-                (String) topStats[i][0],  // Title
-                "",                        // No value for now
-                (String) topStats[i][0],   // Tooltip matches the title
-                (String) topStats[i][1]    // Window class
-            ), gbc);
+
+    private JPanel createLeftNavigationButtons() {
+        JPanel leftNav = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
+        leftNav.setBackground(BACKGROUND_COLOR);
+
+        String[] navButtons = {"Books", "Users", "Inventory"};
+
+        for (String buttonText : navButtons) {
+            leftNav.add(createNavButton(buttonText));
         }
-        
-        // Bottom row buttons
-        gbc.gridy = 2;
-        Object[][] bottomButtons = {
-            {"Audit Log", "AuditLogWindow"},
-            {"?????", "PlaceholderWindow"},
-            {"Manage Books", "ManageBooksWindow"},
-            {"Manage Users", "ManageUsersWindow"}
-        };
-        
-        for (int i = 0; i < bottomButtons.length; i++) {
-            gbc.gridx = i;
-            centerPanel.add(createActionButton(
-                (String) bottomButtons[i][0],
-                (String) bottomButtons[i][1]
-            ), gbc);
-        }
-        
-        return centerPanel;
+
+        return leftNav;
     }
-    
-    
-    private JButton createNavButton(String text, String windowTitle) {
+
+    private JButton createNavButton(String text) {
         JButton button = new JButton(text);
-        button.setBackground(Color.WHITE);
-        button.setFont(new Font("Arimo", Font.PLAIN, 14));
-        button.setBorderPainted(false); // Disable borders
-        button.setFocusPainted(false); // Disable focus highlight
-        button.setContentAreaFilled(false); // Remove background fill
-        button.setHorizontalAlignment(SwingConstants.LEFT); // Align text if necessary
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Change cursor to hand pointer on hover
-        button.addActionListener(e -> openWindow(windowTitle));
+        button.setFont(BUTTON_FONT);
+        button.setBackground(BACKGROUND_COLOR);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.addActionListener(e -> openFeatureWindow(text));
         return button;
     }
 
-    private void openWindow(String title) {
-        JFrame newWindow = new JFrame(title);
-        newWindow.setSize(800, 600);
-        newWindow.setLocationRelativeTo(this);
-        newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    private JPanel createRightNavigationPanel() {
+        JPanel rightNav = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
+        rightNav.setBackground(BACKGROUND_COLOR);
 
-        JLabel contentLabel = new JLabel("Content for " + title + " will be implemented here");
-        contentLabel.setHorizontalAlignment(JLabel.CENTER);
-        contentLabel.setFont(new Font("Arimo", Font.PLAIN, 16));
+        JTextField searchField = new JTextField(20);
+        searchField.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(PRIMARY_COLOR, 1, true),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)
+        ));
+        searchField.setFont(BUTTON_FONT);
 
-        newWindow.add(contentLabel);
-        newWindow.setVisible(true);
+        JButton profileButton = createProfileButton();
+
+        rightNav.add(searchField);
+        rightNav.add(profileButton);
+
+        return rightNav;
     }
 
-    //square sa top right
+    //i want to add a profile button icon(?) here
     private JButton createProfileButton() {
-        JButton profileBtn = new JButton();
-        profileBtn.setPreferredSize(new Dimension(40, 40));
-        profileBtn.setBackground(new Color(255, 136, 0));
+        JButton profileBtn = new JButton("Profile");
+        profileBtn.setPreferredSize(new Dimension(80, 40));
+        profileBtn.setBackground(PRIMARY_COLOR);
+        profileBtn.setForeground(Color.WHITE);
         profileBtn.setBorderPainted(false);
+        profileBtn.addActionListener(e -> openProfileSettings());
         return profileBtn;
     }
-    
-    private JPanel createStatBox(String title, String value, String tooltip, String windowClass) {
+
+    private JPanel createDashboardContentPanel() {
+        JPanel contentPanel = new JPanel(new GridLayout(2, 4, 15, 15));
+        contentPanel.setBackground(BACKGROUND_COLOR);
+
+        // Top Row: Statistics
+        String[][] statsData = {
+            {"Users", "UserStats"},
+            {"Checked Out", "CheckedOutBooks"},
+            {"Total Books", "BookInventory"},
+            {"Active Authors", "AuthorList"}
+        };
+
+        for (String[] stat : statsData) {
+            contentPanel.add(createStatisticsCard(stat[0], stat[1]));
+        }
+
+        // Bottom Row: Action Buttons
+        String[][] actionData = {
+            {"Audit Log", "AuditLog"},
+            {"System Reports", "SystemReports"},
+            {"Manage Books", "BookManagement"},
+            {"User Management", "UserManagement"}
+        };
+
+        for (String[] action : actionData) {
+            contentPanel.add(createActionCard(action[0], action[1]));
+        }
+
+        return contentPanel;
+    }
+
+    private JPanel createStatisticsCard(String title, String windowClass) {
+        return createInteractivePanel(title, "", windowClass);
+    }
+
+    private JPanel createActionCard(String title, String windowClass) {
+        return createInteractivePanel(title, null, windowClass);
+    }
+
+    private JPanel createInteractivePanel(String title, String value, String windowClass) {
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setPreferredSize(new Dimension(250, 150));
         panel.setBorder(BorderFactory.createCompoundBorder(
-            new LineBorder(new Color(255, 136, 0), 2, true),
+            BorderFactory.createLineBorder(PRIMARY_COLOR, 2, true),
             BorderFactory.createEmptyBorder(15, 15, 15, 15)
         ));
-        panel.setBackground(Color.WHITE);
-        
-        // Title Label centered
+        panel.setBackground(BACKGROUND_COLOR);
+
         JLabel titleLabel = new JLabel(title);
-        titleLabel.setFont(new Font("Arimo", Font.BOLD, 18));
-        titleLabel.setHorizontalAlignment(JLabel.CENTER);  // Center the title
-        
-        // Value label is empty for now
-        JLabel valueLabel = new JLabel(value);
-        valueLabel.setFont(new Font("Arimo", Font.BOLD, 36));
-        valueLabel.setHorizontalAlignment(JLabel.CENTER);  // Center the value text (even if empty)
-        
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+
+        JLabel valueLabel = new JLabel(value != null ? value : "");
+        valueLabel.setFont(new Font("Segoe UI", Font.BOLD, 36));
+        valueLabel.setHorizontalAlignment(JLabel.CENTER);
+
         panel.add(titleLabel, BorderLayout.NORTH);
         panel.add(valueLabel, BorderLayout.CENTER);
-        panel.setToolTipText(tooltip);
-        
-        // Add click functionality
-        panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        panel.addMouseListener(new HoverEffectListener(panel));
         panel.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent e) {
-                openWindow(windowClass, title);
-            }
-            
-            public void mouseEntered(MouseEvent e) {
-                panel.setBackground(new Color(255, 245, 238));
-            }
-            
-            public void mouseExited(MouseEvent e) {
-                panel.setBackground(Color.WHITE);
+                openFeatureWindow(windowClass);
             }
         });
-        
-        return panel;
-    }
-    
-    
-    private JPanel createActionButton(String text, String windowClass) {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setPreferredSize(new Dimension(250, 150));
-        panel.setBorder(BorderFactory.createCompoundBorder(
-            new LineBorder(new Color(255, 136, 0), 2, true),
-            BorderFactory.createEmptyBorder(15, 15, 15, 15)
-        ));
-        panel.setBackground(Color.WHITE);
-        
-        JLabel label = new JLabel(text);
-        label.setFont(new Font("Arimo", Font.BOLD, 18));
-        label.setHorizontalAlignment(JLabel.CENTER);
-        
-        panel.add(label, BorderLayout.CENTER);
-        panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
-        // Add click functionality
-        panel.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                openWindow(windowClass, text);
-            }
-            
-            public void mouseEntered(MouseEvent e) {
-                panel.setBackground(new Color(255, 245, 238));
-            }
-            
-            public void mouseExited(MouseEvent e) {
-                panel.setBackground(Color.WHITE);
-            }
-        });
-        
+
         return panel;
     }
 
-    private void openWindow(String windowClass, String title) {
-        JFrame newWindow = new JFrame(title);
-        newWindow.setSize(800, 600);
-        newWindow.setLocationRelativeTo(this);
-        newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        
-        // Set icon
-        ImageIcon taskbarIcon = new ImageIcon("C:\\Users\\John Janiel\\Desktop\\ANP orange copy.png");
-        Image resizedTaskbarIcon = taskbarIcon.getImage().getScaledInstance(64, 43, Image.SCALE_SMOOTH);
-        newWindow.setIconImage(resizedTaskbarIcon);
-        
-        // Add a panel with basic content
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        
-        JLabel titleLabel = new JLabel(title);
-        titleLabel.setFont(new Font("Arimo", Font.BOLD, 24));
-        panel.add(titleLabel, BorderLayout.NORTH);
-        
-        // Add placeholder content
-        JLabel contentLabel = new JLabel("Content for " + title + " will be implemented here");
+    private void openFeatureWindow(String feature) {
+        JFrame featureWindow = new JFrame(feature);
+        featureWindow.setSize(800, 600);
+        featureWindow.setLocationRelativeTo(this);
+        featureWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        JLabel contentLabel = new JLabel("Implementing " + feature + " functionality...");
         contentLabel.setHorizontalAlignment(JLabel.CENTER);
-        contentLabel.setFont(new Font("Arimo", Font.PLAIN, 16));
-        panel.add(contentLabel, BorderLayout.CENTER);
-        
-        newWindow.add(panel);
-        newWindow.setVisible(true);
+        contentPanel.add(contentLabel, BorderLayout.CENTER);
+
+        featureWindow.add(contentPanel);
+        featureWindow.setVisible(true);
     }
-    
+
+    private void openProfileSettings() {
+        JOptionPane.showMessageDialog(this, 
+            "Profile Settings for " + adminName, 
+            "Profile", 
+            JOptionPane.INFORMATION_MESSAGE
+        );
+    }
+
+    private static class HoverEffectListener extends MouseAdapter {
+        private final JPanel panel;
+
+        public HoverEffectListener(JPanel panel) {
+            this.panel = panel;
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            panel.setBackground(new Color(255, 245, 238));
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            panel.setBackground(BACKGROUND_COLOR);
+        }
+    }
+
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new Admin_DashboardGUI("John");
-        });
+        SwingUtilities.invokeLater(() -> 
+            new Admin_DashboardGUI("Administrator")
+        );
     }
 }
