@@ -55,17 +55,17 @@ public class EditBooks extends JFrame {
 
         // Define column names
         String[] columnNames = {
-            "Book ID", "ISBN", "Title", "Author", "Publication Date", 
-            "Available Copies", "Category", "Location", "Status"
+            "ISBN", "Title", "Author", "Publication Date", 
+            "Available Copies"
         };
 
         // Sample data 
         Object[][] data = {
-            {"B001", "9780743273565", "The Great Gatsby", "F. Scott Fitzgerald", "1925-04-10", 5, "Fiction", "Shelf A1", "Available"},
-            {"B002", "9780061120084", "To Kill a Mockingbird", "Harper Lee", "1960-07-11", 3, "Fiction", "Shelf B2", "Available"},
-            {"B003", "9780451524935", "1984", "George Orwell", "1949-06-08", 4, "Dystopian", "Shelf C3", "Available"},
-            {"B004", "9781503290563", "Pride and Prejudice", "Jane Austen", "1813-01-28", 2, "Classic", "Shelf D4", "Limited Stock"},
-            {"B005", "9781503280786", "Moby Dick", "Herman Melville", "1851-10-18", 0, "Adventure", "Shelf E5", "Out of Stock"}
+            {"9780743273565", "The Great Gatsby", "F. Scott Fitzgerald", "1925-04-10", 5},
+            {"9780061120084", "To Kill a Mockingbird", "Harper Lee", "1960-07-11", 3},
+            {"9780451524935", "1984", "George Orwell", "1949-06-08", 4},
+            {"9781503290563", "Pride and Prejudice", "Jane Austen", "1813-01-28", 2},
+            {"9781503280786", "Moby Dick", "Herman Melville", "1851-10-18", 0}
         };
 
         tableModel = new DefaultTableModel(data, columnNames) {
@@ -117,7 +117,7 @@ public class EditBooks extends JFrame {
 
     private void addNewBook() {
         JDialog addBookDialog = new JDialog(this, "Add New Book", true);
-        addBookDialog.setSize(500, 400);
+        addBookDialog.setSize(350, 280);
         addBookDialog.setLocationRelativeTo(this);
 
         JPanel dialogPanel = new JPanel(new GridLayout(0, 2, 10, 10));
@@ -144,15 +144,6 @@ public class EditBooks extends JFrame {
         JSpinner copiesSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 1000, 1));
         dialogPanel.add(copiesSpinner);
 
-        dialogPanel.add(new JLabel("Category:"));
-        String[] categories = {"Fiction", "Non-Fiction", "Classic", "Sci-Fi", "Biography"};
-        JComboBox<String> categoryCombo = new JComboBox<>(categories);
-        dialogPanel.add(categoryCombo);
-
-        dialogPanel.add(new JLabel("Location:"));
-        JTextField locationField = new JTextField();
-        dialogPanel.add(locationField);
-
         // Buttons
         JButton saveButton = new JButton("Save");
         saveButton.addActionListener(e -> {
@@ -165,9 +156,6 @@ public class EditBooks extends JFrame {
                     authorField.getText(),
                     publicationDateField.getText(),
                     copiesSpinner.getValue(),
-                    categoryCombo.getSelectedItem(),
-                    locationField.getText(),
-                    "Available"
                 };
                 tableModel.addRow(newBook);
                 addBookDialog.dispose();
@@ -238,49 +226,34 @@ public class EditBooks extends JFrame {
         }
 
         JDialog editBookDialog = new JDialog(this, "Edit Book", true);
-        editBookDialog.setSize(500, 400);
+        editBookDialog.setSize(350, 280);
         editBookDialog.setLocationRelativeTo(this);
 
         JPanel dialogPanel = new JPanel(new GridLayout(0, 2, 10, 10));
         dialogPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        // Input fields with current values
-        dialogPanel.add(new JLabel("Book ID:"));
-        JLabel bookIdLabel = new JLabel(currentBookDetails[0].toString());
-        dialogPanel.add(bookIdLabel);
-
         dialogPanel.add(new JLabel("ISBN:"));
-        JTextField isbnField = new JTextField(currentBookDetails[1].toString());
+        JTextField isbnField = new JTextField(currentBookDetails[0].toString());
         dialogPanel.add(isbnField);
 
         dialogPanel.add(new JLabel("Title:"));
-        JTextField titleField = new JTextField(currentBookDetails[2].toString());
+        JTextField titleField = new JTextField(currentBookDetails[1].toString());
         dialogPanel.add(titleField);
 
         dialogPanel.add(new JLabel("Author:"));
-        JTextField authorField = new JTextField(currentBookDetails[3].toString());
+        JTextField authorField = new JTextField(currentBookDetails[2].toString());
         dialogPanel.add(authorField);
 
         dialogPanel.add(new JLabel("Publication Date:"));
-        JTextField publicationDateField = new JTextField(currentBookDetails[4].toString());
+        JTextField publicationDateField = new JTextField(currentBookDetails[3].toString());
         dialogPanel.add(publicationDateField);
 
         dialogPanel.add(new JLabel("Available Copies:"));
         JSpinner copiesSpinner = new JSpinner(new SpinnerNumberModel(
-            Integer.parseInt(currentBookDetails[5].toString()), 
+            Integer.parseInt(currentBookDetails[4].toString()), 
             0, 1000, 1
         ));
         dialogPanel.add(copiesSpinner);
-
-        dialogPanel.add(new JLabel("Category:"));
-        String[] categories = {"Fiction", "Non-Fiction", "Classic", "Sci-Fi", "Biography"};
-        JComboBox<String> categoryCombo = new JComboBox<>(categories);
-        categoryCombo.setSelectedItem(currentBookDetails[6]);
-        dialogPanel.add(categoryCombo);
-
-        dialogPanel.add(new JLabel("Location:"));
-        JTextField locationField = new JTextField(currentBookDetails[7].toString());
-        dialogPanel.add(locationField);
 
         // Buttons
         JButton saveButton = new JButton("Save Changes");
@@ -293,8 +266,6 @@ public class EditBooks extends JFrame {
                 tableModel.setValueAt(authorField.getText(), selectedRow, 3);
                 tableModel.setValueAt(publicationDateField.getText(), selectedRow, 4);
                 tableModel.setValueAt(copiesSpinner.getValue(), selectedRow, 5);
-                tableModel.setValueAt(categoryCombo.getSelectedItem(), selectedRow, 6);
-                tableModel.setValueAt(locationField.getText(), selectedRow, 7);
                 
                 editBookDialog.dispose();
             }
