@@ -95,8 +95,7 @@ public class Admin_DashboardGUI extends JFrame {
         timeLabel.setForeground(PRIMARY_COLOR);
         updateTime(timeLabel);
         
-        // CHANGE TO ACTUAL IMAGE SOON AND SCALE APPROPRIATELY
-        ImageIcon timeIcon = new ImageIcon("Logos\\ANP black copy.png"); 
+        ImageIcon timeIcon = new ImageIcon("Logos\\clockIcon.png"); 
         Image scaledTimeIcon = timeIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         JLabel timeIconLabel = new JLabel(new ImageIcon(scaledTimeIcon));
 
