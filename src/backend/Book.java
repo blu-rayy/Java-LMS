@@ -65,4 +65,10 @@ public boolean borrowBook() {
 public void returnBook() {
     availableCopies++;
 }
+
+@Override
+public String toString() {
+    return "Title: " + title + ", Author: " + author + ", ISBN: " + ISBN + 
+           ", Publication Date: " + publicationDate + ", In Stock: " + availableCopies;
+}
 }

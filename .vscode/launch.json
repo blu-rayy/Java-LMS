@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "BookList",
+            "request": "launch",
+            "mainClass": "GUI.BookList",
+            "projectName": "Java-LMS_541637ef"
+        },
+        {
+            "type": "java",
             "name": "ANPLMSGUI",
             "request": "launch",
             "mainClass": "GUI.ANPLMSGUI",
