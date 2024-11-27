@@ -6,9 +6,14 @@ import javax.swing.*;
 
 public class ANPLMSGUI extends JFrame {
     public ANPLMSGUI() {
+        // sets taskbar icon
+        ImageIcon taskbarIcon = new ImageIcon("C:\\Users\\John Janiel\\Desktop\\ANP orange copy.png");
+        Image resizedTaskbarIcon = taskbarIcon.getImage().getScaledInstance(64, 43, Image.SCALE_SMOOTH);
+        setIconImage(resizedTaskbarIcon);
         // loads the new fonts on NewFont.java
         // GUYS IF WANT NYO IMPLEMENT SARILING FONT PUNTA KAU SA NEWFONT.JAVA
         NewFont.usingCustomFonts();
+        // gawa kong function to set the taskbar icon
 
         // Set up the frame
         setTitle("ANP-LMS Login");
@@ -25,16 +30,11 @@ public class ANPLMSGUI extends JFrame {
         leftPanel.setPreferredSize(new Dimension(800, 720)); // Set custom width for the left panel
 
         // Load the image
-        ImageIcon bookIcon = new ImageIcon("your-image-path"); // Use your actual image path
-        JLabel imageLabel = new JLabel(bookIcon, JLabel.CENTER);
-
-        // Center "ANP-LMS" text in the middle of the panel
-        JLabel iconLabel = new JLabel("ANP-LMS", JLabel.CENTER);
-        iconLabel.setFont(new Font("Arimo", Font.BOLD, 36));
-        iconLabel.setForeground(Color.WHITE);
-        
+        ImageIcon bookIcon = new ImageIcon("C:\\Users\\John Janiel\\Desktop\\ANP white copy.png");
+        Image resizingBookIcon = bookIcon.getImage().getScaledInstance(250, 171, Image.SCALE_SMOOTH);
+        ImageIcon resizedBookIcon = new ImageIcon(resizingBookIcon);
+        JLabel imageLabel = new JLabel(resizedBookIcon, JLabel.CENTER);
         leftPanel.add(imageLabel, BorderLayout.CENTER);
-        leftPanel.add(iconLabel, BorderLayout.CENTER); //change this when meron nang logo
 
         // Right panel for login form
         JPanel rightPanel = new JPanel();
@@ -198,7 +198,7 @@ public class ANPLMSGUI extends JFrame {
                 passwordMismatchLabel.setVisible(false);
     
                 // Show success message dialog
-                JOptionPane.showMessageDialog(signUpFrame, "<html><div style='text-align: center;'>Account created successfully!<br>Return to Login Page</div></html>", "Account Created", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(signUpFrame, "Account Created Successfully!", "Account Created", JOptionPane.INFORMATION_MESSAGE);
     
                 // Close the sign-up window only
                 signUpFrame.dispose();
@@ -218,13 +218,16 @@ public class ANPLMSGUI extends JFrame {
     
     private void openDashboardWindow(String username) {
         this.setVisible(false);
-        new DashboardGUI(username);
+        new User_DashboardGUI(username);
     }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             ANPLMSGUI loginGUI = new ANPLMSGUI();
             loginGUI.setVisible(true);
         });
+
+        
     }
 }
