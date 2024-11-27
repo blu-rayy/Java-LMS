@@ -5,10 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 
-public class ANPLMSGUI extends JFrame {
-    private static final Color PRIMARY_COLOR = new Color(255, 136, 0);
-    private static final Font TITLE_FONT = new Font("Segoe UI", Font.BOLD, 18);
-    private static final Font PLAIN_FONT = new Font("Segoe UI", Font.PLAIN, 14);
+public class ANPLMSGUI extends JFrame implements fontComponent {
 
     public ANPLMSGUI() {
         // sets taskbar icon
@@ -84,22 +81,22 @@ public class ANPLMSGUI extends JFrame {
         gbc.gridy = 2;
         gbc.gridwidth = 2;
         JLabel usernameLabel = new JLabel("Username");
-        usernameLabel.setFont(TITLE_FONT); // Larger font size
+        usernameLabel.setFont(TITLE_FONT18); // Larger font size
         rightPanel.add(usernameLabel, gbc);
 
         JTextField usernameField = new JTextField(20); // Increased width
-        usernameField.setFont(TITLE_FONT); // Larger font size
+        usernameField.setFont(TITLE_FONT18); // Larger font size
         gbc.gridy = 3;
         rightPanel.add(usernameField, gbc);
 
         // Password field
         JLabel passwordLabel = new JLabel("Password");
-        passwordLabel.setFont(TITLE_FONT); // Larger font size
+        passwordLabel.setFont(TITLE_FONT18); // Larger font size
         gbc.gridy = 4;
         rightPanel.add(passwordLabel, gbc);
 
         JPasswordField passwordField = new JPasswordField(20); // Increased width
-        passwordField.setFont(TITLE_FONT); // Larger font size
+        passwordField.setFont(TITLE_FONT18); // Larger font size
         gbc.gridy = 5;
         rightPanel.add(passwordField, gbc);
 
