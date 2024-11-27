@@ -1,11 +1,10 @@
 package GUI;
 
-import backend.Book;
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 public class EditBooks extends JFrame implements fontComponent {
     private JTable bookTable;
@@ -17,7 +16,7 @@ public class EditBooks extends JFrame implements fontComponent {
 
     private void initializeUI() {
         setTitle("ANP LMS - Book Management");
-        setSize(1366, 768);
+        setSize(1200, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -36,10 +35,17 @@ public class EditBooks extends JFrame implements fontComponent {
         JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         titlePanel.setBackground(BACKGROUND_COLOR);
 
+        // Add icon beside title
+        ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\managebookIconOrange.png"); // Replace with the path to your icon
+        Image resizedTaskbarIcon = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        setIconImage(resizedTaskbarIcon);
+        JLabel iconLabel = new JLabel(new ImageIcon(resizedTaskbarIcon));
+
         JLabel titleLabel = new JLabel("Book Management");
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(PRIMARY_COLOR);
 
+        titlePanel.add(iconLabel);
         titlePanel.add(titleLabel);
         return titlePanel;
     }
@@ -74,6 +80,12 @@ public class EditBooks extends JFrame implements fontComponent {
         bookTable.setRowHeight(30);
         bookTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         bookTable.getTableHeader().setReorderingAllowed(false);
+
+        // Customize table header
+        JTableHeader header = bookTable.getTableHeader();
+        header.setBackground(PRIMARY_COLOR);
+        header.setForeground(Color.WHITE);
+        header.setFont(new Font("Segoe UI", Font.BOLD, 14));
 
         JScrollPane scrollPane = new JScrollPane(bookTable);
         scrollPane.setBorder(BorderFactory.createLineBorder(PRIMARY_COLOR, 1));

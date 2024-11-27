@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 public class EditUsers extends JFrame implements fontComponent {
     private JTable userTable;
@@ -76,6 +77,12 @@ public class EditUsers extends JFrame implements fontComponent {
         userTable.setRowHeight(30);
         userTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         userTable.getTableHeader().setReorderingAllowed(false);
+
+        // Customize table header
+        JTableHeader header = userTable.getTableHeader();
+        header.setBackground(PRIMARY_COLOR);
+        header.setForeground(Color.WHITE);
+        header.setFont(new Font("Segoe UI", Font.BOLD, 14));
 
         JScrollPane scrollPane = new JScrollPane(userTable);
         scrollPane.setBorder(BorderFactory.createLineBorder(PRIMARY_COLOR, 1));

@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "AuthorList",
+            "request": "launch",
+            "mainClass": "GUI.AuthorList",
+            "projectName": "Java-LMS_541637ef"
+        },
+        {
+            "type": "java",
+            "name": "EditBooks",
+            "request": "launch",
+            "mainClass": "GUI.EditBooks",
+            "projectName": "Java-LMS_541637ef"
+        },
+        {
+            "type": "java",
             "name": "EditBooks",
             "request": "launch",
             "mainClass": "GUI.EditBooks",

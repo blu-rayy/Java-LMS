@@ -10,7 +10,7 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     
             // Your implementation for the BookList window
-            JLabel label = new JLabel("Displaying Book List...");
+            JLabel label = new JLabel("Displaying Checked Out Books...");
             add(label);
         }
     }
