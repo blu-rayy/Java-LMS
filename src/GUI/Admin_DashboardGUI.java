@@ -142,8 +142,8 @@ public class Admin_DashboardGUI extends JFrame {
     
         // Bottom Row: Action Buttons
         String[][] actionData = {
-            {"Manage Books", "Logos\\ANP black copy.png", "EditBooks"},
-            {"Update Status", "Logos\\ANP orange copy.png", "EditCheckedOut"},
+            {"Authors", "Logos\\ANP black copy.png", "AuthorList"},
+            {"Manage Books", "Logos\\ANP orange copy.png", "EditBooks"},
             {"Manage Users", "Logos\\ANP black copy.png", "EditUsers"},
         };
     
@@ -204,11 +204,10 @@ public class Admin_DashboardGUI extends JFrame {
 
     private void openFeatureWindow(String feature) {
         try {
-            // Assume feature might need package (use default package for simplicity)
             String className = feature;
             if (!feature.contains(".")) {
-                // If the feature name doesn't contain a package, prepend default package or adjust as needed
-                className = "GUI." + feature;  // Adjust the package here (e.g., "GUI")
+                // opens a .java file based on which dashboard content pannel is sent
+                className = "GUI." + feature;  
             }
             
             // Load the class dynamically
@@ -217,7 +216,6 @@ public class Admin_DashboardGUI extends JFrame {
             // Instantiate the class (assuming a no-argument constructor)
             Object featureInstance = clazz.getDeclaredConstructor().newInstance();
             
-            // Check if the featureInstance is an instance of JFrame (or subclass)
             if (featureInstance instanceof JFrame) {
                 JFrame featureWindow = (JFrame) featureInstance;
                 featureWindow.setSize(1200, 700);
