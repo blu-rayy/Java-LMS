@@ -125,75 +125,70 @@ public class Admin_DashboardGUI extends JFrame {
     }
 
     private JPanel createDashboardContentPanel() {
-        JPanel contentPanel = new JPanel(new GridLayout(2, 4, 15, 15));
+        JPanel contentPanel = new JPanel(new GridLayout(2, 3, 15, 15));
         contentPanel.setBackground(BACKGROUND_COLOR);
-
+    
         // Top Row: Statistics
         String[][] statsData = {
-            {"Users", "UserStats"},
-            {"Checked Out", "CheckedOutBooks"},
-            {"Total Books", "BookInventory"},
-            {"Active Authors", "AuthorList"}
+            {"Books", "Logos\\ANP orange copy.png", "BookList"},
+            {"Circulation","Logos\\ANP black copy.png", "CheckedOutBooks"},
+            {"Users","Logos\\ANP orange copy.png", "UserList"},
         };
-
+    
         for (String[] stat : statsData) {
-            contentPanel.add(createStatisticsCard(stat[0], stat[1]));
+            contentPanel.add(createStatisticsCard(stat[0], stat[1], stat.length > 2 ? stat[2] : null));
         }
-
+    
         // Bottom Row: Action Buttons
         String[][] actionData = {
-            {"Audit Log", "AuditLog"},
-            {"System Reports", "SystemReports"},
-            {"Manage Books", "BookManagement"},
-            {"User Management", "UserManagement"}
+            {"Manage Books", "Logos\\ANP black copy.png", "EditBooks"},
+            {"Update Status", "Logos\\ANP orange copy.png", "EditCheckedOut"},
+            {"Manage Users", "Logos\\ANP black copy.png", "EditUsers"},
         };
-
+    
         for (String[] action : actionData) {
-            contentPanel.add(createActionCard(action[0], action[1]));
+            contentPanel.add(createActionCard(action[0], action[1], action[2]));
         }
-
+    
         return contentPanel;
     }
-
-    private JPanel createStatisticsCard(String title, String windowClass) {
-        return createInteractivePanel(title, " ", windowClass);
+    
+    private JPanel createStatisticsCard(String title, String iconPath, String windowClass) {
+        return createInteractivePanel(title, iconPath, windowClass);
     }
-
-    private JPanel createActionCard(String title, String windowClass) {
-        return createInteractivePanel(title, null, windowClass);
+    
+    private JPanel createActionCard(String title, String iconPath, String windowClass) {
+        return createInteractivePanel(title, iconPath, windowClass);
     }
-
-    private JPanel createInteractivePanel(String title, String value, String windowClass) {
+    
+    private JPanel createInteractivePanel(String title, String iconPath, String windowClass) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(PRIMARY_COLOR, 2, true),
             BorderFactory.createEmptyBorder(15, 15, 15, 15)
         ));
         panel.setBackground(BACKGROUND_COLOR);
-
-        JLabel iconLabel = new JLabel();
-        iconLabel.setHorizontalAlignment(JLabel.CENTER);
-        //ImageIcon icon = new ImageIcon(iconPath);
-        //Image scaledIcon = icon.getImage().getScaledInstance(64, 64, Image.SCALE_SMOOTH);
-        //iconLabel.setIcon(new ImageIcon(scaledIcon));
-
-
-        //adds title
+    
+        // Add image if the path is provided
+        if (iconPath != null && !iconPath.isEmpty()) {
+            JLabel iconLabel = new JLabel();
+            iconLabel.setHorizontalAlignment(JLabel.CENTER);
+    
+            // Load the image and scale it
+            ImageIcon icon = new ImageIcon(iconPath);
+            Image scaledIcon = icon.getImage().getScaledInstance(64, 64, Image.SCALE_SMOOTH);
+            iconLabel.setIcon(new ImageIcon(scaledIcon));
+    
+            panel.add(iconLabel, BorderLayout.CENTER);
+        }
+    
+        // Add title label
         JLabel titleLabel = new JLabel(title);
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
-
-        // add an image
-        panel.add(iconLabel, BorderLayout.CENTER); // Add the icon in the center
-        panel.add(titleLabel, BorderLayout.SOUTH); // Add the title below the icon
-
-        JLabel valueLabel = new JLabel(value != null ? value : "12");
-        valueLabel.setFont(new Font("Segoe UI", Font.BOLD, 36));
-        valueLabel.setHorizontalAlignment(JLabel.CENTER);
-
         panel.add(titleLabel, BorderLayout.SOUTH);
-        panel.add(valueLabel, BorderLayout.CENTER);
-
+    
+        // Mouse listener to open feature window on click
         panel.addMouseListener(new HoverEffectListener(panel));
         panel.addMouseListener(new MouseAdapter() {
             @Override
@@ -201,9 +196,10 @@ public class Admin_DashboardGUI extends JFrame {
                 openFeatureWindow(windowClass);
             }
         });
-
+    
         return panel;
     }
+    
 
     private void openFeatureWindow(String feature) {
         JFrame featureWindow = new JFrame(feature);
