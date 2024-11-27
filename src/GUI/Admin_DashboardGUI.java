@@ -1,9 +1,8 @@
 package GUI;
 
-import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
 
 public class Admin_DashboardGUI extends JFrame {
     private static final Color PRIMARY_COLOR = new Color(255, 136, 0);
@@ -25,7 +24,7 @@ public class Admin_DashboardGUI extends JFrame {
         setLocationRelativeTo(null);
 
         //icon for taskbar and yung sa top left corner
-        ImageIcon taskbarIcon = new ImageIcon("C:\\Users\\John Janiel\\Desktop\\ANP orange copy.png");
+        ImageIcon taskbarIcon = new ImageIcon("Logos\\ANP orange copy.png");
         Image resizedTaskbarIcon = taskbarIcon.getImage().getScaledInstance(64, 43, Image.SCALE_SMOOTH);
         setIconImage(resizedTaskbarIcon);
 
@@ -101,7 +100,7 @@ public class Admin_DashboardGUI extends JFrame {
     //i want to add a profile button icon(?) here
     private JButton createProfileButton() {
         JButton profileBtn = new JButton("Profile");
-        profileBtn.setPreferredSize(new Dimension(80, 40));
+        profileBtn.setPreferredSize(new Dimension(80, 33));
         profileBtn.setBackground(PRIMARY_COLOR);
         profileBtn.setForeground(Color.WHITE);
         profileBtn.setBorderPainted(false);

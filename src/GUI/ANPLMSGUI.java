@@ -7,12 +7,13 @@ import javax.swing.*;
 public class ANPLMSGUI extends JFrame {
     public ANPLMSGUI() {
         // sets taskbar icon
-        ImageIcon taskbarIcon = new ImageIcon("C:\\Users\\John Janiel\\Desktop\\ANP orange copy.png");
+        ImageIcon taskbarIcon = new ImageIcon("Logos\\ANP orange copy.png");
         Image resizedTaskbarIcon = taskbarIcon.getImage().getScaledInstance(64, 43, Image.SCALE_SMOOTH);
         setIconImage(resizedTaskbarIcon);
+
         // loads the new fonts on NewFont.java
         // GUYS IF WANT NYO IMPLEMENT SARILING FONT PUNTA KAU SA NEWFONT.JAVA
-        NewFont.usingCustomFonts();
+        //NewFont.usingCustomFonts();
         // gawa kong function to set the taskbar icon
 
         // Set up the frame
@@ -30,7 +31,7 @@ public class ANPLMSGUI extends JFrame {
         leftPanel.setPreferredSize(new Dimension(800, 720)); // Set custom width for the left panel
 
         // Load the image
-        ImageIcon bookIcon = new ImageIcon("C:\\Users\\John Janiel\\Desktop\\ANP white copy.png");
+        ImageIcon bookIcon = new ImageIcon("Logos\\ANP white copy.png");
         Image resizingBookIcon = bookIcon.getImage().getScaledInstance(250, 171, Image.SCALE_SMOOTH);
         ImageIcon resizedBookIcon = new ImageIcon(resizingBookIcon);
         JLabel imageLabel = new JLabel(resizedBookIcon, JLabel.CENTER);
