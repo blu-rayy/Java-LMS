@@ -100,7 +100,7 @@ public class Admin_DashboardGUI extends JFrame {
     //i want to add a profile button icon(?) here
     private JButton createProfileButton() {
         JButton profileBtn = new JButton("Profile");
-        profileBtn.setPreferredSize(new Dimension(80, 40));
+        profileBtn.setPreferredSize(new Dimension(80, 30));
         profileBtn.setBackground(PRIMARY_COLOR);
         profileBtn.setForeground(Color.WHITE);
         profileBtn.setBorderPainted(false);
