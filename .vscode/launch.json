@@ -4,7 +4,13 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "backend.Main",
+            "projectName": "Java-LMS_541637ef"
+        },
         {
             "type": "java",
             "name": "Current File",
@@ -23,7 +29,7 @@
             "name": "Main",
             "request": "launch",
             "mainClass": "Main",
-            "projectName": "Java LMS_54104f1c",
+            "projectName": "Java LMS_54104f1c"
         },
         {
             "type": "java",
