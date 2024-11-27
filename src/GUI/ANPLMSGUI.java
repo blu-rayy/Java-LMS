@@ -218,7 +218,7 @@ public class ANPLMSGUI extends JFrame {
     
     private void openDashboardWindow(String username) {
         this.setVisible(false);
-        new User_DashboardGUI(username);
+        new Admin_DashboardGUI(username);
     }
 
 
