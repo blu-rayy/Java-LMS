@@ -24,7 +24,7 @@ public class Admin_DashboardGUI extends JFrame {
         setLocationRelativeTo(null);
 
         //icon for taskbar and yung sa top left corner
-        ImageIcon taskbarIcon = new ImageIcon("C:\\Users\\John Janiel\\Desktop\\ANP orange copy.png");
+        ImageIcon taskbarIcon = new ImageIcon("Logos\\ANP orange copy.png");
         Image resizedTaskbarIcon = taskbarIcon.getImage().getScaledInstance(64, 43, Image.SCALE_SMOOTH);
         setIconImage(resizedTaskbarIcon);
 
@@ -66,9 +66,9 @@ public class Admin_DashboardGUI extends JFrame {
         }
 
         return leftNav;
-    }
+        }
 
-    private JButton createNavButton(String text) {
+        private JButton createNavButton(String text) {
         JButton button = new JButton(text);
         button.setFont(BUTTON_FONT);
         button.setBackground(BACKGROUND_COLOR);
@@ -76,9 +76,9 @@ public class Admin_DashboardGUI extends JFrame {
         button.setFocusPainted(false);
         button.addActionListener(e -> openFeatureWindow(text));
         return button;
-    }
+        }
 
-    private JPanel createRightNavigationPanel() {
+        private JPanel createRightNavigationPanel() {
         JPanel rightNav = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
         rightNav.setBackground(BACKGROUND_COLOR);
 
@@ -89,18 +89,34 @@ public class Admin_DashboardGUI extends JFrame {
         ));
         searchField.setFont(BUTTON_FONT);
 
+        // added current time with icon
+        JLabel timeLabel = new JLabel();
+        timeLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        timeLabel.setForeground(PRIMARY_COLOR);
+        updateTime(timeLabel);
+        
+        // CHANGE TO ACTUAL IMAGE SOON AND SCALE APPROPRIATELY
+        ImageIcon timeIcon = new ImageIcon("Logos\\ANP black copy.png"); 
+        Image scaledTimeIcon = timeIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        JLabel timeIconLabel = new JLabel(new ImageIcon(scaledTimeIcon));
+
+        Timer timer = new Timer(1000, e -> updateTime(timeLabel));
+        timer.start();
+
         JButton profileButton = createProfileButton();
 
+        rightNav.add(timeIconLabel);
+        rightNav.add(timeLabel);
         rightNav.add(searchField);
         rightNav.add(profileButton);
 
         return rightNav;
-    }
+        }
 
     //i want to add a profile button icon(?) here
     private JButton createProfileButton() {
         JButton profileBtn = new JButton("Profile");
-        profileBtn.setPreferredSize(new Dimension(80, 30));
+        profileBtn.setPreferredSize(new Dimension(80, 33));
         profileBtn.setBackground(PRIMARY_COLOR);
         profileBtn.setForeground(Color.WHITE);
         profileBtn.setBorderPainted(false);
@@ -140,7 +156,7 @@ public class Admin_DashboardGUI extends JFrame {
     }
 
     private JPanel createStatisticsCard(String title, String windowClass) {
-        return createInteractivePanel(title, "", windowClass);
+        return createInteractivePanel(title, " ", windowClass);
     }
 
     private JPanel createActionCard(String title, String windowClass) {
@@ -155,15 +171,27 @@ public class Admin_DashboardGUI extends JFrame {
         ));
         panel.setBackground(BACKGROUND_COLOR);
 
+        JLabel iconLabel = new JLabel();
+        iconLabel.setHorizontalAlignment(JLabel.CENTER);
+        //ImageIcon icon = new ImageIcon(iconPath);
+        //Image scaledIcon = icon.getImage().getScaledInstance(64, 64, Image.SCALE_SMOOTH);
+        //iconLabel.setIcon(new ImageIcon(scaledIcon));
+
+
+        //adds title
         JLabel titleLabel = new JLabel(title);
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
 
-        JLabel valueLabel = new JLabel(value != null ? value : "");
+        // add an image
+        panel.add(iconLabel, BorderLayout.CENTER); // Add the icon in the center
+        panel.add(titleLabel, BorderLayout.SOUTH); // Add the title below the icon
+
+        JLabel valueLabel = new JLabel(value != null ? value : "12");
         valueLabel.setFont(new Font("Segoe UI", Font.BOLD, 36));
         valueLabel.setHorizontalAlignment(JLabel.CENTER);
 
-        panel.add(titleLabel, BorderLayout.NORTH);
+        panel.add(titleLabel, BorderLayout.SOUTH);
         panel.add(valueLabel, BorderLayout.CENTER);
 
         panel.addMouseListener(new HoverEffectListener(panel));
@@ -199,6 +227,10 @@ public class Admin_DashboardGUI extends JFrame {
             JOptionPane.INFORMATION_MESSAGE
         );
     }
+
+    private void updateTime(JLabel timeLabel) {
+        timeLabel.setText(java.time.LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")));
+        }
 
     private static class HoverEffectListener extends MouseAdapter {
         private final JPanel panel;

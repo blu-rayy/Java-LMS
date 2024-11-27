@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ANPLMSGUI",
+            "request": "launch",
+            "mainClass": "GUI.ANPLMSGUI",
+            "projectName": "Java-LMS_541637ef"
+        },
+        {
+            "type": "java",
             "name": "Admin_DashboardGUI",
             "request": "launch",
             "mainClass": "GUI.Admin_DashboardGUI",
