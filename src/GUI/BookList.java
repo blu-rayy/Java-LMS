@@ -2,7 +2,6 @@ package GUI;
 
 import backend.Book;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
@@ -186,7 +185,7 @@ public class BookList extends JFrame {
         }
     }
 
-    // Method to fetch books manually for demonstration
+    //Method to fetch books manually for demonstration
     public ArrayList<Book> getManualBooks() {
         ArrayList<Book> books = new ArrayList<>();
         

@@ -220,7 +220,7 @@ public class Admin_DashboardGUI extends JFrame {
             // Check if the featureInstance is an instance of JFrame (or subclass)
             if (featureInstance instanceof JFrame) {
                 JFrame featureWindow = (JFrame) featureInstance;
-                featureWindow.setSize(800, 600);
+                featureWindow.setSize(1200, 700);
                 featureWindow.setLocationRelativeTo(this);
                 featureWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 featureWindow.setVisible(true);

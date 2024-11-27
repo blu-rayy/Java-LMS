@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "UserList",
+            "request": "launch",
+            "mainClass": "GUI.UserList",
+            "projectName": "Java-LMS_541637ef"
+        },
+        {
+            "type": "java",
             "name": "BookList",
             "request": "launch",
             "mainClass": "GUI.BookList",

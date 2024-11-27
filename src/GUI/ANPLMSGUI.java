@@ -4,7 +4,12 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+
 public class ANPLMSGUI extends JFrame {
+    private static final Color PRIMARY_COLOR = new Color(255, 136, 0);
+    private static final Font TITLE_FONT = new Font("Segoe UI", Font.BOLD, 18);
+    private static final Font PLAIN_FONT = new Font("Segoe UI", Font.PLAIN, 14);
+
     public ANPLMSGUI() {
         // sets taskbar icon
         ImageIcon taskbarIcon = new ImageIcon("Logos\\ANP orange copy.png");
@@ -25,7 +30,7 @@ public class ANPLMSGUI extends JFrame {
 
         // Left panel with icon and text
         JPanel leftPanel = new JPanel();
-        leftPanel.setBackground(new Color(255, 136, 0));
+        leftPanel.setBackground(PRIMARY_COLOR);
         leftPanel.setLayout(new BorderLayout());
         leftPanel.setPreferredSize(new Dimension(800, 720)); // Set custom width for the left panel
 
@@ -62,7 +67,7 @@ public class ANPLMSGUI extends JFrame {
         rightPanel.add(signupLabel, gbc);
 
         JLabel signupLink = new JLabel("Sign-up");
-        signupLink.setForeground(new Color(255, 136, 0));
+        signupLink.setForeground(PRIMARY_COLOR);
         signupLink.setFont(new Font("Arimo", Font.ITALIC, 16));
         signupLink.setCursor(new Cursor(Cursor.HAND_CURSOR));
         signupLink.addMouseListener(new MouseAdapter() {
@@ -79,22 +84,22 @@ public class ANPLMSGUI extends JFrame {
         gbc.gridy = 2;
         gbc.gridwidth = 2;
         JLabel usernameLabel = new JLabel("Username");
-        usernameLabel.setFont(new Font("Arimo", Font.BOLD, 18)); // Larger font size
+        usernameLabel.setFont(TITLE_FONT); // Larger font size
         rightPanel.add(usernameLabel, gbc);
 
         JTextField usernameField = new JTextField(20); // Increased width
-        usernameField.setFont(new Font("Arimo", Font.PLAIN, 18)); // Larger font size
+        usernameField.setFont(TITLE_FONT); // Larger font size
         gbc.gridy = 3;
         rightPanel.add(usernameField, gbc);
 
         // Password field
         JLabel passwordLabel = new JLabel("Password");
-        passwordLabel.setFont(new Font("Arimo", Font.BOLD, 18)); // Larger font size
+        passwordLabel.setFont(TITLE_FONT); // Larger font size
         gbc.gridy = 4;
         rightPanel.add(passwordLabel, gbc);
 
         JPasswordField passwordField = new JPasswordField(20); // Increased width
-        passwordField.setFont(new Font("Arimo", Font.PLAIN, 18)); // Larger font size
+        passwordField.setFont(TITLE_FONT); // Larger font size
         gbc.gridy = 5;
         rightPanel.add(passwordField, gbc);
 
@@ -125,12 +130,11 @@ public class ANPLMSGUI extends JFrame {
     // Method to open a new sign-up window
     private void openSignUpWindow() {
         JFrame signUpFrame = new JFrame("Sign-Up");
-        signUpFrame.setSize(500, 300); // Adjusted size for sign-up window
+        signUpFrame.setSize(600, 400);
         signUpFrame.setResizable(false);
-        signUpFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Closes this window only
-        signUpFrame.setLocationRelativeTo(this); // Center relative to main window
+        signUpFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        signUpFrame.setLocationRelativeTo(this);
     
-        // Sign-up form layout
         JPanel signUpPanel = new JPanel();
         signUpPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -143,75 +147,109 @@ public class ANPLMSGUI extends JFrame {
         signUpPanel.add(new JLabel("Username"), gbc);
     
         JTextField usernameField = new JTextField(15);
-        usernameField.setFont(new Font("Arimo", Font.PLAIN, 18)); // Larger font for sign-up fields
+        usernameField.setFont(PLAIN_FONT);
         gbc.gridx = 1;
         signUpPanel.add(usernameField, gbc);
     
-        // Password field
+        // Email field
         gbc.gridx = 0;
         gbc.gridy = 1;
+        signUpPanel.add(new JLabel("Email"), gbc);
+    
+        JTextField emailField = new JTextField(15);
+        emailField.setFont(PLAIN_FONT);
+        gbc.gridx = 1;
+        signUpPanel.add(emailField, gbc);
+    
+        // Phone Number field
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        signUpPanel.add(new JLabel("Phone Number"), gbc);
+    
+        JTextField phoneField = new JTextField(15);
+        phoneField.setFont(PLAIN_FONT);
+        gbc.gridx = 1;
+        signUpPanel.add(phoneField, gbc);
+    
+        // Password field
+        gbc.gridx = 0;
+        gbc.gridy = 3;
         signUpPanel.add(new JLabel("Password"), gbc);
     
         JPasswordField passwordField = new JPasswordField(15);
-        passwordField.setFont(new Font("Arimo", Font.PLAIN, 18)); // Larger font for sign-up fields
+        passwordField.setFont(PLAIN_FONT);
         gbc.gridx = 1;
         signUpPanel.add(passwordField, gbc);
     
         // Confirm Password field
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 4;
         signUpPanel.add(new JLabel("Confirm Password"), gbc);
     
         JPasswordField confirmPasswordField = new JPasswordField(15);
-        confirmPasswordField.setFont(new Font("Arimo", Font.PLAIN, 18)); // Larger font for sign-up fields
+        confirmPasswordField.setFont(PLAIN_FONT);
         gbc.gridx = 1;
         signUpPanel.add(confirmPasswordField, gbc);
+    
+        // User Type Checkbox
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.gridwidth = 2;
+        JCheckBox librarianCheckBox = new JCheckBox("Are you a Librarian?");
+        signUpPanel.add(librarianCheckBox, gbc);
     
         // Sign-up button
         JButton signUpButton = new JButton("Sign-Up");
         signUpButton.setBackground(new Color(255, 136, 0));
         signUpButton.setForeground(Color.WHITE);
-        signUpButton.setFont(new Font("Arimo", Font.BOLD, 20)); // Larger font size for sign-up button
+        signUpButton.setFont(new Font("Arimo", Font.BOLD, 20));
         gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.gridwidth = 2;
+        gbc.gridy = 6;
         signUpPanel.add(signUpButton, gbc);
     
-        // Label for password mismatch error (initially invisible)
+        // Password mismatch label
         JLabel passwordMismatchLabel = new JLabel("*Passwords do not match!");
         passwordMismatchLabel.setForeground(Color.RED);
-        passwordMismatchLabel.setVisible(false); // Initially hidden
+        passwordMismatchLabel.setVisible(false);
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 7;
         gbc.gridwidth = 2;
         signUpPanel.add(passwordMismatchLabel, gbc);
     
         signUpButton.addActionListener(e -> {
+            String username = usernameField.getText();
+            String email = emailField.getText();
+            String phoneNumber = phoneField.getText();
             String password = new String(passwordField.getPassword());
             String confirmPassword = new String(confirmPasswordField.getPassword());
+            boolean isLibrarian = librarianCheckBox.isSelected();
     
-            // Check if passwords match
             if (password.equals(confirmPassword)) {
-                
-    
-                // Hide the error label if passwords match
                 passwordMismatchLabel.setVisible(false);
     
-                // Show success message dialog
-                JOptionPane.showMessageDialog(signUpFrame, "Account Created Successfully!", "Account Created", JOptionPane.INFORMATION_MESSAGE);
+                String userType = isLibrarian ? "Librarian" : "User";  
+                JOptionPane.showMessageDialog(
+                    signUpFrame, 
+                    "Account Created Successfully!", 
+                    "Account Created", 
+                    JOptionPane.INFORMATION_MESSAGE
+                );
     
-                // Close the sign-up window only
                 signUpFrame.dispose();
             } else {
-                // Show the error message if passwords do not match
                 passwordMismatchLabel.setVisible(true);
+                // Reset the text fields to their original size
+                usernameField.setColumns(15);
+                emailField.setColumns(15);
+                phoneField.setColumns(15);
+                passwordField.setColumns(15);
+                confirmPasswordField.setColumns(15);
             }
     
             signUpPanel.revalidate();
             signUpPanel.repaint();
         });
     
-        // Add panel to frame and show it
         signUpFrame.add(signUpPanel);
         signUpFrame.setVisible(true);
     }

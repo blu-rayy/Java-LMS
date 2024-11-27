@@ -3,7 +3,6 @@ package GUI;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
 
 public class UserList extends JFrame {
@@ -21,7 +20,7 @@ public class UserList extends JFrame {
 
     private void initializeUI() {
         setTitle("ANP LMS - Registered Users");
-        setSize(1000, 600);
+        setSize(1200, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -55,16 +54,16 @@ public class UserList extends JFrame {
         // Define column names
         String[] columnNames = {
             "User ID", "Full Name", "Email", "Contact Number", 
-            "Registration Date", "User Type", "Status"
+            "Registration Date", "User Type"
         };
 
         // Sample data (in a real application, this would come from a database)
         Object[][] data = {
-            {"U001", "John Doe", "john.doe@example.com", "0912-345-6789", "2024-01-15", "Student", "Active"},
-            {"U002", "Jane Smith", "jane.smith@example.com", "0923-456-7890", "2024-01-20", "Faculty", "Active"},
-            {"U003", "Mike Johnson", "mike.johnson@example.com", "0934-567-8901", "2024-02-01", "Staff", "Inactive"},
-            {"U004", "Sarah Williams", "sarah.w@example.com", "0945-678-9012", "2024-02-10", "Student", "Active"},
-            {"U005", "Robert Brown", "robert.b@example.com", "0956-789-0123", "2024-02-15", "Librarian", "Active"}
+            {"U001", "John Doe", "john.doe@example.com", "0912-345-6789", "2024-01-15", "Student"},
+            {"U002", "Jane Smith", "jane.smith@example.com", "0923-456-7890", "2024-01-20", "Faculty"},
+            {"U003", "Mike Johnson", "mike.johnson@example.com", "0934-567-8901", "2024-02-01", "Staff"},
+            {"U004", "Sarah Williams", "sarah.w@example.com", "0945-678-9012", "2024-02-10", "Student"},
+            {"U005", "Robert Brown", "robert.b@example.com", "0956-789-0123", "2024-02-15", "Librarian"}
         };
 
         tableModel = new DefaultTableModel(data, columnNames) {
@@ -80,6 +79,11 @@ public class UserList extends JFrame {
         userTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         userTable.getTableHeader().setReorderingAllowed(false);
 
+        JTableHeader header = userTable.getTableHeader();
+        header.setBackground(PRIMARY_COLOR);
+        header.setForeground(Color.WHITE);
+        header.setFont(new Font("Segoe UI", Font.BOLD, 14));
+
         // Custom column widths
         userTable.getColumnModel().getColumn(0).setPreferredWidth(50);  // User ID
         userTable.getColumnModel().getColumn(1).setPreferredWidth(150); // Full Name
@@ -87,7 +91,6 @@ public class UserList extends JFrame {
         userTable.getColumnModel().getColumn(3).setPreferredWidth(100); // Contact Number
         userTable.getColumnModel().getColumn(4).setPreferredWidth(100); // Registration Date
         userTable.getColumnModel().getColumn(5).setPreferredWidth(80);  // User Type
-        userTable.getColumnModel().getColumn(6).setPreferredWidth(50);  // Status
 
         JScrollPane scrollPane = new JScrollPane(userTable);
         scrollPane.setBorder(BorderFactory.createLineBorder(PRIMARY_COLOR, 1));
@@ -117,7 +120,7 @@ public class UserList extends JFrame {
         searchButton.addActionListener(e -> performSearch(searchField.getText()));
 
         // Filter dropdown
-        String[] filterOptions = {"All", "Active", "Inactive", "Student", "Faculty", "Staff", "Librarian"};
+        String[] filterOptions = {"All", "Student", "Faculty", "Staff", "Librarian"};
         JComboBox<String> filterComboBox = new JComboBox<>(filterOptions);
         filterComboBox.setFont(TABLE_FONT);
         filterComboBox.addActionListener(e -> filterUsers((String) filterComboBox.getSelectedItem()));
@@ -165,11 +168,7 @@ public class UserList extends JFrame {
         }
 
         // Filter based on the selected option
-        RowFilter<DefaultTableModel, Object> filter = RowFilter.regexFilter(filterOption, 6); // Status column
-        if (filterOption.equals("Student") || filterOption.equals("Faculty") || 
-            filterOption.equals("Staff") || filterOption.equals("Librarian")) {
-            filter = RowFilter.regexFilter(filterOption, 5); // User Type column
-        }
+        RowFilter<DefaultTableModel, Object> filter = RowFilter.regexFilter(filterOption, 5); // User Type column
 
         sorter.setRowFilter(filter);
     }
