@@ -79,7 +79,7 @@ public class Admin_DashboardGUI extends JFrame {
         }
 
         private JPanel createRightNavigationPanel() {
-        JPanel rightNav = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
+        JPanel rightNav = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         rightNav.setBackground(BACKGROUND_COLOR);
 
         JTextField searchField = new JTextField(20);
