@@ -4,8 +4,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-//sample pull on davidBranch
-
 public class Admin_DashboardGUI extends JFrame {
     private static final Color PRIMARY_COLOR = new Color(255, 136, 0);
     private static final Color BACKGROUND_COLOR = Color.WHITE;
