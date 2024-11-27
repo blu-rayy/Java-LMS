@@ -5,7 +5,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 
-public class UserManagementGUI extends JFrame {
+public class EditUsers extends JFrame {
     private static final Color PRIMARY_COLOR = new Color(255, 136, 0);
     private static final Color BACKGROUND_COLOR = Color.WHITE;
     private static final Font TITLE_FONT = new Font("Segoe UI", Font.BOLD, 24);
@@ -14,7 +14,7 @@ public class UserManagementGUI extends JFrame {
     private JTable userTable;
     private DefaultTableModel tableModel;
 
-    public UserManagementGUI() {
+    public EditUsers() {
         initializeUI();
     }
 
@@ -207,7 +207,7 @@ public class UserManagementGUI extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new UserManagementGUI().setVisible(true);
+            new EditUsers().setVisible(true);
         });
     }
 }
