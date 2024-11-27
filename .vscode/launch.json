@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "EditBooks",
+            "request": "launch",
+            "mainClass": "GUI.EditBooks",
+            "projectName": "Java-LMS_e478d2fa"
+        },
+        {
+            "type": "java",
             "name": "ANPLMSGUI",
             "request": "launch",
             "mainClass": "GUI.ANPLMSGUI",
