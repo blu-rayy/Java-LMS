@@ -12,8 +12,16 @@ public class Person {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getID() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public boolean borrowBook(Book book) {

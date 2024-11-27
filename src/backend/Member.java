@@ -10,6 +10,15 @@ public class Member extends Person {
         this.borrowedBooks = new ArrayList<>();
     }
 
+    // Method to get the member ID
+    public String getMemberID() {
+        return super.getID();
+    }
+    
+    public void setMemberID(String memberID) {
+        super.setId(memberID);
+    }
+
     // Method to get the list of borrowed books
     public List<Book> getBorrowedBooks() {
         return borrowedBooks;

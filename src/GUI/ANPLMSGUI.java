@@ -7,7 +7,7 @@ import javax.swing.*;
 public class ANPLMSGUI extends JFrame {
     public ANPLMSGUI() {
         // sets taskbar icon
-        ImageIcon taskbarIcon = new ImageIcon("C:\\Users\\John Janiel\\Desktop\\ANP orange copy.png");
+        ImageIcon taskbarIcon = new ImageIcon("Logos\\ANP orange copy.png");
         Image resizedTaskbarIcon = taskbarIcon.getImage().getScaledInstance(64, 43, Image.SCALE_SMOOTH);
         setIconImage(resizedTaskbarIcon);
         // loads the new fonts on NewFont.java
@@ -30,7 +30,7 @@ public class ANPLMSGUI extends JFrame {
         leftPanel.setPreferredSize(new Dimension(800, 720)); // Set custom width for the left panel
 
         // Load the image
-        ImageIcon bookIcon = new ImageIcon("C:\\Users\\John Janiel\\Desktop\\ANP white copy.png");
+        ImageIcon bookIcon = new ImageIcon("Logos\\ANP white copy.png");
         Image resizingBookIcon = bookIcon.getImage().getScaledInstance(250, 171, Image.SCALE_SMOOTH);
         ImageIcon resizedBookIcon = new ImageIcon(resizingBookIcon);
         JLabel imageLabel = new JLabel(resizedBookIcon, JLabel.CENTER);
@@ -218,7 +218,7 @@ public class ANPLMSGUI extends JFrame {
     
     private void openDashboardWindow(String username) {
         this.setVisible(false);
-        new User_DashboardGUI(username);
+        new Admin_DashboardGUI(username);
     }
 
 
