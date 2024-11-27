@@ -1,7 +1,9 @@
 package GUI;
 
+import backend.SQLiteDatabase;
 import backend.Book;
 import java.awt.*;
+import java.sql.*;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
@@ -57,13 +59,13 @@ public class BookList extends JFrame {
             "ISBN", "Title", "Author", "Publication Date", "Available Copies"
         };
 
-        // Get books from the method
-        ArrayList<Book> booksManual = getManualBooks();
+        // Fetch books from the database
+        ArrayList<Book> booksFromDB = fetchBooksFromDatabase();
 
         // Convert Book objects to table data
-        Object[][] data = new Object[booksManual.size()][5];
-        for (int i = 0; i < booksManual.size(); i++) {
-            Book book = booksManual.get(i);
+        Object[][] data = new Object[booksFromDB.size()][5];
+        for (int i = 0; i < booksFromDB.size(); i++) {
+            Book book = booksFromDB.get(i);
             data[i] = new Object[]{
                 book.getISBN(), 
                 book.getTitle(), 
@@ -102,7 +104,6 @@ public class BookList extends JFrame {
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         searchPanel.setBackground(BACKGROUND_COLOR);
 
-        // Search field
         JTextField searchField = new JTextField(20);
         searchField.setFont(TABLE_FONT);
         searchField.setBorder(BorderFactory.createCompoundBorder(
@@ -111,42 +112,28 @@ public class BookList extends JFrame {
         ));
         searchField.setToolTipText("Search by Title, Author, or ISBN");
 
-        // Search button
         JButton searchButton = new JButton("Search");
         searchButton.setBackground(PRIMARY_COLOR);
         searchButton.setForeground(Color.WHITE);
         searchButton.setFont(TABLE_FONT);
         searchButton.addActionListener(e -> performSearch(searchField.getText()));
 
-        // Filter dropdown
-        String[] filterOptions = {"All", "Available", "Out of Stock"};
-        JComboBox<String> filterComboBox = new JComboBox<>(filterOptions);
-        filterComboBox.setFont(TABLE_FONT);
-        filterComboBox.addActionListener(e -> filterBooks((String) filterComboBox.getSelectedItem()));
-
         searchPanel.add(new JLabel("Search:"));
         searchPanel.add(searchField);
         searchPanel.add(searchButton);
-        searchPanel.add(new JLabel("Filter:"));
-        searchPanel.add(filterComboBox);
 
         return searchPanel;
     }
 
     private void performSearch(String searchText) {
-        // Basic search implementation
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
+        bookTable.setRowSorter(sorter);
+
         if (searchText.trim().isEmpty()) {
-            // Reset to show all rows if search is empty
-            TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
-            bookTable.setRowSorter(sorter);
             sorter.setRowFilter(null);
             return;
         }
 
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
-        bookTable.setRowSorter(sorter);
-        
-        // Search across Title, Author, and ISBN columns
         RowFilter<DefaultTableModel, Object> filter = RowFilter.orFilter(
             Arrays.asList(
                 RowFilter.regexFilter("(?i)" + searchText, 1), // Title column
@@ -154,53 +141,36 @@ public class BookList extends JFrame {
                 RowFilter.regexFilter("(?i)" + searchText, 0)  // ISBN column
             )
         );
-        
+
         sorter.setRowFilter(filter);
     }
 
-    private void filterBooks(String filterOption) {
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
-        bookTable.setRowSorter(sorter);
-
-        if ("All".equals(filterOption)) {
-            sorter.setRowFilter(null);
-            return;
-        }
-
-        // Filter based on the selected option
-        RowFilter<DefaultTableModel, Object> filter;
-        switch (filterOption) {
-            case "Available":
-                filter = RowFilter.numberFilter(RowFilter.ComparisonType.AFTER, 0, 4); // Available Copies column
-                break;
-            case "Out of Stock":
-                filter = RowFilter.numberFilter(RowFilter.ComparisonType.EQUAL, 0, 4); // Available Copies column
-                break;
-            default:
-                filter = null;
-        }
-
-        if (filter != null) {
-            sorter.setRowFilter(filter);
-        }
-    }
-
-    //Method to fetch books manually for demonstration
-    public ArrayList<Book> getManualBooks() {
+    private ArrayList<Book> fetchBooksFromDatabase() {
         ArrayList<Book> books = new ArrayList<>();
-        
-        // Create and add some Book objects manually
-        books.add(new Book("The Great Gatsby", "F. Scott Fitzgerald", "9780743273565", "1925-04-10", 5));
-        books.add(new Book("To Kill a Mockingbird", "Harper Lee", "9780061120084", "1960-07-11", 3));
-        books.add(new Book("1984", "George Orwell", "9780451524935", "1949-06-08", 4));
-        books.add(new Book("Pride and Prejudice", "Jane Austen", "9781503290563", "1813-01-28", 2));
-        books.add(new Book("Moby Dick", "Herman Melville", "9781503280786", "1851-10-18", 0));
-        
+        String query = "SELECT ISBN, title, author, publicationDate, availableCopies FROM books";
+
+        try (Connection connection = SQLiteDatabase.connect();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+
+            while (resultSet.next()) {
+                String isbn = resultSet.getString("ISBN");
+                String title = resultSet.getString("title");
+                String author = resultSet.getString("author");
+                String publicationDate = resultSet.getString("publicationDate");
+                int availableCopies = resultSet.getInt("availableCopies");
+
+                books.add(new Book(title, author, isbn, publicationDate, availableCopies));
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error fetching books from database: " + e.getMessage());
+        }
+
         return books;
     }
 
     public static void main(String[] args) {
-        // Invoke the GUI in the Event Dispatch Thread (EDT) to ensure thread safety
         SwingUtilities.invokeLater(() -> new BookList().setVisible(true));
     }
 }
