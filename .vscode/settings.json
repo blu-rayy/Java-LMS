@@ -2,6 +2,7 @@
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
         "Java-LMS/sqlite-jdbc-3.47.0.0 (1).jar",
-        "Java-LMS/Libraries/sqlite-jdbc-3.47.0.0 (1).jar"
+        "Java-LMS/Libraries/sqlite-jdbc-3.47.0.0 (1).jar",
+        "Libraries/sqlite-jdbc-3.47.0.0 (1).jar"
     ]
 }

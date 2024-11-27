@@ -1,9 +1,9 @@
 package GUI;
 
-import javax.swing.*;
-import javax.swing.table.*;
 import java.awt.*;
 import java.util.*;
+import javax.swing.*;
+import javax.swing.table.*;
 
 public class UserList extends JFrame {
     private static final Color PRIMARY_COLOR = new Color(255, 136, 0);
@@ -33,21 +33,28 @@ public class UserList extends JFrame {
         mainPanel.add(createSearchPanel(), BorderLayout.SOUTH);
 
         add(mainPanel);
-    }
+        }
 
-    private JPanel createTitlePanel() {
+        private JPanel createTitlePanel() {
         JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         titlePanel.setBackground(BACKGROUND_COLOR);
+
+        // Add icon to the title
+        ImageIcon icon = new ImageIcon("Logos\\ANP orange copy.png"); // Replace with the path to your icon
+        Image resizedTaskbarIcon = icon.getImage().getScaledInstance(32, 21, Image.SCALE_SMOOTH);
+        setIconImage(resizedTaskbarIcon);
+        JLabel iconLabel = new JLabel(new ImageIcon(resizedTaskbarIcon)); // Use resized icon
 
         JLabel titleLabel = new JLabel("Registered Users");
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(PRIMARY_COLOR);
 
+        titlePanel.add(iconLabel);
         titlePanel.add(titleLabel);
         return titlePanel;
-    }
+        }
 
-    private JPanel createUserTablePanel() {
+        private JPanel createUserTablePanel() {
         JPanel tablePanel = new JPanel(new BorderLayout());
         tablePanel.setBackground(BACKGROUND_COLOR);
 

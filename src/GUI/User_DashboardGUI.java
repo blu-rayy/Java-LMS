@@ -7,7 +7,7 @@ import javax.swing.*;
 public class User_DashboardGUI extends JFrame {
     public User_DashboardGUI(String username) {
         // sets taskbar
-        ImageIcon taskbarIcon = new ImageIcon("Logos/ANP orange copy.png");
+        ImageIcon taskbarIcon = new ImageIcon("Logos//                                                                  ANP orange copy.png");
         Image resizedTaskbarIcon = taskbarIcon.getImage().getScaledInstance(64, 43, Image.SCALE_SMOOTH);
         setIconImage(resizedTaskbarIcon);
         

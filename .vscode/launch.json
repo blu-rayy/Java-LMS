@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "User_DashboardGUI",
+            "request": "launch",
+            "mainClass": "GUI.User_DashboardGUI",
+            "projectName": "Java-LMS_541637ef"
+        },
+        {
+            "type": "java",
             "name": "UserList",
             "request": "launch",
             "mainClass": "GUI.UserList",
