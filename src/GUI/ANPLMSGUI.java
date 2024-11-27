@@ -12,10 +12,6 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         ImageIcon taskbarIcon = new ImageIcon("Logos\\ANP orange copy.png");
         Image resizedTaskbarIcon = taskbarIcon.getImage().getScaledInstance(64, 43, Image.SCALE_SMOOTH);
         setIconImage(resizedTaskbarIcon);
-        // loads the new fonts on NewFont.java
-        // GUYS IF WANT NYO IMPLEMENT SARILING FONT PUNTA KAU SA NEWFONT.JAVA
-        NewFont.usingCustomFonts();
-        // gawa kong function to set the taskbar icon
 
         // Set up the frame
         setTitle("ANP-LMS Login");
