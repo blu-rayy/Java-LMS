@@ -131,9 +131,9 @@ public class Admin_DashboardGUI extends JFrame {
         // Top Row: Statistics
         // very important on third row; determines the name of the .java
         String[][] statsData = {
-            {"Books", "Logos\\ANP orange copy.png", "BookList"},
+            {"Books", "Logos\\bookIcon.png", "BookList"},
             {"Circulation","Logos\\ANP black copy.png", "CheckedOutBooks"},
-            {"Users","Logos\\ANP orange copy.png", "UserList"},
+            {"Users", "Logos\\usersList.png", "UserList"},
         };
     
         for (String[] stat : statsData) {
@@ -177,7 +177,7 @@ public class Admin_DashboardGUI extends JFrame {
     
             // Load the image and scale it
             ImageIcon icon = new ImageIcon(iconPath);
-            Image scaledIcon = icon.getImage().getScaledInstance(64, 64, Image.SCALE_SMOOTH);
+            Image scaledIcon = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
             iconLabel.setIcon(new ImageIcon(scaledIcon));
     
             panel.add(iconLabel, BorderLayout.CENTER);
