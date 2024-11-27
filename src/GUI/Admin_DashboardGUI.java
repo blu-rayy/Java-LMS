@@ -133,7 +133,7 @@ public class Admin_DashboardGUI extends JFrame {
         String[][] statsData = {
             {"Books", "Logos\\bookIcon.png", "BookList"},
             {"Circulation","Logos\\ANP black copy.png", "CheckedOutBooks"},
-            {"Users", "Logos\\usersList.png", "UserList"},
+            {"Users", "Logos\\usersIcon.png", "UserList"},
         };
     
         for (String[] stat : statsData) {
@@ -142,9 +142,9 @@ public class Admin_DashboardGUI extends JFrame {
     
         // Bottom Row: Action Buttons
         String[][] actionData = {
-            {"Authors", "Logos\\ANP black copy.png", "AuthorList"},
-            {"Manage Books", "Logos\\ANP orange copy.png", "EditBooks"},
-            {"Manage Users", "Logos\\ANP black copy.png", "EditUsers"},
+            {"Authors", "Logos\\authorIcon.png", "AuthorList"},
+            {"Manage Books", "Logos\\managebookIcon.png", "EditBooks"},
+            {"Manage Users", "Logos\\manageusersIcon.png", "EditUsers"},
         };
     
         for (String[] action : actionData) {
@@ -165,7 +165,7 @@ public class Admin_DashboardGUI extends JFrame {
     private JPanel createInteractivePanel(String title, String iconPath, String windowClass) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(PRIMARY_COLOR, 2, true),
+            BorderFactory.createLineBorder(PRIMARY_COLOR, 0, true),
             BorderFactory.createEmptyBorder(15, 15, 15, 15)
         ));
         panel.setBackground(BACKGROUND_COLOR);
