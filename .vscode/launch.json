@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Admin_DashboardGUI",
+            "request": "launch",
+            "mainClass": "GUI.Admin_DashboardGUI",
+            "projectName": "Java-LMS_e478d2fa"
+        },
+        {
+            "type": "java",
             "name": "BookList",
             "request": "launch",
             "mainClass": "GUI.BookList",
