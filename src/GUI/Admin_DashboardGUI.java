@@ -2,6 +2,8 @@ package GUI;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.time.LocalTime;
+
 import javax.swing.*;
 
 public class Admin_DashboardGUI extends JFrame implements fontComponent {
@@ -74,37 +76,53 @@ public class Admin_DashboardGUI extends JFrame implements fontComponent {
         }
 
         private JPanel createRightNavigationPanel() {
-        JPanel rightNav = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
-        rightNav.setBackground(BACKGROUND_COLOR);
-
-        JTextField searchField = new JTextField(20);
-        searchField.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(PRIMARY_COLOR, 1, true),
-            BorderFactory.createEmptyBorder(5, 5, 5, 5)
-        ));
-        searchField.setFont(BUTTON_FONT);
-
-        // added current time with icon
-        JLabel timeLabel = new JLabel();
-        timeLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        timeLabel.setForeground(PRIMARY_COLOR);
-        updateTime(timeLabel);
+            JPanel rightNav = new JPanel();
+            rightNav.setLayout(new BoxLayout(rightNav, BoxLayout.X_AXIS));
+            rightNav.setBackground(BACKGROUND_COLOR);
         
-        ImageIcon timeIcon = new ImageIcon("Logos\\clockIcon.png"); 
-        Image scaledTimeIcon = timeIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-        JLabel timeIconLabel = new JLabel(new ImageIcon(scaledTimeIcon));
-
-        Timer timer = new Timer(1000, e -> updateTime(timeLabel));
-        timer.start();
-
-        JLabel profileButton = createProfileButton();
-
-        rightNav.add(timeIconLabel);
-        rightNav.add(timeLabel);
-        rightNav.add(searchField);
-        rightNav.add(profileButton);
-
-        return rightNav;
+            // Time section (closer together and lower)
+            JPanel timePanel = new JPanel();
+            timePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5)); // Added vertical padding
+            timePanel.setBackground(BACKGROUND_COLOR);
+            
+            ImageIcon timeIcon = new ImageIcon("Logos\\clockIcon.png"); 
+            Image scaledTimeIcon = timeIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+            JLabel timeIconLabel = new JLabel(new ImageIcon(scaledTimeIcon));
+            timeIconLabel.setVerticalAlignment(JLabel.BOTTOM); // Align to bottom
+            
+            JLabel timeLabel = new JLabel();
+            timeLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
+            timeLabel.setForeground(PRIMARY_COLOR);
+            timeLabel.setVerticalAlignment(JLabel.BOTTOM); // Align to bottom
+            updateTime(timeLabel);
+            
+            timePanel.add(timeIconLabel);
+            timePanel.add(timeLabel);
+        
+            // Greeting
+            JLabel greetingLabel = new JLabel();
+            greetingLabel.setFont(new Font("Segoe UI", Font.ITALIC, 16));
+            greetingLabel.setForeground(PRIMARY_COLOR);
+            updateGreeting(greetingLabel);
+        
+            // Timer
+            Timer timer = new Timer(1000, e -> {
+                updateTime(timeLabel);
+                updateGreeting(greetingLabel);
+            });
+            timer.start();
+        
+            // Profile button
+            JLabel profileButton = createProfileButton();
+        
+            // Add components with rigid areas for spacing
+            rightNav.add(timePanel);
+            rightNav.add(Box.createRigidArea(new Dimension(30, 0))); // Spacing between time and greeting
+            rightNav.add(greetingLabel);
+            rightNav.add(Box.createRigidArea(new Dimension(30, 0))); // Spacing between greeting and profile
+            rightNav.add(profileButton);
+        
+            return rightNav;
         }
 
     //i want to add a profile button icon(?) here
@@ -141,8 +159,8 @@ public class Admin_DashboardGUI extends JFrame implements fontComponent {
     
         // Bottom Row: Action Buttons
         String[][] actionData = {
-            {"Authors", "Logos\\authorIcon.png", "AuthorList"},
             {"Manage Books", "Logos\\managebookIcon.png", "EditBooks"},
+            {"Authors", "Logos\\authorIcon.png", "AuthorList"},
             {"Manage Users", "Logos\\manageusersIcon.png", "EditUsers"},
         };
     
@@ -245,7 +263,7 @@ public class Admin_DashboardGUI extends JFrame implements fontComponent {
     private void updateTime(JLabel timeLabel) {
         timeLabel.setText(java.time.LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")));
         }
-
+        
     private static class HoverEffectListener extends MouseAdapter {
         private final JPanel panel;
 
@@ -262,6 +280,22 @@ public class Admin_DashboardGUI extends JFrame implements fontComponent {
         public void mouseExited(MouseEvent e) {
             panel.setBackground(BACKGROUND_COLOR);
         }
+    }
+    
+    //greeting message based on time of day
+    private void updateGreeting(JLabel greetingLabel) {
+        LocalTime now = LocalTime.now();
+        String greeting;
+
+        if (now.isBefore(LocalTime.NOON)) {
+            greeting = "Good Morning, Admin!";
+        } else if (now.isBefore(LocalTime.of(18, 0))) {
+            greeting = "Good Afternoon, Admin!";
+        } else {
+            greeting = "Good Evening, Admin!";
+        }
+
+        greetingLabel.setText(greeting);
     }
 
     public static void main(String[] args) {
