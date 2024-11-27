@@ -129,6 +129,7 @@ public class Admin_DashboardGUI extends JFrame {
         contentPanel.setBackground(BACKGROUND_COLOR);
     
         // Top Row: Statistics
+        // very important on third row; determines the name of the .java
         String[][] statsData = {
             {"Books", "Logos\\ANP orange copy.png", "BookList"},
             {"Circulation","Logos\\ANP black copy.png", "CheckedOutBooks"},
@@ -202,19 +203,39 @@ public class Admin_DashboardGUI extends JFrame {
     
 
     private void openFeatureWindow(String feature) {
-        JFrame featureWindow = new JFrame(feature);
-        featureWindow.setSize(800, 600);
-        featureWindow.setLocationRelativeTo(this);
-        featureWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-        JPanel contentPanel = new JPanel(new BorderLayout());
-        JLabel contentLabel = new JLabel("Implementing " + feature + " functionality...");
-        contentLabel.setHorizontalAlignment(JLabel.CENTER);
-        contentPanel.add(contentLabel, BorderLayout.CENTER);
-
-        featureWindow.add(contentPanel);
-        featureWindow.setVisible(true);
+        try {
+            // Assume feature might need package (use default package for simplicity)
+            String className = feature;
+            if (!feature.contains(".")) {
+                // If the feature name doesn't contain a package, prepend default package or adjust as needed
+                className = "GUI." + feature;  // Adjust the package here (e.g., "GUI")
+            }
+            
+            // Load the class dynamically
+            Class<?> clazz = Class.forName(className);  // Fully qualified name (e.g., "GUI.BookList")
+            
+            // Instantiate the class (assuming a no-argument constructor)
+            Object featureInstance = clazz.getDeclaredConstructor().newInstance();
+            
+            // Check if the featureInstance is an instance of JFrame (or subclass)
+            if (featureInstance instanceof JFrame) {
+                JFrame featureWindow = (JFrame) featureInstance;
+                featureWindow.setSize(800, 600);
+                featureWindow.setLocationRelativeTo(this);
+                featureWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                featureWindow.setVisible(true);
+            } else {
+                // Handle case where class doesn't extend JFrame
+                System.out.println("Error: Class does not extend JFrame.");
+            }
+            
+        } catch (Exception e) {
+            // Handle errors (e.g., class not found, instantiation issues)
+            JOptionPane.showMessageDialog(this, "Feature not implemented or class not found: " + feature, "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }
+    
 
     private void openProfileSettings() {
         JOptionPane.showMessageDialog(this, 
