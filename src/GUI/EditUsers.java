@@ -1,16 +1,11 @@
 package GUI;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
-public class EditUsers extends JFrame {
-    private static final Color PRIMARY_COLOR = new Color(255, 136, 0);
-    private static final Color BACKGROUND_COLOR = Color.WHITE;
-    private static final Font TITLE_FONT = new Font("Segoe UI", Font.BOLD, 24);
-    private static final Font BUTTON_FONT = new Font("Segoe UI", Font.PLAIN, 14);
-
+public class EditUsers extends JFrame implements fontComponent {
     private JTable userTable;
     private DefaultTableModel tableModel;
 
@@ -39,10 +34,17 @@ public class EditUsers extends JFrame {
         JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         titlePanel.setBackground(BACKGROUND_COLOR);
 
+        // Add icon beside title
+        ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\manageusersIconOrange.png"); // Replace with the path to your icon
+        Image resizedTaskbarIcon = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        setIconImage(resizedTaskbarIcon);
+        JLabel iconLabel = new JLabel(new ImageIcon(resizedTaskbarIcon));
+
         JLabel titleLabel = new JLabel("User Management");
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(PRIMARY_COLOR);
 
+        titlePanel.add(iconLabel);
         titlePanel.add(titleLabel);
         return titlePanel;
     }

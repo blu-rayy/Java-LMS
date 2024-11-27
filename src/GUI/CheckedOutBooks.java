@@ -2,7 +2,7 @@ package GUI;
 
 import javax.swing.*;
 
-public class CheckedOutBooks extends JFrame {
+public class CheckedOutBooks extends JFrame implements fontComponent {
     public CheckedOutBooks() {
             setTitle("Book List");
             setSize(800, 600);

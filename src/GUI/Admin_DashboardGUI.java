@@ -4,12 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class Admin_DashboardGUI extends JFrame {
-    private static final Color PRIMARY_COLOR = new Color(255, 136, 0);
-    private static final Color BACKGROUND_COLOR = Color.WHITE;
-    private static final Font TITLE_FONT = new Font("Segoe UI", Font.BOLD, 24);
-    private static final Font BUTTON_FONT = new Font("Segoe UI", Font.PLAIN, 14);
-
+public class Admin_DashboardGUI extends JFrame implements fontComponent {
     private final String adminName;
 
     public Admin_DashboardGUI(String adminName) {
@@ -118,6 +113,7 @@ public class Admin_DashboardGUI extends JFrame {
         Image scaledProfileIcon = profileIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         JLabel profileLabel = new JLabel(new ImageIcon(scaledProfileIcon));
         profileLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        
         profileLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {

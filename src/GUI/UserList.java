@@ -5,12 +5,7 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
-public class UserList extends JFrame {
-    private static final Color PRIMARY_COLOR = new Color(255, 136, 0);
-    private static final Color BACKGROUND_COLOR = Color.WHITE;
-    private static final Font TITLE_FONT = new Font("Segoe UI", Font.BOLD, 24);
-    private static final Font TABLE_FONT = new Font("Segoe UI", Font.PLAIN, 14);
-
+public class UserList extends JFrame implements fontComponent {
     private JTable userTable;
     private DefaultTableModel tableModel;
 
@@ -39,11 +34,11 @@ public class UserList extends JFrame {
         JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         titlePanel.setBackground(BACKGROUND_COLOR);
 
-        // Add icon to the title
-        ImageIcon icon = new ImageIcon("Logos\\ANP orange copy.png"); // Replace with the path to your icon
-        Image resizedTaskbarIcon = icon.getImage().getScaledInstance(32, 21, Image.SCALE_SMOOTH);
+        // Add icon beside title
+        ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\usersListOrange.png"); // Replace with the path to your icon
+        Image resizedTaskbarIcon = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         setIconImage(resizedTaskbarIcon);
-        JLabel iconLabel = new JLabel(new ImageIcon(resizedTaskbarIcon)); // Use resized icon
+        JLabel iconLabel = new JLabel(new ImageIcon(resizedTaskbarIcon));
 
         JLabel titleLabel = new JLabel("Registered Users");
         titleLabel.setFont(TITLE_FONT);

@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "EditUsers",
+            "request": "launch",
+            "mainClass": "GUI.EditUsers",
+            "projectName": "Java-LMS_541637ef"
+        },
+        {
+            "type": "java",
             "name": "Admin_DashboardGUI",
             "request": "launch",
             "mainClass": "GUI.Admin_DashboardGUI",
