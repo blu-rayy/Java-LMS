@@ -2,40 +2,193 @@ package GUI;
 
 import backend.Book;
 import java.awt.*;
-import java.util.ArrayList;
+import java.awt.event.*;
+import java.util.*;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
+import javax.swing.table.*;
 
 public class BookList extends JFrame {
+    private static final Color PRIMARY_COLOR = new Color(255, 136, 0);
+    private static final Color BACKGROUND_COLOR = Color.WHITE;
+    private static final Font TITLE_FONT = new Font("Segoe UI", Font.BOLD, 24);
+    private static final Font TABLE_FONT = new Font("Segoe UI", Font.PLAIN, 14);
 
-    // Constructor
+    private JTable bookTable;
+    private DefaultTableModel tableModel;
+
     public BookList() {
-        setTitle("Book List");
-        setSize(800, 600);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        initializeUI();
+    }
 
-        // Get books from the database
+    private void initializeUI() {
+        setTitle("ANP LMS - Book List");
+        setSize(1200, 700);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        mainPanel.setBackground(BACKGROUND_COLOR);
+
+        mainPanel.add(createTitlePanel(), BorderLayout.NORTH);
+        mainPanel.add(createBookTablePanel(), BorderLayout.CENTER);
+        mainPanel.add(createSearchPanel(), BorderLayout.SOUTH);
+
+        add(mainPanel);
+    }
+
+    private JPanel createTitlePanel() {
+        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        titlePanel.setBackground(BACKGROUND_COLOR);
+
+        JLabel titleLabel = new JLabel("Book List");
+        titleLabel.setFont(TITLE_FONT);
+        titleLabel.setForeground(PRIMARY_COLOR);
+
+        titlePanel.add(titleLabel);
+        return titlePanel;
+    }
+
+    private JPanel createBookTablePanel() {
+        JPanel tablePanel = new JPanel(new BorderLayout());
+        tablePanel.setBackground(BACKGROUND_COLOR);
+
+        // Define column names
+        String[] columnNames = {
+            "ISBN", "Title", "Author", "Publication Date", "Available Copies", "Category"
+        };
+
+        // Get books from the method
         ArrayList<Book> booksManual = getManualBooks();
 
-        // Create DefaultListModel and add books to it
-        DefaultListModel<Book> bookListModel = new DefaultListModel<>();
-        for (Book book : booksManual) {
-            bookListModel.addElement(book);
+        // Convert Book objects to table data
+        Object[][] data = new Object[booksManual.size()][6];
+        for (int i = 0; i < booksManual.size(); i++) {
+            Book book = booksManual.get(i);
+            data[i] = new Object[]{
+                book.getISBN(), 
+                book.getTitle(), 
+                book.getAuthor(), 
+                book.getPublicationDate(), 
+                book.getAvailableCopies(), 
+                "Fiction" // Added a category for demonstration
+            };
         }
 
-        // Create a JList with the DefaultListModel
-        JList<Book> bookJList = new JList<>(bookListModel);
+        tableModel = new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Make table non-editable
+            }
+        };
 
-        // Customize JList rendering using BookRenderer
-        bookJList.setCellRenderer(new BookRenderer());
+        bookTable = new JTable(tableModel);
+        bookTable.setFont(TABLE_FONT);
+        bookTable.setRowHeight(35);
+        bookTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        // Add the JList to a JScrollPane and then add the JScrollPane to the frame
-        JScrollPane scrollPane = new JScrollPane(bookJList);
-        add(scrollPane, BorderLayout.CENTER);
+        // Customize table header
+        JTableHeader header = bookTable.getTableHeader();
+        header.setBackground(PRIMARY_COLOR);
+        header.setForeground(Color.WHITE);
+        header.setFont(new Font("Segoe UI", Font.BOLD, 14));
 
-        // Make the window visible
-        setVisible(true);
+        JScrollPane scrollPane = new JScrollPane(bookTable);
+        scrollPane.setBorder(BorderFactory.createLineBorder(PRIMARY_COLOR, 1));
+
+        tablePanel.add(scrollPane, BorderLayout.CENTER);
+        return tablePanel;
+    }
+
+    private JPanel createSearchPanel() {
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        searchPanel.setBackground(BACKGROUND_COLOR);
+
+        // Search field
+        JTextField searchField = new JTextField(20);
+        searchField.setFont(TABLE_FONT);
+        searchField.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(PRIMARY_COLOR, 1),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)
+        ));
+        searchField.setToolTipText("Search by Title, Author, or ISBN");
+
+        // Search button
+        JButton searchButton = new JButton("Search");
+        searchButton.setBackground(PRIMARY_COLOR);
+        searchButton.setForeground(Color.WHITE);
+        searchButton.setFont(TABLE_FONT);
+        searchButton.addActionListener(e -> performSearch(searchField.getText()));
+
+        // Filter dropdown
+        String[] filterOptions = {"All", "Fiction", "Non-Fiction", "Available", "Out of Stock"};
+        JComboBox<String> filterComboBox = new JComboBox<>(filterOptions);
+        filterComboBox.setFont(TABLE_FONT);
+        filterComboBox.addActionListener(e -> filterBooks((String) filterComboBox.getSelectedItem()));
+
+        searchPanel.add(new JLabel("Search:"));
+        searchPanel.add(searchField);
+        searchPanel.add(searchButton);
+        searchPanel.add(new JLabel("Filter:"));
+        searchPanel.add(filterComboBox);
+
+        return searchPanel;
+    }
+
+    private void performSearch(String searchText) {
+        // Basic search implementation
+        if (searchText.trim().isEmpty()) {
+            // Reset to show all rows if search is empty
+            TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
+            bookTable.setRowSorter(sorter);
+            sorter.setRowFilter(null);
+            return;
+        }
+
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
+        bookTable.setRowSorter(sorter);
+        
+        // Search across Title, Author, and ISBN columns
+        RowFilter<DefaultTableModel, Object> filter = RowFilter.orFilter(
+            Arrays.asList(
+                RowFilter.regexFilter("(?i)" + searchText, 1), // Title column
+                RowFilter.regexFilter("(?i)" + searchText, 2), // Author column
+                RowFilter.regexFilter("(?i)" + searchText, 0)  // ISBN column
+            )
+        );
+        
+        sorter.setRowFilter(filter);
+    }
+
+    private void filterBooks(String filterOption) {
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
+        bookTable.setRowSorter(sorter);
+
+        if ("All".equals(filterOption)) {
+            sorter.setRowFilter(null);
+            return;
+        }
+
+        // Filter based on the selected option
+        RowFilter<DefaultTableModel, Object> filter;
+        switch (filterOption) {
+            case "Fiction":
+            case "Non-Fiction":
+                filter = RowFilter.regexFilter(filterOption, 5); // Category column
+                break;
+            case "Available":
+                filter = RowFilter.numberFilter(RowFilter.ComparisonType.AFTER, 0, 4); // Available Copies column
+                break;
+            case "Out of Stock":
+                filter = RowFilter.numberFilter(RowFilter.ComparisonType.EQUAL, 0, 4); // Available Copies column
+                break;
+            default:
+                filter = null;
+        }
+
+        if (filter != null) {
+            sorter.setRowFilter(filter);
+        }
     }
 
     // Method to fetch books manually for demonstration
@@ -47,82 +200,13 @@ public class BookList extends JFrame {
         books.add(new Book("To Kill a Mockingbird", "Harper Lee", "9780061120084", "1960-07-11", 3));
         books.add(new Book("1984", "George Orwell", "9780451524935", "1949-06-08", 4));
         books.add(new Book("Pride and Prejudice", "Jane Austen", "9781503290563", "1813-01-28", 2));
-        books.add(new Book("Moby Dick", "Herman Melville", "9781503280786", "1851-10-18", 6));
+        books.add(new Book("Moby Dick", "Herman Melville", "9781503280786", "1851-10-18", 0));
         
         return books;
     }
 
-    // Custom renderer for Book
-    class BookRenderer extends JPanel implements ListCellRenderer<Book> {
-        private JLabel titleLabel = new JLabel();
-        private JLabel authorLabel = new JLabel();
-        private JLabel isbnLabel = new JLabel();
-        private JLabel publicationDateLabel = new JLabel();
-        private JLabel availableCopiesLabel = new JLabel();
-
-        @Override
-        public Component getListCellRendererComponent(JList<? extends Book> list, Book value, int index, boolean isSelected, boolean cellHasFocus) {
-            // Set labels with book information
-            isbnLabel.setText("ISBN: " + value.getISBN());
-            titleLabel.setText("Title: " + value.getTitle());
-            authorLabel.setText("Author: " + value.getAuthor());
-            publicationDateLabel.setText("Published: " + value.getPublicationDate());
-            availableCopiesLabel.setText("Available Copies: " + value.getAvailableCopies());
-
-            // Set layout and style for each book
-            setLayout(new GridLayout(1, 5));
-            setBackground(list.getBackground()); // Transparent background for individual book rows
-
-            // Add book labels to panel in the order: ISBN, Title, Author, Published Date, Available Copies
-            add(isbnLabel);
-            add(titleLabel);
-            add(authorLabel);
-            add(publicationDateLabel);
-            add(availableCopiesLabel);
-
-            // Set thin black border for each book row
-            setBorder(new LineBorder(Color.BLACK, 1));
-
-            // If item is selected, change background color
-            if (isSelected) {
-                setBackground(list.getSelectionBackground());
-                setForeground(list.getSelectionForeground());
-            } else {
-                setBackground(list.getBackground());
-                setForeground(list.getForeground());
-            }
-
-            return this;
-        }
-    }
-
-    // Header row component (ISBN, TITLE, AUTHOR, PUBLISHED, AVAILABLE COPIES)
-    class HeaderPanel extends JPanel {
-        JLabel isbnLabel = new JLabel("ISBN");
-        JLabel titleLabel = new JLabel("TITLE");
-        JLabel authorLabel = new JLabel("AUTHOR");
-        JLabel publicationDateLabel = new JLabel("PUBLISHED");
-        JLabel availableCopiesLabel = new JLabel("AVAILABLE COPIES");
-
-        public HeaderPanel() {
-            // Set layout for header row
-            setLayout(new GridLayout(1, 5));
-
-            // Set the background color to orange
-            setBackground(new Color(255, 136, 0));
-
-            // Add all labels to the panel
-            add(isbnLabel);
-            add(titleLabel);
-            add(authorLabel);
-            add(publicationDateLabel);
-            add(availableCopiesLabel);
-        }
-    }
-
-    // Main method to test the BookList window
     public static void main(String[] args) {
         // Invoke the GUI in the Event Dispatch Thread (EDT) to ensure thread safety
-        SwingUtilities.invokeLater(() -> new BookList());
+        SwingUtilities.invokeLater(() -> new BookList().setVisible(true));
     }
 }
