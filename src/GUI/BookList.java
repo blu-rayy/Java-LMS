@@ -55,14 +55,14 @@ public class BookList extends JFrame {
 
         // Define column names
         String[] columnNames = {
-            "ISBN", "Title", "Author", "Publication Date", "Available Copies", "Category"
+            "ISBN", "Title", "Author", "Publication Date", "Available Copies"
         };
 
         // Get books from the method
         ArrayList<Book> booksManual = getManualBooks();
 
         // Convert Book objects to table data
-        Object[][] data = new Object[booksManual.size()][6];
+        Object[][] data = new Object[booksManual.size()][5];
         for (int i = 0; i < booksManual.size(); i++) {
             Book book = booksManual.get(i);
             data[i] = new Object[]{
@@ -70,8 +70,7 @@ public class BookList extends JFrame {
                 book.getTitle(), 
                 book.getAuthor(), 
                 book.getPublicationDate(), 
-                book.getAvailableCopies(), 
-                "Fiction" // Added a category for demonstration
+                book.getAvailableCopies()
             };
         }
 
@@ -121,7 +120,7 @@ public class BookList extends JFrame {
         searchButton.addActionListener(e -> performSearch(searchField.getText()));
 
         // Filter dropdown
-        String[] filterOptions = {"All", "Fiction", "Non-Fiction", "Available", "Out of Stock"};
+        String[] filterOptions = {"All", "Available", "Out of Stock"};
         JComboBox<String> filterComboBox = new JComboBox<>(filterOptions);
         filterComboBox.setFont(TABLE_FONT);
         filterComboBox.addActionListener(e -> filterBooks((String) filterComboBox.getSelectedItem()));
@@ -172,10 +171,6 @@ public class BookList extends JFrame {
         // Filter based on the selected option
         RowFilter<DefaultTableModel, Object> filter;
         switch (filterOption) {
-            case "Fiction":
-            case "Non-Fiction":
-                filter = RowFilter.regexFilter(filterOption, 5); // Category column
-                break;
             case "Available":
                 filter = RowFilter.numberFilter(RowFilter.ComparisonType.AFTER, 0, 4); // Available Copies column
                 break;
