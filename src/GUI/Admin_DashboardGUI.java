@@ -102,7 +102,7 @@ public class Admin_DashboardGUI extends JFrame {
         Timer timer = new Timer(1000, e -> updateTime(timeLabel));
         timer.start();
 
-        JButton profileButton = createProfileButton();
+        JLabel profileButton = createProfileButton();
 
         rightNav.add(timeIconLabel);
         rightNav.add(timeLabel);
@@ -113,14 +113,18 @@ public class Admin_DashboardGUI extends JFrame {
         }
 
     //i want to add a profile button icon(?) here
-    private JButton createProfileButton() {
-        JButton profileBtn = new JButton("Profile");
-        profileBtn.setPreferredSize(new Dimension(80, 33));
-        profileBtn.setBackground(PRIMARY_COLOR);
-        profileBtn.setForeground(Color.WHITE);
-        profileBtn.setBorderPainted(false);
-        profileBtn.addActionListener(e -> openProfileSettings());
-        return profileBtn;
+    private JLabel createProfileButton() {
+        ImageIcon profileIcon = new ImageIcon("Logos\\profileIcon.png");
+        Image scaledProfileIcon = profileIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        JLabel profileLabel = new JLabel(new ImageIcon(scaledProfileIcon));
+        profileLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        profileLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                openProfileSettings();
+            }
+        });
+        return profileLabel;
     }
 
     private JPanel createDashboardContentPanel() {
@@ -131,7 +135,7 @@ public class Admin_DashboardGUI extends JFrame {
         // very important on third row; determines the name of the .java
         String[][] statsData = {
             {"Books", "Logos\\bookIcon.png", "BookList"},
-            {"Circulation","Logos\\ANP black copy.png", "CheckedOutBooks"},
+            {"Circulation","Logos\\circulationIcon.png", "CheckedOutBooks"},
             {"Users", "Logos\\usersIcon.png", "UserList"},
         };
     
