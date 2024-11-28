@@ -66,8 +66,8 @@ public class Admin_DashboardGUI extends JFrame implements fontComponent {
         leftNav.add(logoLabel);
 
         // Mapping of button text to corresponding class names
-        String[] navButtons = {"Books", "Users", "Inventory"};
-        String[] classNames = {"BookList", "UserList", "InventoryList"};
+        String[] navButtons = {"Books", "Users"};
+        String[] classNames = {"BookList", "UserList"};
 
         for (int i = 0; i < navButtons.length; i++) {
             JButton button = createNavButton(navButtons[i], classNames[i]);

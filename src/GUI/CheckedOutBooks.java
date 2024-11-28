@@ -48,11 +48,11 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
     private JPanel createTitlePanel() {
         JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.setBackground(BACKGROUND_COLOR);
-
+    
         JLabel titleLabel = new JLabel("Checked Out Books");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
         titleLabel.setForeground(PRIMARY_COLOR);
-
+    
         searchField = new JTextField(20);
         searchField.setFont(PLAIN_FONT16);
         searchField.addKeyListener(new KeyAdapter() {
@@ -62,15 +62,14 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
                 rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
             }
         });
-
+    
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         searchPanel.setBackground(BACKGROUND_COLOR);
         searchPanel.add(new JLabel("Search: "));
         searchPanel.add(searchField);
-
+    
         titlePanel.add(titleLabel, BorderLayout.WEST);
-        titlePanel.add(searchPanel, BorderLayout.EAST);
-
+    
         return titlePanel;
     }
 
@@ -112,15 +111,25 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
     }
 
     private JPanel createActionPanel() {
-        JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        JPanel actionPanel = new JPanel(new BorderLayout(10, 10));
         actionPanel.setBackground(BACKGROUND_COLOR);
-
+    
+        // Search panel now added to bottom left
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        searchPanel.setBackground(BACKGROUND_COLOR);
+        searchPanel.add(new JLabel("Search: "));
+        searchPanel.add(searchField);
+        actionPanel.add(searchPanel, BorderLayout.WEST);
+    
+        // Modify button on bottom right
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonPanel.setBackground(BACKGROUND_COLOR);
         JButton modifyButton = createStyledButton("Modify Status", "Logos\\editIcon.png");
         modifyButton.setPreferredSize(new Dimension(150, 40));
         modifyButton.addActionListener(e -> modifyBookStatus());
-
-        actionPanel.add(modifyButton);
-
+        buttonPanel.add(modifyButton);
+        actionPanel.add(buttonPanel, BorderLayout.EAST);
+    
         return actionPanel;
     }
 
