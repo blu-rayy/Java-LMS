@@ -50,11 +50,17 @@ public class Admin_DashboardGUI extends JFrame implements fontComponent {
         navPanel.add(rightNav, BorderLayout.EAST);
 
         return navPanel;
-    }
+        }
 
-    private JPanel createLeftNavigationButtons() {
+        private JPanel createLeftNavigationButtons() {
         JPanel leftNav = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
         leftNav.setBackground(BACKGROUND_COLOR);
+
+        // Add logo to the left
+        ImageIcon logoIcon = new ImageIcon("Logos\\ANP orange copy.png");
+        Image scaledLogoIcon = logoIcon.getImage().getScaledInstance(32, 22, Image.SCALE_SMOOTH);
+        JLabel logoLabel = new JLabel(new ImageIcon(scaledLogoIcon));
+        leftNav.add(logoLabel);
 
         String[] navButtons = {"Books", "Users", "Inventory"};
 
@@ -67,8 +73,9 @@ public class Admin_DashboardGUI extends JFrame implements fontComponent {
 
         private JButton createNavButton(String text) {
         JButton button = new JButton(text);
-        button.setFont(BUTTON_FONT);
+        button.setFont(TITLE_FONT14);
         button.setBackground(BACKGROUND_COLOR);
+        button.setForeground(PRIMARY_COLOR); // Set font color to PRIMARY_COLOR
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.addActionListener(e -> openFeatureWindow(text));
