@@ -125,14 +125,14 @@ public class AuthorList extends JFrame implements fontComponent {
         JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
         actionPanel.setBackground(BACKGROUND_COLOR);
     
-        JButton addBookBtn = createStyledButton("Add Author", e -> addNewAuthor());
-        JButton editBookBtn = createStyledButton("Edit Author", e -> editSelectedAuthor());
-        JButton deleteBookBtn = createStyledButton("Delete Author", e -> deleteSelectedAuthor());
+        JButton addAuthorBtn = createStyledButton("Add Author", e -> addNewAuthor());
+        JButton editAuthorBtn = createStyledButton("Edit Author", e -> editSelectedAuthor());
+        JButton deleteAuthorBtn = createStyledButton("Delete Author", e -> deleteSelectedAuthor());
         JButton refreshBtn = createStyledButton("Refresh", e -> refreshBookList());
     
-        actionPanel.add(addBookBtn);
-        actionPanel.add(editBookBtn);
-        actionPanel.add(deleteBookBtn);
+        actionPanel.add(addAuthorBtn);
+        actionPanel.add(editAuthorBtn);
+        actionPanel.add(deleteAuthorBtn);
         actionPanel.add(refreshBtn);
     
         return actionPanel;
@@ -185,12 +185,12 @@ public class AuthorList extends JFrame implements fontComponent {
         saveButton.addActionListener(e -> {
             // Validate inputs
             if (validateauthorInput(authorField.getText(), countField.getText())) {
-            Object[] newBook = {
+            Object[] newAuthor = {
                 "A" + (tableModel.getRowCount() + 1),
                 authorField.getText(),
-                countField.getText(),
+                Integer.valueOf(countField.getText())
             };
-            tableModel.addRow(newBook);
+            tableModel.addRow(newAuthor);
             addBookDialog.dispose();
             }
         });
@@ -230,88 +230,101 @@ public class AuthorList extends JFrame implements fontComponent {
         }
 
         private void editSelectedAuthor() {
-        int selectedRow = authorTable.getSelectedRow();
-        if (selectedRow == -1) {
+            int selectedRow = authorTable.getSelectedRow();
+            if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, 
-            "Please select an Author to edit", 
-            "No Author Selected", 
-            JOptionPane.WARNING_MESSAGE
-            );
-            return;
-        }
-
-        // Get current book details
-        Object[] currentBookDetails = new Object[tableModel.getColumnCount()];
-        for (int i = 0; i < tableModel.getColumnCount(); i++) {
-            currentBookDetails[i] = tableModel.getValueAt(selectedRow, i);
-        }
-
-        JDialog editAuthorDialog = new JDialog(this, "Edit Author", true);
-        editAuthorDialog.setSize(300, 200); // Adjusted size
-        editAuthorDialog.setLocationRelativeTo(this);
-
-        JPanel dialogPanel = new JPanel(new GridLayout(0, 2, 10, 10));
-        dialogPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-
-        dialogPanel.add(new JLabel("Author Name:"));
-        JTextField authorField = new JTextField(currentBookDetails[0].toString(), 15); // Adjusted length
-        dialogPanel.add(authorField);
-
-        dialogPanel.add(new JLabel("Book Count:"));
-        JTextField countField = new JTextField(currentBookDetails[1].toString(), 15); // Adjusted length
-        dialogPanel.add(countField);
-
-        // Buttons
-        JButton saveButton = new JButton("Save Changes");
-        saveButton.addActionListener(e -> {
-            // Validate inputs
-            if (validateauthorInput(authorField.getText(), countField.getText())) {
-            // Update the selected row
-            tableModel.setValueAt(authorField.getText(), selectedRow, 1);
-            tableModel.setValueAt(countField.getText(), selectedRow, 2);
-            editAuthorDialog.dispose();
-            }
-        });
-
-        JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(e -> editAuthorDialog.dispose());
-
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        buttonPanel.add(saveButton);
-        buttonPanel.add(cancelButton);
-
-        // Add components to dialog
-        editAuthorDialog.setLayout(new BorderLayout());
-        editAuthorDialog.add(dialogPanel, BorderLayout.CENTER);
-        editAuthorDialog.add(buttonPanel, BorderLayout.SOUTH);
-
-        editAuthorDialog.setVisible(true);
-        }
-
-        private void deleteSelectedAuthor() {
-        int selectedRow = authorTable.getSelectedRow();
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, 
-                "Please select an Author to delete", 
+                "Please select an Author to edit", 
                 "No Author Selected", 
                 JOptionPane.WARNING_MESSAGE
             );
             return;
+            }
+        
+            // Get current book details
+            Object[] currentBookDetails = new Object[tableModel.getColumnCount()];
+            for (int i = 0; i < tableModel.getColumnCount(); i++) {
+            currentBookDetails[i] = tableModel.getValueAt(selectedRow, i);
+            }
+        
+            // Make sure currentBookDetails[2] is not null before using it
+            String currentBookCount = (currentBookDetails[2] != null) ? currentBookDetails[2].toString() : "";
+        
+            JDialog editAuthorDialog = new JDialog(this, "Edit Author", true);
+            editAuthorDialog.setSize(350, 200); // Adjusted size
+            editAuthorDialog.setLocationRelativeTo(this);
+        
+            JPanel dialogPanel = new JPanel(new GridBagLayout());
+            dialogPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.insets = new Insets(5, 5, 5, 5);
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+        
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            dialogPanel.add(new JLabel("Author Name:"), gbc);
+            gbc.gridx = 1;
+            JTextField authorField = new JTextField(currentBookDetails[1].toString(), 15); // Adjusted length
+            dialogPanel.add(authorField, gbc);
+        
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            dialogPanel.add(new JLabel("Book Count:"), gbc);
+            gbc.gridx = 1;
+            JTextField countField = new JTextField(currentBookCount, 15); // Adjusted length
+            dialogPanel.add(countField, gbc);
+        
+            // Buttons
+            gbc.gridx = 0;
+            gbc.gridy = 2;
+            gbc.gridwidth = 2;
+            gbc.anchor = GridBagConstraints.EAST;
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            JButton saveButton = new JButton("Save Changes");
+            saveButton.addActionListener(e -> {
+            // Validate inputs
+            if (validateauthorInput(authorField.getText(), countField.getText())) {
+                // Update the selected row
+                tableModel.setValueAt(authorField.getText(), selectedRow, 1);
+                tableModel.setValueAt(countField.getText(), selectedRow, 2);
+                editAuthorDialog.dispose();
+            }
+            });
+        
+            JButton cancelButton = new JButton("Cancel");
+            cancelButton.addActionListener(e -> editAuthorDialog.dispose());
+        
+            buttonPanel.add(saveButton);
+            buttonPanel.add(cancelButton);
+        
+            dialogPanel.add(buttonPanel, gbc);
+        
+            editAuthorDialog.add(dialogPanel);
+            editAuthorDialog.setVisible(true);
+        }        
+
+        private void deleteSelectedAuthor() {
+            int selectedRow = authorTable.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, 
+                    "Please select an Author to delete", 
+                    "No Author Selected", 
+                    JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+    
+            int confirmDelete = JOptionPane.showConfirmDialog(this, 
+                "Are you sure you want to delete this author?", 
+                "Confirm Deletion", 
+                JOptionPane.YES_NO_OPTION
+            );
+    
+            if (confirmDelete == JOptionPane.YES_OPTION) {
+                tableModel.removeRow(selectedRow);
+            }
         }
-
-        int confirmDelete = JOptionPane.showConfirmDialog(this, 
-            "Are you sure you want to delete this author?", 
-            "Confirm Deletion", 
-            JOptionPane.YES_NO_OPTION
-        );
-
-        if (confirmDelete == JOptionPane.YES_OPTION) {
-            tableModel.removeRow(selectedRow);
-        }
-    }
-
+        
     private void refreshBookList() {
-        // In a real application, this would reload data from the database
         JOptionPane.showMessageDialog(this, 
             "Author list refreshed", 
             "Refresh", 
@@ -336,8 +349,9 @@ public class AuthorList extends JFrame implements fontComponent {
         tableModel.setRowCount(0);
         Map<String, Integer> authorCountMap = fetchAuthorsFromDatabase();
 
+        int id = 1;
         for (Map.Entry<String, Integer> entry : authorCountMap.entrySet()) {
-            tableModel.addRow(new Object[]{entry.getKey(), entry.getValue()});
+            tableModel.addRow(new Object[]{"A" + id++, entry.getKey(), entry.getValue()});
         }
     }
 
