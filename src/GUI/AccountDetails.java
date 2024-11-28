@@ -3,14 +3,14 @@ package GUI;
 import backend.LibraryDatabase;
 import backend.Member;
 import java.awt.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.swing.*;
 
 public class AccountDetails extends JFrame implements fontComponent {
     public AccountDetails(String username) {
-        // Fetch member details from database
-        Member member = LibraryDatabase.loginMember(username, username);
+        // Fetch member details from database -- for testing purposes, i set my name for now
+        Member member = LibraryDatabase.getMemberDetails("kristian");
         
         // Set up frame
         setTitle("Account Details");
@@ -39,6 +39,9 @@ public class AccountDetails extends JFrame implements fontComponent {
         profileIconLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         mainPanel.add(profileIconLabel);
         mainPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        // Taskbar icon
+        Image resizedTaskbarIcon = profileIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        setIconImage(resizedTaskbarIcon);
         
         // Account Details Table
         String[][] accountData = {
@@ -85,7 +88,7 @@ public class AccountDetails extends JFrame implements fontComponent {
     // Helper method to format creation date
     private String formatCreationDate(String creationDate) {
             if (creationDate == null) return "N/A";
-            return LocalDateTime.parse(creationDate).format(DateTimeFormatter.ofPattern("MMMM dd, yyyy HH:mm:ss"));
+            return LocalDate.parse(creationDate).format(DateTimeFormatter.ofPattern("MMMM dd, yyyy"));
     }
     
     // Optional: Main method for standalone testing
