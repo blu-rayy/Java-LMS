@@ -2,6 +2,7 @@ package GUI;
 
 import backend.Book;
 import backend.SQLiteDatabase;
+import backend.LibraryDatabase;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.Connection;
@@ -181,6 +182,16 @@ public class EditBooks extends JFrame implements fontComponent {
                 addBookDialog.dispose();
             }
         });
+
+        // Insert the new book into the database
+        Book newBook = new Book(
+            isbnField.getText(),
+            titleField.getText(),
+            authorField.getText(),
+            publicationDateField.getText(),
+            (int) copiesSpinner.getValue()
+        );
+        LibraryDatabase.insertBook(newBook);
 
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(e -> addBookDialog.dispose());
