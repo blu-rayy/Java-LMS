@@ -93,6 +93,35 @@ public class LibraryDatabase {
         return "M001";
     }
 
+    // Get member details by name
+    public static Member getMemberDetails(String name) {
+        String sql = "SELECT * FROM members WHERE name = ?";
+        try (Connection conn = SQLiteDatabase.connect(); 
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, name);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    Member member = new Member();
+                    member.setMemberID(rs.getString("memberID"));
+                    member.setName(rs.getString("name"));
+                    member.setUsername(rs.getString("username"));
+                    member.setEmail(rs.getString("email"));
+                    member.setPhoneNumber(rs.getString("phoneNumber"));
+                    member.setRegistrationDate(rs.getString("registrationDate"));
+                    member.setPassword(rs.getString("password"));
+                    member.setUserType(rs.getString("userType"));
+                    return member;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting member details by name: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     // Insert a new book into the database
     public static void insertBook(Book book) {
         String sql = "INSERT INTO books(title, author, isbn, publicationDate, availableCopies) VALUES(?,?,?,?,?)";
