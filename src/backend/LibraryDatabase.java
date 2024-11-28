@@ -291,6 +291,32 @@ public class LibraryDatabase {
         }
     }
 
+    public static List<Member> getAllMembers() {
+        List<Member> members = new ArrayList<>();
+        String sql = "SELECT * FROM members";
+        try (Connection conn = SQLiteDatabase.connect(); 
+             Statement stmt = conn.createStatement(); 
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Member member = new Member(
+                    rs.getString("memberID"),  
+                    rs.getString("name"),      
+                    rs.getString("username"),
+                    rs.getString("email"),     
+                    rs.getString("phoneNumber"),
+                    rs.getString("registrationDate"),  
+                    rs.getString("password"),
+                    rs.getString("userType") 
+                );
+                members.add(member);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching members: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return members;
+    }
+
     // Method to populate books
     public static void populateBooks() {
         // Populating books
@@ -379,7 +405,22 @@ public class LibraryDatabase {
         members.add(new Member(generateNextMemberID(), "Ava Chen", "avah", "ava.chen@gmail.com", "09123456789", "2023-01-01", "oh.4artepa?", "Faculty"));
         members.add(new Member(generateNextMemberID(), "Harumi Kitagawa", "miru", "harumi.kitagawa@gmail.com", "09234567890", "2023-01-01", "3lemental.pr1ncess", "Student"));
         members.add(new Member(generateNextMemberID(), "Haruma Von Brandt", "maru", "haruma.vonbrandt@gmail.com", "09345678901", "2023-01-01", "blond3.boi", "Student"));
-        
+        members.add(new Member(generateNextMemberID(), "Levi Nerissa Angeles", "levia", "levi.angeles@gmail.com", "09123456789", "2023-01-10", "ang3l!p@ss", "Student"));
+        members.add(new Member(generateNextMemberID(), "Serhana Ceres Fernandez", "shera", "serhana.fernandez@gmail.com", "09234567890", "2023-02-05", "S3rh!C@res", "Faculty"));
+        members.add(new Member(generateNextMemberID(), "Tammarah Xaine Molina", "tammx", "tammarah.molina@gmail.com", "09345678901", "2023-03-12", "xain3.p@ss", "Staff"));
+        members.add(new Member(generateNextMemberID(), "Ivo Chiara Siason", "ivos", "ivo.siason@gmail.com", "09456789012", "2023-04-25", "Chi@ra45!", "Librarian"));
+        members.add(new Member(generateNextMemberID(), "Shea Gementia Yuzon", "sheay", "shea.yuzon@gmail.com", "09567890123", "2023-05-30", "SheaGem@7", "Student"));
+        members.add(new Member(generateNextMemberID(), "Marguerite Cortez", "margec", "marguerite.cortez@gmail.com", "09678901234", "2023-06-15", "Margu3!c", "Faculty"));
+        members.add(new Member(generateNextMemberID(), "Florah Elina Chavez", "florahc", "florah.chavez@gmail.com", "09789012345", "2023-07-07", "Fl0r@Hchz", "Staff"));
+        members.add(new Member(generateNextMemberID(), "Kerianne Abellie Salazar", "kerrys", "kerianne.salazar@gmail.com", "09890123456", "2023-08-21", "KerriA@b5", "Librarian"));
+        members.add(new Member(generateNextMemberID(), "Yesania Aszelle Chua", "yesch", "yesania.chua@gmail.com", "09901234567", "2023-09-12", "Asz3!Chua", "Student"));
+        members.add(new Member(generateNextMemberID(), "Shreya Fellize Kenan", "shrek", "shreya.kenan@gmail.com", "09102345678", "2023-10-05", "Shr3y@fK", "Faculty"));
+        members.add(new Member(generateNextMemberID(), "Alisa Keith Demers", "alisak", "alisa.demers@gmail.com", "09203456789", "2023-11-01", "A1!is@dK", "Staff"));
+        members.add(new Member(generateNextMemberID(), "Dominique Zareah Lee", "domz", "dominique.lee@gmail.com", "09304567890", "2023-11-15", "D0mzLee@5", "Librarian"));
+        members.add(new Member(generateNextMemberID(), "Paige Hershell Yoon", "paigeh", "paige.yoon@gmail.com", "09405678901", "2023-12-01", "P@yoon8!", "Student"));
+        members.add(new Member(generateNextMemberID(), "Keziah Nyxx Ramirez", "keznyx", "keziah.ramirez@gmail.com", "09506789012", "2024-01-10", "Nyxx8@pass", "Faculty"));
+        members.add(new Member(generateNextMemberID(), "Maurice Lauren Dela Vega", "mauricev", "maurice.vega@gmail.com", "09607890123", "2024-02-05", "Laur!8DelV", "Staff"));
+
         for (Member member : members) {
             insertMember(member);
         }

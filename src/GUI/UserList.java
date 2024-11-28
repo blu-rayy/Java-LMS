@@ -4,6 +4,9 @@ import java.awt.*;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
+import java.util.List;
+import backend.LibraryDatabase;
+import backend.Member;
 
 public class UserList extends JFrame implements fontComponent {
     private JTable userTable;
@@ -11,6 +14,7 @@ public class UserList extends JFrame implements fontComponent {
 
     public UserList() {
         initializeUI();
+        loadUserData();
     }
 
     private void initializeUI() {
@@ -28,9 +32,9 @@ public class UserList extends JFrame implements fontComponent {
         mainPanel.add(createSearchPanel(), BorderLayout.SOUTH);
 
         add(mainPanel);
-        }
+    }
 
-        private JPanel createTitlePanel() {
+    private JPanel createTitlePanel() {
         JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         titlePanel.setBackground(BACKGROUND_COLOR);
 
@@ -47,9 +51,9 @@ public class UserList extends JFrame implements fontComponent {
         titlePanel.add(iconLabel);
         titlePanel.add(titleLabel);
         return titlePanel;
-        }
+    }
 
-        private JPanel createUserTablePanel() {
+    private JPanel createUserTablePanel() {
         JPanel tablePanel = new JPanel(new BorderLayout());
         tablePanel.setBackground(BACKGROUND_COLOR);
 
@@ -59,16 +63,7 @@ public class UserList extends JFrame implements fontComponent {
             "Registration Date", "User Type"
         };
 
-        // Sample data (in a real application, this would come from a database)
-        Object[][] data = {
-            {"U001", "John Doe", "john.doe@example.com", "0912-345-6789", "2024-01-15", "Student"},
-            {"U002", "Jane Smith", "jane.smith@example.com", "0923-456-7890", "2024-01-20", "Faculty"},
-            {"U003", "Mike Johnson", "mike.johnson@example.com", "0934-567-8901", "2024-02-01", "Staff"},
-            {"U004", "Sarah Williams", "sarah.w@example.com", "0945-678-9012", "2024-02-10", "Student"},
-            {"U005", "Robert Brown", "robert.b@example.com", "0956-789-0123", "2024-02-15", "Librarian"}
-        };
-
-        tableModel = new DefaultTableModel(data, columnNames) {
+        tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // Make table non-editable
@@ -173,6 +168,21 @@ public class UserList extends JFrame implements fontComponent {
         RowFilter<DefaultTableModel, Object> filter = RowFilter.regexFilter(filterOption, 5); // User Type column
 
         sorter.setRowFilter(filter);
+    }
+
+    private void loadUserData() {
+        List<Member> members = LibraryDatabase.getAllMembers();
+        for (Member member : members) {
+            Object[] rowData = {
+                member.getMemberID(),
+                member.getName(),
+                member.getEmail(),
+                member.getPhoneNumber(),
+                member.getRegistrationDate(),
+                member.getUserType()
+            };
+            tableModel.addRow(rowData);
+        }
     }
 
     public static void main(String[] args) {
