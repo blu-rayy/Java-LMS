@@ -65,7 +65,7 @@ public class LibraryDatabase {
             }
         } catch (SQLException e) {
             System.out.println("Error generating authorID: " + e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return "A001";
     }
@@ -88,7 +88,7 @@ public class LibraryDatabase {
             }
         } catch (SQLException e) {
             System.out.println("Error generating memberID: " + e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return "M001";
     }
@@ -117,7 +117,7 @@ public class LibraryDatabase {
             }
         } catch (SQLException e) {
             System.out.println("Error getting member details by name: " + e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return null;
     }
@@ -155,7 +155,7 @@ public class LibraryDatabase {
             }
         } catch (SQLException e) {
             System.out.println("Error inserting author: " + e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
     
@@ -175,7 +175,7 @@ public class LibraryDatabase {
             }
         } catch (SQLException e) {
             System.out.println("Error validating login: " + e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return false;
     }
@@ -194,7 +194,7 @@ public class LibraryDatabase {
             }
         } catch (SQLException e) {
             System.out.println("Error getting user type: " + e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return null;
     }
@@ -225,7 +225,7 @@ public class LibraryDatabase {
             }
         } catch (SQLException e) {
             System.out.println("Error inserting member: " + e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
     
@@ -249,7 +249,7 @@ public class LibraryDatabase {
             }
         } catch (SQLException e) {
             System.out.println("Error logging in member: " + e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return null;
     }
