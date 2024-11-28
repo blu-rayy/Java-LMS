@@ -39,10 +39,18 @@ public class EditUsers extends JFrame implements fontComponent {
         JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         titlePanel.setBackground(BACKGROUND_COLOR);
 
+        // Add icon beside title
+        ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\manageusersIconOrange.png");
+        Image resizedTaskbarIcon = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        setIconImage(resizedTaskbarIcon);
+        JLabel iconLabel = new JLabel(new ImageIcon(resizedTaskbarIcon));
+
         JLabel titleLabel = new JLabel("User Management");
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(PRIMARY_COLOR);
+        titleLabel.setPreferredSize(new Dimension(300, 30));
 
+        titlePanel.add(iconLabel);
         titlePanel.add(titleLabel);
         return titlePanel;
     }

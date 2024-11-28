@@ -1,10 +1,10 @@
 package GUI;
 
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-import java.awt.*;
-import java.awt.event.*;
 
 public class CheckedOutBooks extends JFrame implements fontComponent {
     private JTable borrowedBooksTable;
@@ -48,28 +48,32 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
     private JPanel createTitlePanel() {
         JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.setBackground(BACKGROUND_COLOR);
-    
+        
         JLabel titleLabel = new JLabel("Checked Out Books");
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(PRIMARY_COLOR);
-    
+        titleLabel.setPreferredSize(new Dimension(300, 30));
+        
         searchField = new JTextField(20);
         searchField.setFont(PLAIN_FONT16);
         searchField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                String text = searchField.getText().trim();
-                rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+            String text = searchField.getText().trim();
+            rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
             }
         });
-    
-        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        searchPanel.setBackground(BACKGROUND_COLOR);
-        searchPanel.add(new JLabel("Search: "));
-        searchPanel.add(searchField);
-    
-        titlePanel.add(titleLabel, BorderLayout.WEST);
-    
+
+        // Add icon beside title
+        ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\circulationIconOrange.png");
+        Image resizedIcon = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        JLabel iconLabel = new JLabel(new ImageIcon(resizedIcon));
+        JPanel titleContentPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        titleContentPanel.setBackground(BACKGROUND_COLOR);
+
+        titleContentPanel.add(iconLabel);
+        titleContentPanel.add(titleLabel);
+        titlePanel.add(titleContentPanel, BorderLayout.WEST);
         return titlePanel;
     }
 

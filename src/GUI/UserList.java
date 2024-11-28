@@ -1,12 +1,12 @@
 package GUI;
 
-import java.awt.*;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.table.*;
-import java.util.List;
 import backend.LibraryDatabase;
 import backend.Member;
+import java.awt.*;
+import java.util.*;
+import java.util.List;
+import javax.swing.*;
+import javax.swing.table.*;
 
 public class UserList extends JFrame implements fontComponent {
     private JTable userTable;
@@ -39,7 +39,7 @@ public class UserList extends JFrame implements fontComponent {
         titlePanel.setBackground(BACKGROUND_COLOR);
 
         // Add icon beside title
-        ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\usersListOrange.png"); // Replace with the path to your icon
+        ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\usersListOrange.png"); 
         Image resizedTaskbarIcon = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         setIconImage(resizedTaskbarIcon);
         JLabel iconLabel = new JLabel(new ImageIcon(resizedTaskbarIcon));
@@ -47,6 +47,7 @@ public class UserList extends JFrame implements fontComponent {
         JLabel titleLabel = new JLabel("Registered Users");
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(PRIMARY_COLOR);
+        titleLabel.setPreferredSize(new Dimension(300, 30));
 
         titlePanel.add(iconLabel);
         titlePanel.add(titleLabel);
