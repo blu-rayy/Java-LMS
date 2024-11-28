@@ -231,7 +231,7 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
 
         JPasswordField librarianPasswordField = new JPasswordField(15);
         librarianPasswordField.setFont(PLAIN_FONT);
-        JLabel librarianPasswordLabel = new JLabel("Librarian Verification Password");
+        JLabel librarianPasswordLabel = new JLabel("Verification Password");
         JLabel librarianPasswordErrorLabel = new JLabel("Incorrect librarian password");
         librarianPasswordErrorLabel.setForeground(Color.RED);
         librarianPasswordErrorLabel.setVisible(false);
