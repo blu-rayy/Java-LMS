@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "AccountDetails",
+            "request": "launch",
+            "mainClass": "GUI.AccountDetails",
+            "projectName": "Java-LMS_541637ef"
+        },
+        {
+            "type": "java",
             "name": "AuthorList",
             "request": "launch",
             "mainClass": "GUI.AuthorList",
