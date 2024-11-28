@@ -287,11 +287,12 @@ public class Admin_DashboardGUI extends JFrame implements fontComponent {
         String greeting;
 
         if (now.isBefore(LocalTime.NOON)) {
-            greeting = "Good Morning, Admin!";
+            greeting = "Good Morning, " + adminName + "!";
         } else if (now.isBefore(LocalTime.of(18, 0))) {
-            greeting = "Good Afternoon, Admin!";
+            greeting = "Good Afternoon, " + adminName + "!";
+
         } else {
-            greeting = "Good Evening, Admin!";
+            greeting = "Good Evening, " + adminName + "!";
         }
 
         greetingLabel.setText(greeting);
