@@ -2,6 +2,7 @@ package GUI;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalTime;
 import javax.swing.*;
 
@@ -231,22 +232,18 @@ public class Admin_DashboardGUI extends JFrame implements fontComponent {
             
             // Instantiate the class (assuming a no-argument constructor)
             Object featureInstance = clazz.getDeclaredConstructor().newInstance();
-            
-            if (featureInstance instanceof JFrame) {
+        
                 JFrame featureWindow = (JFrame) featureInstance;
                 featureWindow.setSize(1200, 700);
                 featureWindow.setLocationRelativeTo(this);
                 featureWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 featureWindow.setVisible(true);
-            } else {
+
                 // Handle case where class doesn't extend JFrame
                 System.out.println("Error: Class does not extend JFrame.");
-            }
             
-        } catch (Exception e) {
-            // Handle errors (e.g., class not found, instantiation issues)
+        } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
             JOptionPane.showMessageDialog(this, "Feature not implemented or class not found: " + feature, "Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
         }
     }
     
