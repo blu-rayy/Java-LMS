@@ -325,9 +325,6 @@ private JLabel createProfileButton() {
                 featureWindow.setLocationRelativeTo(this);
                 featureWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 featureWindow.setVisible(true);
-
-                // Handle case where class doesn't extend JFrame
-                System.out.println("Error: Class does not extend JFrame.");
             
         } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
             JOptionPane.showMessageDialog(this, "Feature not implemented or class not found: " + feature, "Error", JOptionPane.ERROR_MESSAGE);
@@ -336,16 +333,14 @@ private JLabel createProfileButton() {
     
 // Method to show account details
 private void showAccountDetails() {
-    try {
-        Class<?> accountDetailsClass = Class.forName("GUI.AccountDetails");
-        JFrame accountDetailsFrame = (JFrame) accountDetailsClass.getDeclaredConstructor(String.class).newInstance(adminName);
-        accountDetailsFrame.setSize(500, 600);
-        accountDetailsFrame.setLocationRelativeTo(this);
-        accountDetailsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        accountDetailsFrame.setVisible(true);
-    } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
-        JOptionPane.showMessageDialog(this, "Error opening account details: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    }
+    // Create an instance of AboutPage
+    DevelopersList devList = new DevelopersList();
+
+    // Set the AboutPage properties
+    devList.setSize(400, 300); 
+    devList.setLocationRelativeTo(this); 
+    devList.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+    devList.setVisible(true); 
 }
 
 // Method to show About dialog

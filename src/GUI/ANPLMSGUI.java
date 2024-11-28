@@ -219,7 +219,7 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
 
         // Librarian Checkbox
         gbc.gridx = 0;
-        gbc.gridy = 10;
+        gbc.gridy = 11;
         gbc.gridwidth = 2;
         JCheckBox librarianCheckBox = new JCheckBox("Are you a Librarian?");
         signUpPanel.add(librarianCheckBox, gbc);
@@ -264,6 +264,8 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         librarianCheckBox.addActionListener(e -> {
             librarianPasswordPanel.setVisible(librarianCheckBox.isSelected());
             signUpFrame.pack();
+            signUpPanel.revalidate();
+            signUpPanel.repaint();
         });
 
         signUpButton.addActionListener(e -> {
