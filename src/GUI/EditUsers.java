@@ -1,10 +1,15 @@
 package GUI;
 
-import java.awt.*;
-import java.awt.event.*;
+import backend.LibraryDatabase;
+import backend.Member;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
 public class EditUsers extends JFrame implements fontComponent {
     private JTable userTable;
@@ -12,6 +17,7 @@ public class EditUsers extends JFrame implements fontComponent {
 
     public EditUsers() {
         initializeUI();
+        refreshUserList(); // Load data from the database
     }
 
     private void initializeUI() {
@@ -35,17 +41,10 @@ public class EditUsers extends JFrame implements fontComponent {
         JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         titlePanel.setBackground(BACKGROUND_COLOR);
 
-        // Add icon beside title
-        ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\manageusersIconOrange.png"); // Replace with the path to your icon
-        Image resizedTaskbarIcon = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-        setIconImage(resizedTaskbarIcon);
-        JLabel iconLabel = new JLabel(new ImageIcon(resizedTaskbarIcon));
-
         JLabel titleLabel = new JLabel("User Management");
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(PRIMARY_COLOR);
 
-        titlePanel.add(iconLabel);
         titlePanel.add(titleLabel);
         return titlePanel;
     }
@@ -54,31 +53,18 @@ public class EditUsers extends JFrame implements fontComponent {
         JPanel tablePanel = new JPanel(new BorderLayout());
         tablePanel.setBackground(BACKGROUND_COLOR);
 
-        // Define column names
-        String[] columnNames = {
-            "User ID", "Name", "Email", "Role", "Status", "Last Login"
-        };
-
-        // Sample data (in a real application, this would come from a database)
-        Object[][] data = {
-            {"U001", "John Doe", "john.doe@example.com", "Student", "Active", "2024-02-15"},
-            {"U002", "Jane Smith", "jane.smith@example.com", "Librarian", "Active", "2024-02-16"},
-            {"U003", "Mike Johnson", "mike.johnson@example.com", "Admin", "Inactive", "2024-01-20"}
-        };
-
-        tableModel = new DefaultTableModel(data, columnNames) {
+        String[] columnNames = {"User ID", "Name", "Email", "Role", "Status", "Registration Date"};
+        tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Make table non-editable
+                return false;
             }
         };
 
         userTable = new JTable(tableModel);
         userTable.setRowHeight(30);
         userTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        userTable.getTableHeader().setReorderingAllowed(false);
 
-        // Customize table header
         JTableHeader header = userTable.getTableHeader();
         header.setBackground(PRIMARY_COLOR);
         header.setForeground(Color.WHITE);
@@ -121,46 +107,62 @@ public class EditUsers extends JFrame implements fontComponent {
 
     private void addNewUser() {
         JDialog addUserDialog = new JDialog(this, "Add New User", true);
-        addUserDialog.setSize(400, 300);
+        addUserDialog.setSize(400, 400);
         addUserDialog.setLocationRelativeTo(this);
-
-        JPanel dialogPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+    
+        JPanel dialogPanel = new JPanel(new GridLayout(8, 2, 10, 10));
         dialogPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-
+    
         dialogPanel.add(new JLabel("Name:"));
         JTextField nameField = new JTextField();
         dialogPanel.add(nameField);
-
+    
+        dialogPanel.add(new JLabel("Username:"));
+        JTextField usernameField = new JTextField();
+        dialogPanel.add(usernameField);
+    
         dialogPanel.add(new JLabel("Email:"));
         JTextField emailField = new JTextField();
         dialogPanel.add(emailField);
-
+    
+        dialogPanel.add(new JLabel("Phone Number:"));
+        JTextField phoneNumberField = new JTextField();
+        dialogPanel.add(phoneNumberField);
+    
+        dialogPanel.add(new JLabel("Password:"));
+        JPasswordField passwordField = new JPasswordField();
+        dialogPanel.add(passwordField);
+    
         dialogPanel.add(new JLabel("Role:"));
-        String[] roles = {"Student", "Librarian", "Admin"};
-        JComboBox<String> roleCombo = new JComboBox<>(roles);
+        JComboBox<String> roleCombo = new JComboBox<>(new String[]{"Student", "Librarian", "Admin"});
         dialogPanel.add(roleCombo);
-
+    
         JButton saveButton = new JButton("Save");
         saveButton.addActionListener(e -> {
-            // In a real application, validate and save to database
-            Object[] newUser = {
-                "U" + (tableModel.getRowCount() + 1),
-                nameField.getText(),
-                emailField.getText(),
-                roleCombo.getSelectedItem(),
-                "Active",
-                new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date())
-            };
-            tableModel.addRow(newUser);
+            if (nameField.getText().isEmpty() || usernameField.getText().isEmpty() || emailField.getText().isEmpty() || phoneNumberField.getText().isEmpty() || new String(passwordField.getPassword()).isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Name, Username, Email, Phone Number, and Password cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+    
+            Member newMember = new Member();
+            newMember.setName(nameField.getText());
+            newMember.setUsername(usernameField.getText());
+            newMember.setEmail(emailField.getText());
+            newMember.setPhoneNumber(phoneNumberField.getText());
+            newMember.setPassword(new String(passwordField.getPassword()));
+            newMember.setUserType(roleCombo.getSelectedItem().toString());
+    
+            LibraryDatabase.insertMember(newMember);
+            refreshUserList();
             addUserDialog.dispose();
         });
-
+    
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(e -> addUserDialog.dispose());
-
+    
         dialogPanel.add(saveButton);
         dialogPanel.add(cancelButton);
-
+    
         addUserDialog.add(dialogPanel);
         addUserDialog.setVisible(true);
     }
@@ -168,55 +170,94 @@ public class EditUsers extends JFrame implements fontComponent {
     private void editSelectedUser() {
         int selectedRow = userTable.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, 
-                "Please select a user to edit", 
-                "No User Selected", 
-                JOptionPane.WARNING_MESSAGE
-            );
+            JOptionPane.showMessageDialog(this, "Please select a user to edit.", "No User Selected", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        // Placeholder for edit user functionality
-        JOptionPane.showMessageDialog(this, 
-            "Edit functionality will be implemented in future updates", 
-            "Edit User", 
-            JOptionPane.INFORMATION_MESSAGE
-        );
+
+        String userId = userTable.getValueAt(selectedRow, 0).toString();
+        String currentName = userTable.getValueAt(selectedRow, 1).toString();
+        String currentEmail = userTable.getValueAt(selectedRow, 2).toString();
+        String currentRole = userTable.getValueAt(selectedRow, 3).toString();
+
+        JDialog editUserDialog = new JDialog(this, "Edit User", true);
+        editUserDialog.setSize(400, 300);
+        editUserDialog.setLocationRelativeTo(this);
+
+        JPanel dialogPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+        dialogPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+
+        dialogPanel.add(new JLabel("Name:"));
+        JTextField nameField = new JTextField(currentName);
+        dialogPanel.add(nameField);
+
+        dialogPanel.add(new JLabel("Email:"));
+        JTextField emailField = new JTextField(currentEmail);
+        dialogPanel.add(emailField);
+
+        dialogPanel.add(new JLabel("Role:"));
+        JComboBox<String> roleCombo = new JComboBox<>(new String[]{"Student", "Librarian", "Admin"});
+        roleCombo.setSelectedItem(currentRole);
+        dialogPanel.add(roleCombo);
+
+        JButton saveButton = new JButton("Save");
+        saveButton.addActionListener(e -> {
+            if (nameField.getText().isEmpty() || emailField.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Name and Email cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Member updatedMember = new Member();
+            updatedMember.setMemberID(userId);
+            updatedMember.setName(nameField.getText());
+            updatedMember.setEmail(emailField.getText());
+            updatedMember.setUserType(roleCombo.getSelectedItem().toString());
+
+            LibraryDatabase.updateMember(updatedMember);
+            refreshUserList();
+            editUserDialog.dispose();
+        });
+
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(e -> editUserDialog.dispose());
+
+        dialogPanel.add(saveButton);
+        dialogPanel.add(cancelButton);
+
+        editUserDialog.add(dialogPanel);
+        editUserDialog.setVisible(true);
     }
 
     private void deleteSelectedUser() {
         int selectedRow = userTable.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, 
-                "Please select a user to delete", 
-                "No User Selected", 
-                JOptionPane.WARNING_MESSAGE
-            );
+            JOptionPane.showMessageDialog(this, "Please select a user to delete.", "No User Selected", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        int confirmDelete = JOptionPane.showConfirmDialog(this, 
-            "Are you sure you want to delete this user?", 
-            "Confirm Deletion", 
-            JOptionPane.YES_NO_OPTION
-        );
+        int confirmDelete = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this user?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+        if (confirmDelete != JOptionPane.YES_OPTION) return;
 
-        if (confirmDelete == JOptionPane.YES_OPTION) {
-            tableModel.removeRow(selectedRow);
-        }
+        String userId = userTable.getValueAt(selectedRow, 0).toString();
+        LibraryDatabase.deleteMember(userId);
+        refreshUserList();
     }
 
     private void refreshUserList() {
-        // In a real application, this would reload data from the database
-        JOptionPane.showMessageDialog(this, 
-            "User list refreshed", 
-            "Refresh", 
-            JOptionPane.INFORMATION_MESSAGE
-        );
+        List<Member> members = LibraryDatabase.getAllMembers();
+        tableModel.setRowCount(0);
+        for (Member member : members) {
+            tableModel.addRow(new Object[]{
+                    member.getMemberID(),
+                    member.getName(),
+                    member.getEmail(),
+                    member.getUserType(),
+                    "Active", // Placeholder
+                    member.getRegistrationDate()
+            });
+        }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new EditUsers().setVisible(true);
-        });
+        SwingUtilities.invokeLater(() -> new EditUsers().setVisible(true));
     }
 }

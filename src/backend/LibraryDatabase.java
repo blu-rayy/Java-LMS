@@ -229,6 +229,34 @@ public class LibraryDatabase {
         }
     }
     
+    public static void updateMember(Member member) {
+        String sql = "UPDATE members SET name = ?, username = ?, email = ?, phoneNumber = ?, userType = ? WHERE memberID = ?";
+        try (Connection conn = SQLiteDatabase.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, member.getName());
+            pstmt.setString(2, member.getUsername());
+            pstmt.setString(3, member.getEmail());
+            pstmt.setString(4, member.getPhoneNumber());
+            pstmt.setString(5, member.getUserType());
+            pstmt.setString(6, member.getMemberID());
+            pstmt.executeUpdate();
+            System.out.println("Member updated: " + member.getName());
+        } catch (SQLException e) {
+            System.out.println("Error updating member: " + e.getMessage());
+        }
+    }
+    
+    // Delete a member
+    public static void deleteMember(String memberID) {
+        String sql = "DELETE FROM members WHERE memberID = ?";
+        try (Connection conn = SQLiteDatabase.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, memberID);
+            pstmt.executeUpdate();
+            System.out.println("Member deleted: " + memberID);
+        } catch (SQLException e) {
+            System.out.println("Error deleting member: " + e.getMessage());
+        }
+    }
+
     public static Member loginMember(String username, String password) {
         String sql = "SELECT * FROM members WHERE username = ? AND password = ?";
         try (Connection conn = SQLiteDatabase.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
