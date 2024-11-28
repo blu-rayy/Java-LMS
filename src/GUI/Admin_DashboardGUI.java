@@ -310,14 +310,16 @@ private JLabel createProfileButton() {
     
 // Method to show account details
 private void showAccountDetails() {
-    JOptionPane.showMessageDialog(this, 
-        "Account Details:\n" +
-        "Name: " + adminName + "\n" +
-        "Role: Administrator\n" +
-        "Email: admin@anplms.com", 
-        "Account Details", 
-        JOptionPane.INFORMATION_MESSAGE
-    );
+    try {
+        Class<?> accountDetailsClass = Class.forName("GUI.AccountDetails");
+        JFrame accountDetailsFrame = (JFrame) accountDetailsClass.getDeclaredConstructor(String.class).newInstance(adminName);
+        accountDetailsFrame.setSize(500, 600);
+        accountDetailsFrame.setLocationRelativeTo(this);
+        accountDetailsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        accountDetailsFrame.setVisible(true);
+    } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
+        JOptionPane.showMessageDialog(this, "Error opening account details: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
 }
 
 // Method to show About dialog

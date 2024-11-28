@@ -2,15 +2,15 @@ package GUI;
 
 import backend.LibraryDatabase;
 import backend.Member;
-import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import javax.swing.*;
 
 public class AccountDetails extends JFrame implements fontComponent {
     public AccountDetails(String username) {
         // Fetch member details from database
-        Member member = LibraryDatabase.getMemberByUsername(username);
+        Member member = LibraryDatabase.loginMember(username, username);
         
         // Set up frame
         setTitle("Account Details");
@@ -27,7 +27,7 @@ public class AccountDetails extends JFrame implements fontComponent {
         
         // Title
         JLabel titleLabel = new JLabel("Account Details");
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        titleLabel.setFont(TITLE_FONT18);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         mainPanel.add(titleLabel);
         mainPanel.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -73,10 +73,10 @@ public class AccountDetails extends JFrame implements fontComponent {
         closeButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         closeButton.setBackground(PRIMARY_COLOR);
         closeButton.setForeground(Color.WHITE);
-        closeButton.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        closeButton.setFont(BUTTON_FONT);
         closeButton.addActionListener(e -> dispose());
         
-        mainPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 0)));
         mainPanel.add(closeButton);
         
         add(mainPanel);
@@ -85,7 +85,7 @@ public class AccountDetails extends JFrame implements fontComponent {
     // Helper method to format creation date
     private String formatCreationDate(String creationDate) {
             if (creationDate == null) return "N/A";
-            return string.format(DateTimeFormatter.ofPattern("MMMM dd, yyyy HH:mm:ss"));
+            return LocalDateTime.parse(creationDate).format(DateTimeFormatter.ofPattern("MMMM dd, yyyy HH:mm:ss"));
     }
     
     // Optional: Main method for standalone testing

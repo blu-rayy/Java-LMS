@@ -107,7 +107,7 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         loginButton.setFont(new Font("Arimo", Font.BOLD, 20)); // Larger font size for the button
         gbc.gridy = 6;
         gbc.gridwidth = 2;
-        gbc.insets = new Insets(25, 0, 0, 0); // Add top padding between the password field and the button
+        gbc.insets = new Insets(25, 0, 0, 0);
 
         rightPanel.add(loginButton, gbc);
 
