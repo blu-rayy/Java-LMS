@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Member extends Person {
-    private List<Book> borrowedBooks;
+    private final List<Book> borrowedBooks;
 
     public Member(String memberID, String name, String username, String email, String phoneNumber, String registrationDate, String password, String userType) {
         super(memberID, name, username, email, phoneNumber, registrationDate, password, userType);
