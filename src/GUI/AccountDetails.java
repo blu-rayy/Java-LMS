@@ -76,7 +76,7 @@ public class AccountDetails extends JFrame implements fontComponent {
         closeButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         closeButton.setBackground(PRIMARY_COLOR);
         closeButton.setForeground(Color.WHITE);
-        closeButton.setFont(BUTTON_FONT);
+        closeButton.setFont(PLAIN_FONT);
         closeButton.addActionListener(e -> dispose());
         
         mainPanel.add(Box.createRigidArea(new Dimension(0, 0)));

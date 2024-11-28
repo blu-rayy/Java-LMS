@@ -110,7 +110,7 @@ public class EditUsers extends JFrame implements fontComponent {
 
     private JButton createStyledButton(String text, ActionListener listener) {
         JButton button = new JButton(text);
-        button.setFont(BUTTON_FONT);
+        button.setFont(PLAIN_FONT);
         button.setBackground(PRIMARY_COLOR);
         button.setForeground(Color.WHITE);
         button.setBorderPainted(false);

@@ -85,7 +85,7 @@ public class BookList extends JFrame implements fontComponent {
         };
 
         bookTable = new JTable(tableModel);
-        bookTable.setFont(TABLE_FONT);
+        bookTable.setFont(PLAIN_FONT);
         bookTable.setRowHeight(35);
         bookTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -107,7 +107,7 @@ public class BookList extends JFrame implements fontComponent {
         searchPanel.setBackground(BACKGROUND_COLOR);
 
         JTextField searchField = new JTextField(20);
-        searchField.setFont(TABLE_FONT);
+        searchField.setFont(PLAIN_FONT);
         searchField.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(PRIMARY_COLOR, 1),
             BorderFactory.createEmptyBorder(5, 5, 5, 5)
@@ -117,7 +117,7 @@ public class BookList extends JFrame implements fontComponent {
         JButton searchButton = new JButton("Search");
         searchButton.setBackground(PRIMARY_COLOR);
         searchButton.setForeground(Color.WHITE);
-        searchButton.setFont(TABLE_FONT);
+        searchButton.setFont(PLAIN_FONT);
         searchButton.addActionListener(e -> performSearch(searchField.getText()));
 
         searchPanel.add(new JLabel("Search:"));

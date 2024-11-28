@@ -76,7 +76,7 @@ public class UserList extends JFrame implements fontComponent {
         };
 
         userTable = new JTable(tableModel);
-        userTable.setFont(TABLE_FONT);
+        userTable.setFont(PLAIN_FONT);
         userTable.setRowHeight(30);
         userTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         userTable.getTableHeader().setReorderingAllowed(false);
@@ -107,7 +107,7 @@ public class UserList extends JFrame implements fontComponent {
 
         // Search field
         JTextField searchField = new JTextField(20);
-        searchField.setFont(TABLE_FONT);
+        searchField.setFont(PLAIN_FONT);
         searchField.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(PRIMARY_COLOR, 1),
             BorderFactory.createEmptyBorder(5, 5, 5, 5)
@@ -118,13 +118,13 @@ public class UserList extends JFrame implements fontComponent {
         JButton searchButton = new JButton("Search");
         searchButton.setBackground(PRIMARY_COLOR);
         searchButton.setForeground(Color.WHITE);
-        searchButton.setFont(TABLE_FONT);
+        searchButton.setFont(PLAIN_FONT);
         searchButton.addActionListener(e -> performSearch(searchField.getText()));
 
         // Filter dropdown
         String[] filterOptions = {"All", "Student", "Faculty", "Staff", "Librarian"};
         JComboBox<String> filterComboBox = new JComboBox<>(filterOptions);
-        filterComboBox.setFont(TABLE_FONT);
+        filterComboBox.setFont(PLAIN_FONT);
         filterComboBox.addActionListener(e -> filterUsers((String) filterComboBox.getSelectedItem()));
 
         searchPanel.add(new JLabel("Search:"));

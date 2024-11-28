@@ -1,5 +1,7 @@
 package GUI;
 
+import GUI.About.AboutPage;
+import GUI.About.DevelopersList;
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.InvocationTargetException;
@@ -195,7 +197,7 @@ public class User_DashboardGUI extends JFrame implements fontComponent {
         
         // Developers Menu Item
         CustomMenuItem developersMenuItem = new CustomMenuItem("Developers");
-        developersMenuItem.addActionListener(e -> showDevelopersDialog());
+        developersMenuItem.addActionListener(e -> showDeveloperDialog());
         dropdownMenu.add(developersMenuItem);
         
         // Logout Menu Item
@@ -328,38 +330,26 @@ public class User_DashboardGUI extends JFrame implements fontComponent {
         }
     }
 
-    // Method to show About dialog
-    private void showAboutDialog() {
-        JOptionPane.showMessageDialog(this, 
-            "ANP Learning Management System (LMS)\n" +
-            "Version 1.0\n\n" +
-            "A comprehensive library management application\n" +
-            "designed to streamline library operations\n" +
-            "and enhance user experience.", 
-            "About ANP LMS", 
-            JOptionPane.INFORMATION_MESSAGE
-        );
-    }
+  // Method to show About dialog
+private void showAboutDialog() {
+    // Create an instance of AboutPage
+    AboutPage aboutPage = new AboutPage();
 
-    // Method to show Developers dialog
-    private void showDevelopersDialog() {
-        String[] developers = {
-            "Kristian Bautista",
-            "Angel Letada", 
-            "John Janiel Obmerga", 
-            "Marianne Santos"
-        };
-        
-        JList<String> developerList = new JList<>(developers);
-        developerList.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        
-        JOptionPane.showMessageDialog(
-            this, 
-            new JScrollPane(developerList), 
-            "Development Team", 
-            JOptionPane.INFORMATION_MESSAGE
-        );
-    }
+    // Set the AboutPage properties
+    aboutPage.setSize(400, 300); 
+    aboutPage.setLocationRelativeTo(this); 
+    aboutPage.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+    aboutPage.setVisible(true); 
+}
+
+
+private void showDeveloperDialog() {
+    // Create an instance of DevelopersList
+    DevelopersList developersList = new DevelopersList();
+
+    // Set properties for the DevelopersList JFrame
+    developersList.setVisible(true); // Make the JFrame visible
+}
 
     // Method to confirm logout
     private void confirmLogout() {

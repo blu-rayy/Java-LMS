@@ -67,7 +67,7 @@ public class UserAuthorList extends JFrame implements fontComponent {
         };
     
         authorTable = new JTable(tableModel);
-        authorTable.setFont(TABLE_FONT);
+        authorTable.setFont(PLAIN_FONT);
         authorTable.setRowHeight(30);
         authorTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     
@@ -99,7 +99,7 @@ public class UserAuthorList extends JFrame implements fontComponent {
         searchPanel.setBackground(BACKGROUND_COLOR);
     
         JTextField searchField = new JTextField(20);
-        searchField.setFont(TABLE_FONT);
+        searchField.setFont(PLAIN_FONT);
         searchField.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(PRIMARY_COLOR, 1),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)
@@ -109,7 +109,7 @@ public class UserAuthorList extends JFrame implements fontComponent {
         JButton searchButton = new JButton("Search");
         searchButton.setBackground(PRIMARY_COLOR);
         searchButton.setForeground(Color.WHITE);
-        searchButton.setFont(TABLE_FONT);
+        searchButton.setFont(PLAIN_FONT);
         searchButton.addActionListener(e -> performSearch(searchField.getText()));
     
         searchPanel.add(new JLabel("Search:"));
