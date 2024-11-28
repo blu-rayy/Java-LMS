@@ -1,8 +1,9 @@
 package backend;
+
 public class Librarian extends Person {
 
-    public Librarian(String name, String librarianID) {
-        super(name, librarianID);
+    public Librarian(String id, String name, String username, String email, String phoneNumber, String registrationDate, String password) {
+        super(id, name, username, email, phoneNumber, registrationDate, password, "Librarian"); // Set userType to "Librarian"
     }
 
     // Override the borrowBook method with Book parameter

@@ -1,6 +1,8 @@
 package backend;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class LibraryDatabase {
@@ -27,9 +29,15 @@ public class LibraryDatabase {
                 stmt.execute(createAuthorsTable);
 
                 // Create Members table
-                String createMembersTable = "CREATE TABLE IF NOT EXISTS members ("
-                        + "memberID TEXT PRIMARY KEY, "
-                        + "name TEXT NOT NULL)";
+                String createMembersTable = "CREATE TABLE IF NOT EXISTS members (" +
+                    "memberID TEXT PRIMARY KEY, " +
+                    "name TEXT NOT NULL, " +
+                    "username TEXT NOT NULL, " +
+                    "email TEXT NOT NULL, " +
+                    "phoneNumber TEXT NOT NULL, " +
+                    "registrationDate TEXT NOT NULL, " +
+                    "password TEXT NOT NULL, " +
+                    "userType TEXT NOT NULL)";
                 stmt.execute(createMembersTable);
 
                 System.out.println("Tables created successfully.");
@@ -122,19 +130,65 @@ public class LibraryDatabase {
         }
     }
     
+    public static boolean validateLogin(String username, String password) {
+        String sql = "SELECT * FROM members WHERE username = ? AND password = ?";
+        try (Connection conn = SQLiteDatabase.connect(); 
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    // User found, return user type
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error validating login: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public static String getUserType(String username) {
+        String sql = "SELECT userType FROM members WHERE username = ?";
+        try (Connection conn = SQLiteDatabase.connect(); 
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, username);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("userType");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting user type: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     // Insert a new member into the database
     public static void insertMember(Member member) {
-        String sql = "INSERT INTO members(memberID, name) VALUES(?,?)";
+        String sql = "INSERT INTO members(memberID, name, username, email, phoneNumber, registrationDate, password, userType) VALUES(?,?,?,?,?,?,?,?)";
         try (Connection conn = SQLiteDatabase.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             String memberID = generateNextMemberID();
             member.setMemberID(memberID);
-            
+            String registrationDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+            member.setRegistrationDate(registrationDate);
+
             pstmt.setString(1, memberID);
             pstmt.setString(2, member.getName());
-            
-            int rowsAffected = pstmt.executeUpdate();
+            pstmt.setString(3, member.getUsername());
+            pstmt.setString(4, member.getEmail());
+            pstmt.setString(5, member.getPhoneNumber());
+            pstmt.setString(6, registrationDate);
+            pstmt.setString(7, member.getPassword());
+            pstmt.setString(8, member.getUserType());
 
+            int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("Member added: " + member.getName() + " with ID: " + memberID);
             } else {
@@ -144,6 +198,31 @@ public class LibraryDatabase {
             System.out.println("Error inserting member: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+    
+    public static Member loginMember(String username, String password) {
+        String sql = "SELECT * FROM members WHERE username = ? AND password = ?";
+        try (Connection conn = SQLiteDatabase.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                Member member = new Member();
+                member.setMemberID(rs.getString("memberID"));
+                member.setName(rs.getString("name"));
+                member.setUsername(rs.getString("username"));
+                member.setEmail(rs.getString("email"));
+                member.setPhoneNumber(rs.getString("phoneNumber"));
+                member.setRegistrationDate(rs.getString("registrationDate"));
+                member.setPassword(rs.getString("password"));
+                member.setUserType(rs.getString("userType"));
+                return member;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error logging in member: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
     }
 
     // Read all books from the database
@@ -268,9 +347,9 @@ public class LibraryDatabase {
     // populate members
     public static void populateMembers() {
         List<Member> members = new ArrayList<>();
-        members.add(new Member("Ava Chen", generateNextMemberID()));
-        members.add(new Member("Harumi Kitagawa", generateNextMemberID()));
-        members.add(new Member("Haruma Von Brandt", generateNextMemberID()));
+        members.add(new Member(generateNextMemberID(), "Ava Chen", "avah", "ava.chen@gmail.com", "09123456789", "2023-01-01", "oh.4artepa?", "Faculty"));
+        members.add(new Member(generateNextMemberID(), "Harumi Kitagawa", "miru", "harumi.kitagawa@gmail.com", "09234567890", "2023-01-01", "3lemental.pr1ncess", "Student"));
+        members.add(new Member(generateNextMemberID(), "Haruma Von Brandt", "maru", "haruma.vonbrandt@gmail.com", "09345678901", "2023-01-01", "blond3.boi", "Student"));
         
         for (Member member : members) {
             insertMember(member);
