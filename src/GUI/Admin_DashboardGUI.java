@@ -65,23 +65,26 @@ public class Admin_DashboardGUI extends JFrame implements fontComponent {
         JLabel logoLabel = new JLabel(new ImageIcon(scaledLogoIcon));
         leftNav.add(logoLabel);
 
+        // Mapping of button text to corresponding class names
         String[] navButtons = {"Books", "Users", "Inventory"};
+        String[] classNames = {"BookList", "UserList", "InventoryList"};
 
-        for (String buttonText : navButtons) {
-            leftNav.add(createNavButton(buttonText));
+        for (int i = 0; i < navButtons.length; i++) {
+            JButton button = createNavButton(navButtons[i], classNames[i]);
+            leftNav.add(button);
         }
 
         return leftNav;
         }
 
-        private JButton createNavButton(String text) {
+        private JButton createNavButton(String text, String className) {
         JButton button = new JButton(text);
         button.setFont(TITLE_FONT14);
         button.setBackground(BACKGROUND_COLOR);
         button.setForeground(PRIMARY_COLOR); // Set font color to PRIMARY_COLOR
         button.setBorderPainted(false);
         button.setFocusPainted(false);
-        button.addActionListener(e -> openFeatureWindow(text));
+        button.addActionListener(e -> openFeatureWindow(className));
         return button;
         }
 
