@@ -155,20 +155,31 @@ private JLabel createProfileButton() {
             super(text);
             setFont(PLAIN_FONT16);
             setPreferredSize(new Dimension(250, 40));
+            setBorderPainted(false); // Ensure border is disabled for a clean look
             
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseEntered(MouseEvent e) {
                     setBackground(PRIMARY_COLOR);
                     setOpaque(true);
+                    repaint();
                 }
                 
                 @Override
                 public void mouseExited(MouseEvent e) {
                     setBackground(null);
                     setOpaque(false);
+                    repaint();
                 }
             });
+        }
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g); // Ensure the default painting happens first
+            if (isOpaque()) {
+                g.setColor(getBackground());
+                g.fillRect(0, 0, getWidth(), getHeight()); // Fill the background with the custom color
+            }
         }
     }
     

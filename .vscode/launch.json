@@ -9,7 +9,18 @@
             "name": "AccountDetails",
             "request": "launch",
             "mainClass": "GUI.AccountDetails",
+<<<<<<< HEAD
+            "projectName": "Java-LMS_e478d2fa"
+        },
+        {
+            "type": "java",
+            "name": "ANPLMSGUI",
+            "request": "launch",
+            "mainClass": "GUI.ANPLMSGUI",
+            "projectName": "Java-LMS_e478d2fa"
+=======
             "projectName": "Java-LMS_541637ef"
+>>>>>>> 38ee7d1b52d7384c2585b8873a82db59ef860aa1
         },
         {
             "type": "java",
