@@ -65,7 +65,7 @@ public class LibraryDatabase {
             }
         } catch (SQLException e) {
             System.out.println("Error generating authorID: " + e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return "A001";
     }
@@ -88,9 +88,38 @@ public class LibraryDatabase {
             }
         } catch (SQLException e) {
             System.out.println("Error generating memberID: " + e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return "M001";
+    }
+
+    // Get member details by name
+    public static Member getMemberDetails(String name) {
+        String sql = "SELECT * FROM members WHERE name = ?";
+        try (Connection conn = SQLiteDatabase.connect(); 
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, name);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    Member member = new Member();
+                    member.setMemberID(rs.getString("memberID"));
+                    member.setName(rs.getString("name"));
+                    member.setUsername(rs.getString("username"));
+                    member.setEmail(rs.getString("email"));
+                    member.setPhoneNumber(rs.getString("phoneNumber"));
+                    member.setRegistrationDate(rs.getString("registrationDate"));
+                    member.setPassword(rs.getString("password"));
+                    member.setUserType(rs.getString("userType"));
+                    return member;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting member details by name: " + e.getMessage());
+            //e.printStackTrace();
+        }
+        return null;
     }
 
     // Insert a new book into the database
@@ -126,7 +155,7 @@ public class LibraryDatabase {
             }
         } catch (SQLException e) {
             System.out.println("Error inserting author: " + e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
     
@@ -146,7 +175,7 @@ public class LibraryDatabase {
             }
         } catch (SQLException e) {
             System.out.println("Error validating login: " + e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return false;
     }
@@ -165,7 +194,7 @@ public class LibraryDatabase {
             }
         } catch (SQLException e) {
             System.out.println("Error getting user type: " + e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return null;
     }
@@ -196,7 +225,7 @@ public class LibraryDatabase {
             }
         } catch (SQLException e) {
             System.out.println("Error inserting member: " + e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
     
@@ -220,7 +249,7 @@ public class LibraryDatabase {
             }
         } catch (SQLException e) {
             System.out.println("Error logging in member: " + e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return null;
     }

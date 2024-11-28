@@ -1,10 +1,13 @@
 package GUI;
 
+import GUI.About.AboutPage;
+import GUI.About.DevelopersList;
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalTime;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 
 public class Admin_DashboardGUI extends JFrame implements fontComponent {
     private final String adminName;
@@ -50,11 +53,17 @@ public class Admin_DashboardGUI extends JFrame implements fontComponent {
         navPanel.add(rightNav, BorderLayout.EAST);
 
         return navPanel;
-    }
+        }
 
-    private JPanel createLeftNavigationButtons() {
+        private JPanel createLeftNavigationButtons() {
         JPanel leftNav = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
         leftNav.setBackground(BACKGROUND_COLOR);
+
+        // Add logo to the left
+        ImageIcon logoIcon = new ImageIcon("Logos\\ANP orange copy.png");
+        Image scaledLogoIcon = logoIcon.getImage().getScaledInstance(32, 22, Image.SCALE_SMOOTH);
+        JLabel logoLabel = new JLabel(new ImageIcon(scaledLogoIcon));
+        leftNav.add(logoLabel);
 
         String[] navButtons = {"Books", "Users", "Inventory"};
 
@@ -67,8 +76,9 @@ public class Admin_DashboardGUI extends JFrame implements fontComponent {
 
         private JButton createNavButton(String text) {
         JButton button = new JButton(text);
-        button.setFont(BUTTON_FONT);
+        button.setFont(TITLE_FONT14);
         button.setBackground(BACKGROUND_COLOR);
+        button.setForeground(PRIMARY_COLOR); // Set font color to PRIMARY_COLOR
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.addActionListener(e -> openFeatureWindow(text));
@@ -125,21 +135,98 @@ public class Admin_DashboardGUI extends JFrame implements fontComponent {
             return rightNav;
         }
 
-    //i want to add a profile button icon(?) here
-    private JLabel createProfileButton() {
-        ImageIcon profileIcon = new ImageIcon("Logos\\profileIcon.png");
-        Image scaledProfileIcon = profileIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-        JLabel profileLabel = new JLabel(new ImageIcon(scaledProfileIcon));
-        profileLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        
-        profileLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                openProfileSettings();
+private JLabel createProfileButton() {
+    ImageIcon profileIcon = new ImageIcon("Logos\\profileIcon.png");
+    Image scaledProfileIcon = profileIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+    JLabel profileLabel = new JLabel(new ImageIcon(scaledProfileIcon));
+    profileLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    
+    // Create custom dropdown menu
+    JPopupMenu dropdownMenu = new JPopupMenu() {
+        @Override
+        public void show(Component invoker, int x, int y) {
+            // Calculate position to show from the left side of the profile icon
+            super.show(invoker, -getPreferredSize().width + invoker.getWidth(), invoker.getHeight());
+        }
+    };
+    dropdownMenu.setBorder(new LineBorder(PRIMARY_COLOR, 1, true));
+    
+    // Custom menu item with orange highlight
+    class CustomMenuItem extends JMenuItem {
+        private boolean isHovered = false; // Track hover state
+    
+        CustomMenuItem(String text) {
+            super(text);
+            setFont(PLAIN_FONT16);
+            setPreferredSize(new Dimension(250, 40));
+            setBorderPainted(false); // Ensure border is disabled for a clean look
+            
+            setForeground(Color.BLACK); // Set initial text color to black
+    
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    isHovered = true;
+                    setBackground(PRIMARY_COLOR); // Set background color for hover
+                    setOpaque(true);
+                    setForeground(Color.WHITE); // Change text color to white
+                    repaint(); // Repaint to apply hover effect
+                }
+                
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    isHovered = false;
+                    setBackground(null); // Reset background color when not hovered
+                    setOpaque(false);
+                    setForeground(Color.BLACK); // Reset text color to black
+                    repaint(); // Repaint to revert hover effect
+                }
+            });
+        }
+    
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g); // Ensure the default painting happens first
+            
+            // Paint the custom background only if opaque
+            if (isOpaque()) {
+                g.setColor(getBackground());
+                g.fillRect(0, 0, getWidth(), getHeight()); // Fill the background with the custom color
             }
-        });
-        return profileLabel;
+            g.setColor(getForeground()); //pag eto lang, gumagana yung color pero walang text
+            super.paintComponent(g); //pag eto lang, walang color yung hover pero may text
+        }
     }
+    
+    // Account Menu Item
+    CustomMenuItem accountMenuItem = new CustomMenuItem("Account");
+    accountMenuItem.addActionListener(e -> showAccountDetails());
+    dropdownMenu.add(accountMenuItem);
+    
+    // About Menu Item
+    CustomMenuItem aboutMenuItem = new CustomMenuItem("About");
+    aboutMenuItem.addActionListener(e -> showAboutDialog());
+    dropdownMenu.add(aboutMenuItem);
+    
+    // Developers Menu Item
+    CustomMenuItem developersMenuItem = new CustomMenuItem("Developers");
+    developersMenuItem.addActionListener(e -> showDeveloperDialog());
+    dropdownMenu.add(developersMenuItem);
+    
+    // Logout Menu Item
+    CustomMenuItem logoutMenuItem = new CustomMenuItem("Log Out");
+    logoutMenuItem.addActionListener(e -> confirmLogout());
+    dropdownMenu.add(logoutMenuItem);
+    
+    profileLabel.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            dropdownMenu.show(profileLabel, e.getX(), e.getY());
+        }
+    });
+    
+    return profileLabel;
+}
 
     private JPanel createDashboardContentPanel() {
         JPanel contentPanel = new JPanel(new GridLayout(2, 3, 15, 15));
@@ -247,14 +334,74 @@ public class Admin_DashboardGUI extends JFrame implements fontComponent {
         }
     }
     
-
-    private void openProfileSettings() {
-        JOptionPane.showMessageDialog(this, 
-            "Profile Settings for " + adminName, 
-            "Profile", 
-            JOptionPane.INFORMATION_MESSAGE
-        );
+// Method to show account details
+private void showAccountDetails() {
+    try {
+        Class<?> accountDetailsClass = Class.forName("GUI.AccountDetails");
+        JFrame accountDetailsFrame = (JFrame) accountDetailsClass.getDeclaredConstructor(String.class).newInstance(adminName);
+        accountDetailsFrame.setSize(500, 600);
+        accountDetailsFrame.setLocationRelativeTo(this);
+        accountDetailsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        accountDetailsFrame.setVisible(true);
+    } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
+        JOptionPane.showMessageDialog(this, "Error opening account details: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
+}
+
+// Method to show About dialog
+private void showAboutDialog() {
+    // Create an instance of AboutPage
+    AboutPage aboutPage = new AboutPage();
+
+    // Set the AboutPage properties
+    aboutPage.setSize(400, 300); 
+    aboutPage.setLocationRelativeTo(this); 
+    aboutPage.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+    aboutPage.setVisible(true); 
+}
+
+
+private void showDeveloperDialog() {
+    // Create an instance of DevelopersList
+    DevelopersList developersList = new DevelopersList();
+
+    // Set properties for the DevelopersList JFrame
+    developersList.setVisible(true); // Make the JFrame visible
+}
+
+
+
+// Method to confirm logout
+private void confirmLogout() {
+    int response = JOptionPane.showConfirmDialog(
+        this, 
+        "Are you sure you want to log out?", 
+        "Confirm Logout", 
+        JOptionPane.YES_NO_OPTION, 
+        JOptionPane.QUESTION_MESSAGE
+    );
+    
+    if (response == JOptionPane.YES_OPTION) {
+        // Close current admin dashboard
+        this.dispose();
+        
+        // Open login screen (ANPLMSGUI)
+        SwingUtilities.invokeLater(() -> {
+            try {
+                Class<?> loginClass = Class.forName("GUI.ANPLMSGUI");
+                JFrame loginFrame = (JFrame) loginClass.getDeclaredConstructor().newInstance();
+                loginFrame.setVisible(true);
+            } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
+                JOptionPane.showMessageDialog(
+                    null, 
+                    "Error opening login screen: " + e.getMessage(), 
+                    "Logout Error", 
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
+        });
+    }
+}
 
     private void updateTime(JLabel timeLabel) {
         timeLabel.setText(java.time.LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")));

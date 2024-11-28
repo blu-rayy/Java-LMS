@@ -1,202 +1,430 @@
-package GUI; 
+package GUI;
+
+import GUI.About.AboutPage;
+import GUI.About.DevelopersList;
 import java.awt.*;
 import java.awt.event.*;
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalTime;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 
-public class User_DashboardGUI extends JFrame {
-    public User_DashboardGUI(String username) {
-        // sets taskbar
-        ImageIcon taskbarIcon = new ImageIcon("Logos//ANP orange copy.png");
-        Image resizedTaskbarIcon = taskbarIcon.getImage().getScaledInstance(64, 43, Image.SCALE_SMOOTH);
-        setIconImage(resizedTaskbarIcon);
-        
-        setTitle("ANP-LMS Dashboard");
-        setSize(1280, 720);
+public class User_DashboardGUI extends JFrame implements fontComponent {
+    private final String userName;
+
+    public User_DashboardGUI(String userName) {
+        this.userName = userName;
+        initializeUI();
+    }
+
+    private void initializeUI() {
+        setTitle("ANP LMS - User Dashboard");
+        setSize(1366, 768);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setResizable(false);
-        setLayout(new BorderLayout());
 
-        getContentPane().setBackground(new Color(242, 240, 239)); // Light gray background
+        //icon for taskbar and yung sa top left corner
+        ImageIcon taskbarIcon = new ImageIcon("Logos\\ANP orange copy.png");
+        Image resizedTaskbarIcon = taskbarIcon.getImage().getScaledInstance(64, 43, Image.SCALE_SMOOTH);
+        setIconImage(resizedTaskbarIcon);
 
-        // Top navigation panel
-        JPanel navPanel = new JPanel(new BorderLayout());
-        navPanel.setBackground(Color.WHITE);
-        navPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        mainPanel.setBackground(BACKGROUND_COLOR);
 
-        // Logo and menu
-        JPanel logoMenuPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        logoMenuPanel.setBackground(Color.WHITE);
-        JLabel logoLabel = new JLabel(new ImageIcon("asdasdsad")); // Replace with your logo image path
-        JLabel booksLabel = new JLabel("Books");
-        JLabel borrowLabel = new JLabel("Borrow");
-        JLabel returnLabel = new JLabel("Return");
-        
-        // Make the labels clickable by adding MouseListeners
-        booksLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Change cursor on hover
-        borrowLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        returnLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        mainPanel.add(createTopNavigationPanel(), BorderLayout.NORTH);
+        mainPanel.add(createDashboardContentPanel(), BorderLayout.CENTER);
 
-        booksLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                // Handle "Books" click
-                JOptionPane.showMessageDialog(null, "Books clicked!");
-            }
-        });
-
-        borrowLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                // Handle "Borrow" click
-                JOptionPane.showMessageDialog(null, "Borrow clicked!");
-            }
-        });
-
-        returnLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                // Handle "Return" click
-                JOptionPane.showMessageDialog(null, "Return clicked!");
-            }
-        });
-        
-        logoMenuPanel.add(logoLabel);
-        logoMenuPanel.add(Box.createHorizontalStrut(10)); // Add space between elements
-        logoMenuPanel.add(booksLabel);
-        logoMenuPanel.add(Box.createHorizontalStrut(20));
-        logoMenuPanel.add(borrowLabel);
-        logoMenuPanel.add(Box.createHorizontalStrut(20));
-        logoMenuPanel.add(returnLabel);
-        logoMenuPanel.add(Box.createHorizontalStrut(20));
-
-        // Search and profile icon
-        JPanel searchProfilePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        searchProfilePanel.setBackground(Color.WHITE);
-        
-        JTextField searchField = new JTextField(15);
-        searchProfilePanel.add(searchField);
-
-        navPanel.add(logoMenuPanel, BorderLayout.WEST);
-        navPanel.add(searchProfilePanel, BorderLayout.EAST);
-
-        // Greeting panel
-        JPanel greetingPanel = new JPanel();
-        greetingPanel.setBackground(new Color(242, 240, 239));
-        JLabel greetingLabel = new JLabel(getGreeting() + ", " + username + "!");
-        greetingLabel.setFont(new Font("Arial", Font.ITALIC, 20));
-        greetingPanel.add(greetingLabel);
-
-        // Summary panel for Borrowed, Due, and Balance with padding
-        JPanel summaryPanel = new JPanel(new GridLayout(1, 3, 15, 10));
-        summaryPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-        // Add left and right padding to each summary card
-        JPanel borrowedPanel = createSummaryCard("BORROWED", "8");
-        JPanel duePanel = createSummaryCard("DUE", "1");
-        JPanel balancePanel = createSummaryCard("BALANCE", "0.00");
-        
-        // Wrap each panel in a container with left-right padding
-        JPanel borrowedContainer = new JPanel();
-        borrowedContainer.setLayout(new BorderLayout());
-        borrowedContainer.setBorder(BorderFactory.createEmptyBorder(25, 20, 25, 20)); // Left and right padding
-        borrowedContainer.add(borrowedPanel, BorderLayout.CENTER);
-
-        JPanel dueContainer = new JPanel();
-        dueContainer.setLayout(new BorderLayout());
-        dueContainer.setBorder(BorderFactory.createEmptyBorder(25, 20, 25, 20)); // Left and right padding
-        dueContainer.add(duePanel, BorderLayout.CENTER);
-
-        JPanel balanceContainer = new JPanel();
-        balanceContainer.setLayout(new BorderLayout());
-        balanceContainer.setBorder(BorderFactory.createEmptyBorder(25, 20, 25, 20)); // Left and right padding
-        balanceContainer.add(balancePanel, BorderLayout.CENTER);
-
-        summaryPanel.add(borrowedContainer);
-        summaryPanel.add(dueContainer);
-        summaryPanel.add(balanceContainer);
-
-        // Recently Added section
-        JPanel recentlyAddedPanel = new JPanel();
-        recentlyAddedPanel.setLayout(new BorderLayout());
-        recentlyAddedPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
-        JLabel recentlyAddedLabel = new JLabel("Recently Added");
-        recentlyAddedLabel.setFont(new Font("Arial", Font.BOLD, 16));
-
-        JPanel bookPanel = new JPanel(new GridLayout(1, 5, 10, 10));
-        for (int i = 0; i < 5; i++) {
-            JLabel bookIcon = new JLabel("📕", JLabel.CENTER); // Placeholder for book icon
-            bookIcon.setBorder(BorderFactory.createLineBorder(new Color(255, 136, 0)));
-            bookPanel.add(bookIcon);
-        }
-        
-        recentlyAddedPanel.add(recentlyAddedLabel, BorderLayout.NORTH);
-        recentlyAddedPanel.add(bookPanel, BorderLayout.CENTER);
-
-        // Create a central panel to hold both the summary and recently added sections
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS)); // Vertical layout to stack components
-        centerPanel.setAlignmentX(Component.CENTER_ALIGNMENT); // Center align the entire content
-        
-        // Add summary panel and recently added panel to the center panel
-        centerPanel.add(summaryPanel);
-        centerPanel.add(Box.createVerticalStrut(20)); // Add space between the panels
-        centerPanel.add(recentlyAddedPanel);
-
-        // Create a main container for the greeting, centered content, and space
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
-        // Add padding above greeting and centered content to the main panel
-        mainPanel.add(Box.createVerticalStrut(30)); // Padding above greeting
-        mainPanel.add(greetingPanel);
-        mainPanel.add(Box.createVerticalStrut(20)); // Add space between greeting and content
-        mainPanel.add(centerPanel);
-
-        // Add the panels to the main frame
-        add(navPanel, BorderLayout.NORTH);
-        add(mainPanel, BorderLayout.CENTER); // Add mainPanel to center position
-
+        add(mainPanel);
         setVisible(true);
     }
 
-    // Helper method to create summary cards
-    private JPanel createSummaryCard(String title, String value) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-        panel.setBorder(BorderFactory.createLineBorder(new Color(255, 136, 0), 2));
+    private JPanel createTopNavigationPanel() {
+        JPanel navPanel = new JPanel(new BorderLayout(10, 0));
+        navPanel.setBackground(BACKGROUND_COLOR);
 
-        JLabel titleLabel = new JLabel(title, JLabel.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        titleLabel.setOpaque(true);
-        titleLabel.setBackground(new Color(255, 136, 0));
-        titleLabel.setForeground(Color.WHITE);
+        // Left Navigation Buttons
+        JPanel leftNav = createLeftNavigationButtons();
 
-        JLabel valueLabel = new JLabel(value, JLabel.CENTER);
-        valueLabel.setFont(new Font("Arial", Font.BOLD, 32));
-        
-        panel.add(titleLabel, BorderLayout.NORTH);
-        panel.add(valueLabel, BorderLayout.CENTER);
+        // Search and Profile Area
+        JPanel rightNav = createRightNavigationPanel();
 
-        return panel;
+        navPanel.add(leftNav, BorderLayout.WEST);
+        navPanel.add(rightNav, BorderLayout.EAST);
+
+        return navPanel;
     }
 
-    // Helper method to get appropriate greeting based on the time of day
-    private String getGreeting() {
-        LocalTime currentTime = LocalTime.now();
-        int hour = currentTime.getHour();
-        if (hour < 12) {
-            return "Good Morning";
-        } else if (hour < 18) {
-            return "Good Afternoon";
-        } else {
-            return "Good Evening";
+    private JPanel createLeftNavigationButtons() {
+        JPanel leftNav = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
+        leftNav.setBackground(BACKGROUND_COLOR);
+
+        // Add logo to the left
+        ImageIcon logoIcon = new ImageIcon("Logos\\ANP orange copy.png");
+        Image scaledLogoIcon = logoIcon.getImage().getScaledInstance(32, 22, Image.SCALE_SMOOTH);
+        JLabel logoLabel = new JLabel(new ImageIcon(scaledLogoIcon));
+        leftNav.add(logoLabel);
+
+        String[] navButtons = {"Books", "Inventory"};
+
+        for (String buttonText : navButtons) {
+            leftNav.add(createNavButton(buttonText));
+        }
+
+        return leftNav;
+    }
+
+    private JButton createNavButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(TITLE_FONT14);
+        button.setBackground(BACKGROUND_COLOR);
+        button.setForeground(PRIMARY_COLOR); // Set font color to PRIMARY_COLOR
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.addActionListener(e -> openFeatureWindow(text));
+        return button;
+    }
+
+    private JPanel createRightNavigationPanel() {
+        JPanel rightNav = new JPanel();
+        rightNav.setLayout(new BoxLayout(rightNav, BoxLayout.X_AXIS));
+        rightNav.setBackground(BACKGROUND_COLOR);
+    
+        // Time section (closer together and lower)
+        JPanel timePanel = new JPanel();
+        timePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5)); // Added vertical padding
+        timePanel.setBackground(BACKGROUND_COLOR);
+        
+        ImageIcon timeIcon = new ImageIcon("Logos\\clockIcon.png"); 
+        Image scaledTimeIcon = timeIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        JLabel timeIconLabel = new JLabel(new ImageIcon(scaledTimeIcon));
+        timeIconLabel.setVerticalAlignment(JLabel.BOTTOM); // Align to bottom
+        
+        JLabel timeLabel = new JLabel();
+        timeLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        timeLabel.setForeground(PRIMARY_COLOR);
+        timeLabel.setVerticalAlignment(JLabel.BOTTOM); // Align to bottom
+        updateTime(timeLabel);
+        
+        timePanel.add(timeIconLabel);
+        timePanel.add(timeLabel);
+    
+        // Greeting
+        JLabel greetingLabel = new JLabel();
+        greetingLabel.setFont(new Font("Segoe UI", Font.ITALIC, 16));
+        greetingLabel.setForeground(PRIMARY_COLOR);
+        updateGreeting(greetingLabel);
+    
+        // Timer
+        Timer timer = new Timer(1000, e -> {
+            updateTime(timeLabel);
+            updateGreeting(greetingLabel);
+        });
+        timer.start();
+    
+        // Profile button
+        JLabel profileButton = createProfileButton();
+    
+        // Add components with rigid areas for spacing
+        rightNav.add(timePanel);
+        rightNav.add(Box.createRigidArea(new Dimension(30, 0))); // Spacing between time and greeting
+        rightNav.add(greetingLabel);
+        rightNav.add(Box.createRigidArea(new Dimension(30, 0))); // Spacing between greeting and profile
+        rightNav.add(profileButton);
+    
+        return rightNav;
+    }
+
+    private JLabel createProfileButton() {
+        ImageIcon profileIcon = new ImageIcon("Logos\\profileIcon.png");
+        Image scaledProfileIcon = profileIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        JLabel profileLabel = new JLabel(new ImageIcon(scaledProfileIcon));
+        profileLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        
+        // Create custom dropdown menu
+        JPopupMenu dropdownMenu = new JPopupMenu() {
+            @Override
+            public void show(Component invoker, int x, int y) {
+                // Calculate position to show from the left side of the profile icon
+                super.show(invoker, -getPreferredSize().width + invoker.getWidth(), invoker.getHeight());
+            }
+        };
+        dropdownMenu.setBorder(new LineBorder(PRIMARY_COLOR, 1, true));
+        
+        // Custom menu item with orange highlight
+        class CustomMenuItem extends JMenuItem {
+            CustomMenuItem(String text) {
+                super(text);
+                setFont(PLAIN_FONT16);
+                setPreferredSize(new Dimension(250, 40));
+                setBorderPainted(false); // Ensure border is disabled for a clean look
+                
+                addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        setBackground(PRIMARY_COLOR);
+                        setOpaque(true);
+                        repaint();
+                    }
+                    
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        setBackground(null);
+                        setOpaque(false);
+                        repaint();
+                    }
+                });
+            }
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g); // Ensure the default painting happens first
+                if (isOpaque()) {
+                    g.setColor(getBackground());
+                    g.fillRect(0, 0, getWidth(), getHeight()); // Fill the background with the custom color
+                }
+            }
+        }
+        
+        // Account Menu Item
+        CustomMenuItem accountMenuItem = new CustomMenuItem("Account");
+        accountMenuItem.addActionListener(e -> showAccountDetails());
+        dropdownMenu.add(accountMenuItem);
+        
+        // About Menu Item
+        CustomMenuItem aboutMenuItem = new CustomMenuItem("About");
+        aboutMenuItem.addActionListener(e -> showAboutDialog());
+        dropdownMenu.add(aboutMenuItem);
+        
+        // Developers Menu Item
+        CustomMenuItem developersMenuItem = new CustomMenuItem("Developers");
+        developersMenuItem.addActionListener(e -> showDeveloperDialog());
+        dropdownMenu.add(developersMenuItem);
+        
+        // Logout Menu Item
+        CustomMenuItem logoutMenuItem = new CustomMenuItem("Log Out");
+        logoutMenuItem.addActionListener(e -> confirmLogout());
+        dropdownMenu.add(logoutMenuItem);
+        
+        profileLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                dropdownMenu.show(profileLabel, e.getX(), e.getY());
+            }
+        });
+        
+        return profileLabel;
+    }
+
+    private JPanel createDashboardContentPanel() {
+        JPanel contentPanel = new JPanel(new GridLayout(2, 3, 15, 15));
+        contentPanel.setBackground(BACKGROUND_COLOR);
+    
+        // Top Row: Statistics
+        // very important on third row; determines the name of the .java
+        String[][] statsData = {
+            {"Books", "Logos\\bookIcon.png", "BookList"},
+            {"Circulation","Logos\\circulationIcon.png", "CheckedOutBooks"},
+            {"Authors", "Logos\\authorIcon.png", "UserAuthorList"},
+        };
+    
+        for (String[] stat : statsData) {
+            contentPanel.add(createStatisticsCard(stat[0], stat[1], stat.length > 2 ? stat[2] : null));
+        }
+    
+        // Bottom Row: Action Buttons
+        String[][] actionData = {
+            {" ", " ", " "},
+            {" ", " ", " "},
+            {" ", " ", " "},
+        };
+    
+        for (String[] action : actionData) {
+            contentPanel.add(createActionCard(action[0], action[1], action[2]));
+        }
+    
+        return contentPanel;
+    }
+    
+    private JPanel createStatisticsCard(String title, String iconPath, String windowClass) {
+        return createInteractivePanel(title, iconPath, windowClass);
+    }
+    
+    private JPanel createActionCard(String title, String iconPath, String windowClass) {
+        return createInteractivePanel(title, iconPath, windowClass);
+    }
+    
+    private JPanel createInteractivePanel(String title, String iconPath, String windowClass) {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(PRIMARY_COLOR, 0, true),
+            BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        ));
+        panel.setBackground(BACKGROUND_COLOR);
+    
+        // Add image if the path is provided
+        if (iconPath != null && !iconPath.isEmpty()) {
+            JLabel iconLabel = new JLabel();
+            iconLabel.setHorizontalAlignment(JLabel.CENTER);
+    
+            // Load the image and scale it
+            ImageIcon icon = new ImageIcon(iconPath);
+            Image scaledIcon = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+            iconLabel.setIcon(new ImageIcon(scaledIcon));
+    
+            panel.add(iconLabel, BorderLayout.CENTER);
+        }
+    
+        // Add title label
+        JLabel titleLabel = new JLabel(title);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+        panel.add(titleLabel, BorderLayout.SOUTH);
+    
+        // Mouse listener to open feature window on click
+        panel.addMouseListener(new HoverEffectListener(panel));
+        panel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                openFeatureWindow(windowClass);
+            }
+        });
+    
+        return panel;
+    }
+    
+    private void openFeatureWindow(String feature) {
+        try {
+            String className = feature;
+            if (!feature.contains(".")) {
+                className = "GUI." + feature;  
+            }
+            
+            // Load the class dynamically
+            Class<?> clazz = Class.forName(className);  // Fully qualified name (e.g., "GUI.BookList")
+            
+            // Instantiate the class (assuming a no-argument constructor)
+            Object featureInstance = clazz.getDeclaredConstructor().newInstance();
+        
+            JFrame featureWindow = (JFrame) featureInstance;
+            featureWindow.setSize(1200, 700);
+            featureWindow.setLocationRelativeTo(this);
+            featureWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            featureWindow.setVisible(true);
+
+        } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
+            JOptionPane.showMessageDialog(this, "Feature not implemented or class not found: " + feature, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    // Method to show account details
+    private void showAccountDetails() {
+        try {
+            Class<?> accountDetailsClass = Class.forName("GUI.AccountDetails");
+            JFrame accountDetailsFrame = (JFrame) accountDetailsClass.getDeclaredConstructor(String.class).newInstance(userName);
+            accountDetailsFrame.setSize(500, 600);
+            accountDetailsFrame.setLocationRelativeTo(this);
+            accountDetailsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            accountDetailsFrame.setVisible(true);
+        } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
+            JOptionPane.showMessageDialog(this, "Error opening account details: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
+  // Method to show About dialog
+private void showAboutDialog() {
+    // Create an instance of AboutPage
+    AboutPage aboutPage = new AboutPage();
+
+    // Set the AboutPage properties
+    aboutPage.setSize(400, 300); 
+    aboutPage.setLocationRelativeTo(this); 
+    aboutPage.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+    aboutPage.setVisible(true); 
+}
+
+
+private void showDeveloperDialog() {
+    // Create an instance of DevelopersList
+    DevelopersList developersList = new DevelopersList();
+
+    // Set properties for the DevelopersList JFrame
+    developersList.setVisible(true); // Make the JFrame visible
+}
+
+    // Method to confirm logout
+    private void confirmLogout() {
+        int response = JOptionPane.showConfirmDialog(
+            this, 
+            "Are you sure you want to log out?", 
+            "Confirm Logout", 
+            JOptionPane.YES_NO_OPTION, 
+            JOptionPane.QUESTION_MESSAGE
+        );
+        
+        if (response == JOptionPane.YES_OPTION) {
+            // Close current user dashboard
+            this.dispose();
+            
+            // Open login screen (ANPLMSGUI)
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    Class<?> loginClass = Class.forName("GUI.ANPLMSGUI");
+                    JFrame loginFrame = (JFrame) loginClass.getDeclaredConstructor().newInstance();
+                    loginFrame.setVisible(true);
+                } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
+                    JOptionPane.showMessageDialog(
+                        null, 
+                        "Error opening login screen: " + e.getMessage(), 
+                        "Logout Error", 
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            });
+        }
+    }
+
+    private void updateTime(JLabel timeLabel) {
+        timeLabel.setText(java.time.LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")));
+    }
+    
+    private static class HoverEffectListener extends MouseAdapter {
+        private final JPanel panel;
+
+        public HoverEffectListener(JPanel panel) {
+            this.panel = panel;
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            panel.setBackground(new Color(255, 245, 238));
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            panel.setBackground(BACKGROUND_COLOR);
+        }
+    }
+    
+    //greeting message based on time of day
+    private void updateGreeting(JLabel greetingLabel) {
+        LocalTime now = LocalTime.now();
+        String greeting;
+
+        if (now.isBefore(LocalTime.NOON)) {
+            greeting = "Good Morning, " + userName + "!";
+        } else if (now.isBefore(LocalTime.of(18, 0))) {
+            greeting = "Good Afternoon, " + userName + "!";
+
+        } else {
+            greeting = "Good Evening, " + userName + "!";
+        }
+
+        greetingLabel.setText(greeting);
+    }
+
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new User_DashboardGUI("John Doe")); // Replace "John Doe" with the actual username
+        SwingUtilities.invokeLater(() -> 
+            new User_DashboardGUI("User")
+        );
     }
 }

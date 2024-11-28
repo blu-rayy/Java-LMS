@@ -81,22 +81,22 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         gbc.gridy = 2;
         gbc.gridwidth = 2;
         JLabel usernameLabel = new JLabel("Username");
-        usernameLabel.setFont(TITLE_FONT18); // Larger font size
+        usernameLabel.setFont(TITLE_FONT18); 
         rightPanel.add(usernameLabel, gbc);
 
-        usernameField = new JTextField(20); // Increased width
-        usernameField.setFont(TITLE_FONT18); // Larger font size
+        usernameField = new JTextField(20);
+        usernameField.setFont(TITLE_FONT18); 
         gbc.gridy = 3;
         rightPanel.add(usernameField, gbc);
 
         // Password field
         JLabel passwordLabel = new JLabel("Password");
-        passwordLabel.setFont(TITLE_FONT18); // Larger font size
+        passwordLabel.setFont(TITLE_FONT18); 
         gbc.gridy = 4;
         rightPanel.add(passwordLabel, gbc);
 
-        passwordField = new JPasswordField(20); // Increased width
-        passwordField.setFont(TITLE_FONT18); // Larger font size
+        passwordField = new JPasswordField(20);
+        passwordField.setFont(TITLE_FONT18); 
         gbc.gridy = 5;
         rightPanel.add(passwordField, gbc);
 
@@ -107,7 +107,7 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         loginButton.setFont(new Font("Arimo", Font.BOLD, 20)); // Larger font size for the button
         gbc.gridy = 6;
         gbc.gridwidth = 2;
-        gbc.insets = new Insets(25, 0, 0, 0); // Add top padding between the password field and the button
+        gbc.insets = new Insets(25, 0, 0, 0);
 
         rightPanel.add(loginButton, gbc);
 
