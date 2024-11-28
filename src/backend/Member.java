@@ -1,25 +1,29 @@
 package backend;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Member extends Person {
     private List<Book> borrowedBooks;
 
-    public Member(String name, String memberID) {
-        super(name, memberID);
+    public Member(String memberID, String name, String username, String email, String phoneNumber, String registrationDate, String password, String userType) {
+        super(memberID, name, username, email, phoneNumber, registrationDate, password, userType);
         this.borrowedBooks = new ArrayList<>();
     }
 
-    // Method to get the member ID
+    public Member(){
+        super();
+        this.borrowedBooks = new ArrayList<>();
+    }
+
     public String getMemberID() {
-        return super.getID();
+        return super.getID(); 
     }
     
     public void setMemberID(String memberID) {
-        super.setId(memberID);
+        super.setID(memberID);
     }
 
-    // Method to get the list of borrowed books
     public List<Book> getBorrowedBooks() {
         return borrowedBooks;
     }
