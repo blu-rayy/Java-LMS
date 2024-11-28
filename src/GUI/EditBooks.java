@@ -1,7 +1,14 @@
 package GUI;
 
+import backend.Book;
+import backend.SQLiteDatabase;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -56,18 +63,24 @@ public class EditBooks extends JFrame implements fontComponent {
 
         // Define column names
         String[] columnNames = {
-            "ISBN", "Title", "Author", "Publication Date", 
-            "Available Copies"
+            "ISBN", "Title", "Author", "Publication Date", "Available Copies"
         };
 
-        // Sample data 
-        Object[][] data = {
-            {"9780743273565", "The Great Gatsby", "F. Scott Fitzgerald", "1925-04-10", 5},
-            {"9780061120084", "To Kill a Mockingbird", "Harper Lee", "1960-07-11", 3},
-            {"9780451524935", "1984", "George Orwell", "1949-06-08", 4},
-            {"9781503290563", "Pride and Prejudice", "Jane Austen", "1813-01-28", 2},
-            {"9781503280786", "Moby Dick", "Herman Melville", "1851-10-18", 0}
-        };
+        // Fetch books from the database
+        ArrayList<Book> booksFromDB = fetchBooksFromDatabase();
+
+        // Convert Book objects to table data
+        Object[][] data = new Object[booksFromDB.size()][5];
+        for (int i = 0; i < booksFromDB.size(); i++) {
+            Book book = booksFromDB.get(i);
+            data[i] = new Object[]{
+                book.getISBN(), 
+                book.getTitle(), 
+                book.getAuthor(), 
+                book.getPublicationDate(), 
+                book.getAvailableCopies()
+            };
+        }
 
         tableModel = new DefaultTableModel(data, columnNames) {
             @Override
@@ -77,9 +90,9 @@ public class EditBooks extends JFrame implements fontComponent {
         };
 
         bookTable = new JTable(tableModel);
-        bookTable.setRowHeight(30);
+        bookTable.setFont(PLAIN_FONT);
+        bookTable.setRowHeight(35);
         bookTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        bookTable.getTableHeader().setReorderingAllowed(false);
 
         // Customize table header
         JTableHeader header = bookTable.getTableHeader();
@@ -322,6 +335,31 @@ public class EditBooks extends JFrame implements fontComponent {
             "Refresh", 
             JOptionPane.INFORMATION_MESSAGE
         );
+    }
+
+    private ArrayList<Book> fetchBooksFromDatabase() {
+        ArrayList<Book> books = new ArrayList<>();
+        String query = "SELECT ISBN, title, author, publicationDate, availableCopies FROM books";
+
+        try (Connection connection = SQLiteDatabase.connect();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+
+            while (resultSet.next()) {
+                String isbn = resultSet.getString("ISBN");
+                String title = resultSet.getString("title");
+                String author = resultSet.getString("author");
+                String publicationDate = resultSet.getString("publicationDate");
+                int availableCopies = resultSet.getInt("availableCopies");
+
+                books.add(new Book(title, author, isbn, publicationDate, availableCopies));
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error fetching books from database: " + e.getMessage());
+        }
+
+        return books;
     }
 
     public static void main(String[] args) {
