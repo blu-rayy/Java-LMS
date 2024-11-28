@@ -136,8 +136,9 @@ public class UserAuthorList extends JFrame implements fontComponent {
         tableModel.setRowCount(0);
         Map<String, Integer> authorCountMap = fetchAuthorsFromDatabase();
 
+        int id = 1;
         for (Map.Entry<String, Integer> entry : authorCountMap.entrySet()) {
-            tableModel.addRow(new Object[]{entry.getKey(), entry.getValue()});
+            tableModel.addRow(new Object[]{"A" + id++, entry.getKey(), entry.getValue()});
         }
     }
 
