@@ -151,35 +151,48 @@ private JLabel createProfileButton() {
     
     // Custom menu item with orange highlight
     class CustomMenuItem extends JMenuItem {
+        private boolean isHovered = false; // Track hover state
+    
         CustomMenuItem(String text) {
             super(text);
             setFont(PLAIN_FONT16);
             setPreferredSize(new Dimension(250, 40));
             setBorderPainted(false); // Ensure border is disabled for a clean look
             
+            setForeground(Color.BLACK); // Set initial text color to black
+    
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseEntered(MouseEvent e) {
-                    setBackground(PRIMARY_COLOR);
+                    isHovered = true;
+                    setBackground(PRIMARY_COLOR); // Set background color for hover
                     setOpaque(true);
-                    repaint();
+                    setForeground(Color.WHITE); // Change text color to white
+                    repaint(); // Repaint to apply hover effect
                 }
                 
                 @Override
                 public void mouseExited(MouseEvent e) {
-                    setBackground(null);
+                    isHovered = false;
+                    setBackground(null); // Reset background color when not hovered
                     setOpaque(false);
-                    repaint();
+                    setForeground(Color.BLACK); // Reset text color to black
+                    repaint(); // Repaint to revert hover effect
                 }
             });
         }
+    
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g); // Ensure the default painting happens first
+            
+            // Paint the custom background only if opaque
             if (isOpaque()) {
                 g.setColor(getBackground());
                 g.fillRect(0, 0, getWidth(), getHeight()); // Fill the background with the custom color
             }
+            g.setColor(getForeground()); //pag eto lang, gumagana yung color pero walang text
+            super.paintComponent(g); //pag eto lang, walang color yung hover pero may text
         }
     }
     
