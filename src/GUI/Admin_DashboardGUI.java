@@ -3,7 +3,6 @@ package GUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalTime;
-
 import javax.swing.*;
 
 public class Admin_DashboardGUI extends JFrame implements fontComponent {

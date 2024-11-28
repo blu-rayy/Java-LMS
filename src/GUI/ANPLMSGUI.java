@@ -195,7 +195,7 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         gbc.gridx = 1;
         signUpPanel.add(signUpPasswordField, gbc);
 
-        JLabel passwordErrorLabel = new JLabel("Password must be 8+ chars, include special char and number");
+        JLabel passwordErrorLabel = new JLabel("Password must have 8 alphanumeric letters");
         passwordErrorLabel.setForeground(Color.RED);
         passwordErrorLabel.setVisible(false);
         gbc.gridy = 7;
