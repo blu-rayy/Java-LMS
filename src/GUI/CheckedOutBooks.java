@@ -82,7 +82,15 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
         tablePanel.setBackground(BACKGROUND_COLOR);
 
         String[] columnNames = {"Book ID", "Title", "Author", "Borrower", "Borrow Date", "Due Date", "Status"};
-        tableModel = new DefaultTableModel(columnNames, 0);
+
+        tableModel = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; //al cells are non-editble
+            }
+        };
+
+        //tableModel = new DefaultTableModel(columnNames, 0);
         borrowedBooksTable = new JTable(tableModel);
         rowSorter = new TableRowSorter<>(tableModel);
         borrowedBooksTable.setRowSorter(rowSorter);
