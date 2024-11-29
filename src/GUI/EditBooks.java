@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import java.util.List;
 
 public class EditBooks extends JFrame implements fontComponent {
     private JTable bookTable;
@@ -141,74 +142,76 @@ public class EditBooks extends JFrame implements fontComponent {
         JDialog addBookDialog = new JDialog(this, "Add New Book", true);
         addBookDialog.setSize(350, 280);
         addBookDialog.setLocationRelativeTo(this);
-
+    
         JPanel dialogPanel = new JPanel(new GridLayout(0, 2, 10, 10));
         dialogPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-
+    
         // Input fields
         dialogPanel.add(new JLabel("ISBN:"));
         JTextField isbnField = new JTextField();
         dialogPanel.add(isbnField);
-
+    
         dialogPanel.add(new JLabel("Title:"));
         JTextField titleField = new JTextField();
         dialogPanel.add(titleField);
-
+    
         dialogPanel.add(new JLabel("Author:"));
         JTextField authorField = new JTextField();
         dialogPanel.add(authorField);
-
+    
         dialogPanel.add(new JLabel("Publication Date:"));
         JTextField publicationDateField = new JTextField();
         dialogPanel.add(publicationDateField);
-
+    
         dialogPanel.add(new JLabel("Available Copies:"));
         JSpinner copiesSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 1000, 1));
         dialogPanel.add(copiesSpinner);
-
+    
         // Buttons
         JButton saveButton = new JButton("Save");
         saveButton.addActionListener(e -> {
             // Validate inputs
             if (validateBookInput(isbnField.getText(), titleField.getText(), authorField.getText())) {
-                Object[] newBook = {
-                    "B" + (tableModel.getRowCount() + 1),
+                // Insert the new book into the database
+                Book newBook = new Book(
+                    titleField.getText(),               // Correctly map Title
+                    authorField.getText(),              // Correctly map Author
+                    isbnField.getText(),                // Correctly map ISBN
+                    publicationDateField.getText(),     // Correctly map Publication Date
+                    (int) copiesSpinner.getValue()      // Correctly map Available Copies
+                );
+    
+                LibraryDatabase.insertBook(newBook);
+    
+                // Update the table model to reflect the new book
+                Object[] row = {
                     isbnField.getText(),
                     titleField.getText(),
                     authorField.getText(),
                     publicationDateField.getText(),
-                    copiesSpinner.getValue(),
+                    copiesSpinner.getValue()
                 };
-                tableModel.addRow(newBook);
+                tableModel.addRow(row);
+    
                 addBookDialog.dispose();
             }
         });
-
-        // Insert the new book into the database
-        Book newBook = new Book(
-            isbnField.getText(),
-            titleField.getText(),
-            authorField.getText(),
-            publicationDateField.getText(),
-            (int) copiesSpinner.getValue()
-        );
-        LibraryDatabase.insertBook(newBook);
-
+    
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(e -> addBookDialog.dispose());
-
+    
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(saveButton);
         buttonPanel.add(cancelButton);
-
+    
         // Add components to dialog
         addBookDialog.setLayout(new BorderLayout());
         addBookDialog.add(dialogPanel, BorderLayout.CENTER);
         addBookDialog.add(buttonPanel, BorderLayout.SOUTH);
-
+    
         addBookDialog.setVisible(true);
     }
-
+    
     private boolean validateBookInput(String isbn, String title, String author) {
         if (isbn.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, 
@@ -250,71 +253,91 @@ public class EditBooks extends JFrame implements fontComponent {
             );
             return;
         }
-
+    
         // Get current book details
         Object[] currentBookDetails = new Object[tableModel.getColumnCount()];
         for (int i = 0; i < tableModel.getColumnCount(); i++) {
             currentBookDetails[i] = tableModel.getValueAt(selectedRow, i);
         }
-
+    
         JDialog editBookDialog = new JDialog(this, "Edit Book", true);
         editBookDialog.setSize(350, 280);
         editBookDialog.setLocationRelativeTo(this);
-
+    
         JPanel dialogPanel = new JPanel(new GridLayout(0, 2, 10, 10));
         dialogPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-
+    
         dialogPanel.add(new JLabel("ISBN:"));
         JTextField isbnField = new JTextField(currentBookDetails[0].toString());
         dialogPanel.add(isbnField);
-
+    
         dialogPanel.add(new JLabel("Title:"));
         JTextField titleField = new JTextField(currentBookDetails[1].toString());
         dialogPanel.add(titleField);
-
+    
         dialogPanel.add(new JLabel("Author:"));
         JTextField authorField = new JTextField(currentBookDetails[2].toString());
         dialogPanel.add(authorField);
-
+    
         dialogPanel.add(new JLabel("Publication Date:"));
         JTextField publicationDateField = new JTextField(currentBookDetails[3].toString());
         dialogPanel.add(publicationDateField);
-
+    
         dialogPanel.add(new JLabel("Available Copies:"));
         JSpinner copiesSpinner = new JSpinner(new SpinnerNumberModel(
             Integer.parseInt(currentBookDetails[4].toString()), 
             0, 1000, 1
         ));
         dialogPanel.add(copiesSpinner);
-
+    
         // Buttons
         JButton saveButton = new JButton("Save Changes");
         saveButton.addActionListener(e -> {
+            // Log values before updating
+            System.out.println("ISBN to update: " + isbnField.getText());
+            System.out.println("Title to update: " + titleField.getText());
+            System.out.println("Author to update: " + authorField.getText());
+            System.out.println("Publication Date to update: " + publicationDateField.getText());
+            System.out.println("Available Copies to update: " + copiesSpinner.getValue());
+    
             // Validate inputs
             if (validateBookInput(isbnField.getText(), titleField.getText(), authorField.getText())) {
-                // Update the selected row
-                tableModel.setValueAt(isbnField.getText(), selectedRow, 1);
-                tableModel.setValueAt(titleField.getText(), selectedRow, 2);
-                tableModel.setValueAt(authorField.getText(), selectedRow, 3);
-                tableModel.setValueAt(publicationDateField.getText(), selectedRow, 4);
-                tableModel.setValueAt(copiesSpinner.getValue(), selectedRow, 5);
+                // Create a Book object with updated values
+                Book updatedBook = new Book(
+                    titleField.getText(),              // title
+                    authorField.getText(),             // author
+                    isbnField.getText(),               // ISBN
+                    publicationDateField.getText(),    // publicationDate
+                    (int) copiesSpinner.getValue()     // availableCopies
+                );
                 
+                // Log the details of the book being updated
+                System.out.println("Updating book with ISBN: '" + updatedBook.getISBN() + "'");
+                System.out.println("Title to update: " + updatedBook.getTitle());
+                System.out.println("Author to update: " + updatedBook.getAuthor());
+                System.out.println("Publication Date to update: " + updatedBook.getPublicationDate());
+                System.out.println("Available Copies to update: " + updatedBook.getAvailableCopies());
+        
+                // Call the method to update the book in the database
+                LibraryDatabase.updateBook(updatedBook);
+        
+                // Close the edit dialog
                 editBookDialog.dispose();
             }
         });
-
+    
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(e -> editBookDialog.dispose());
-
+    
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(saveButton);
         buttonPanel.add(cancelButton);
-
+    
         // Add components to dialog
         editBookDialog.setLayout(new BorderLayout());
         editBookDialog.add(dialogPanel, BorderLayout.CENTER);
         editBookDialog.add(buttonPanel, BorderLayout.SOUTH);
-
+    
         editBookDialog.setVisible(true);
     }
 
@@ -341,14 +364,39 @@ public class EditBooks extends JFrame implements fontComponent {
     }
 
     private void refreshBookList() {
-        // In a real application, this would reload data from the database
-        JOptionPane.showMessageDialog(this, 
-            "Book list refreshed", 
-            "Refresh", 
-            JOptionPane.INFORMATION_MESSAGE
-        );
+        // Clear the current table data
+        tableModel.setRowCount(0);
+        
+        // Get the updated list of books from the database
+        try {
+            List<Book> books = LibraryDatabase.getAllBooks(); // Assuming you have a method to fetch all books
+            
+            // Add books to the table model
+            for (Book book : books) {
+                Object[] rowData = new Object[5];
+                rowData[0] = book.getISBN();
+                rowData[1] = book.getTitle();
+                rowData[2] = book.getAuthor();
+                rowData[3] = book.getPublicationDate();
+                rowData[4] = book.getAvailableCopies();
+                tableModel.addRow(rowData);
+            }
+            
+            // Show confirmation message
+            JOptionPane.showMessageDialog(this, 
+                "Book list refreshed successfully", 
+                "Refresh", 
+                JOptionPane.INFORMATION_MESSAGE
+            );
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, 
+                "Error refreshing book list: " + e.getMessage(), 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
-
+    
     private ArrayList<Book> fetchBooksFromDatabase() {
         ArrayList<Book> books = new ArrayList<>();
         String query = "SELECT ISBN, title, author, publicationDate, availableCopies FROM books";
