@@ -156,8 +156,6 @@ private JLabel createProfileButton() {
     
     // Custom menu item with orange highlight
     class CustomMenuItem extends JMenuItem {
-        private boolean isHovered = false; // Track hover state
-    
         CustomMenuItem(String text) {
             super(text);
             setFont(PLAIN_FONT16);
@@ -169,7 +167,6 @@ private JLabel createProfileButton() {
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseEntered(MouseEvent e) {
-                    isHovered = true;
                     setBackground(PRIMARY_COLOR); // Set background color for hover
                     setOpaque(true);
                     setForeground(Color.WHITE); // Change text color to white
@@ -178,7 +175,6 @@ private JLabel createProfileButton() {
                 
                 @Override
                 public void mouseExited(MouseEvent e) {
-                    isHovered = false;
                     setBackground(null); // Reset background color when not hovered
                     setOpaque(false);
                     setForeground(Color.BLACK); // Reset text color to black
@@ -328,9 +324,6 @@ private JLabel createProfileButton() {
                 featureWindow.setLocationRelativeTo(this);
                 featureWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 featureWindow.setVisible(true);
-
-                // Handle case where class doesn't extend JFrame
-                System.out.println("Error: Class does not extend JFrame.");
             
         } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
             JOptionPane.showMessageDialog(this, "Feature not implemented or class not found: " + feature, "Error", JOptionPane.ERROR_MESSAGE);
