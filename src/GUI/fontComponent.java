@@ -8,6 +8,7 @@ public interface fontComponent {
     Color PRIMARY_COLOR = new Color(255, 136, 0);
     Color BACKGROUND_COLOR = Color.WHITE;
     Font TITLE_FONT = new Font("Segoe UI", Font.BOLD, 24);
+    Font TITLE_FONT12 = new Font("Segoe UI", Font.BOLD, 12);
     Font TITLE_FONT14 = new Font("Segoe UI", Font.BOLD, 14);
     Font TITLE_FONT18 = new Font("Segoe UI", Font.BOLD, 18);
 
