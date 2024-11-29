@@ -377,7 +377,6 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
     private boolean isValidPassword(String password) {
         // Check length, special character, and number
         return password.length() >= 8 && 
-               Pattern.compile("[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]").matcher(password).find() &&
                Pattern.compile("\\d").matcher(password).find();
     }
 
