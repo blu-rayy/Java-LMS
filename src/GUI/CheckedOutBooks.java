@@ -190,14 +190,14 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
 
         for (int i = 0; i < tableModel.getRowCount(); i++) {
             String status = (String) tableModel.getValueAt(i, 3);
-            if ("Active".equalsIgnoreCase(status) || "Overdue".equalsIgnoreCase(status)) {
+            if ("Borrow".equalsIgnoreCase(status) || "Overdue".equalsIgnoreCase(status)) {
                 checkedOutCount++;
             } else if ("Returned".equalsIgnoreCase(status)) {
                 availableCount++;
             }
         }
 
-        counterLabel.setText("Checked Out: " + checkedOutCount + " | Available: " + availableCount);
+        counterLabel.setText("Borrowed: " + checkedOutCount + " | Available: " + availableCount);
     }
 
     private JButton createStyledButton(String text, String iconPath) {
