@@ -5,12 +5,22 @@ import java.util.List;
 public class Author {
     private String name;
     private String authorID;
+    private int bookCount;
     private final List<Book> books;
 
-    public Author(String name, String authorID) {
-        this.name = name;
+    public Author(String authorID, String name, int bookCount) {
         this.authorID = authorID;
+        this.name = name;
+        this.bookCount = bookCount;
         this.books = new ArrayList<>();
+    }
+
+    public String getAuthorID() {
+        return authorID;
+    }
+
+    public void setAuthorID(String authorID) {
+        this.authorID = authorID;
     }
 
     public String getName() {
@@ -21,12 +31,8 @@ public class Author {
         this.name = name;
     }
 
-    public String getAuthorID() {
-        return authorID;
-    }
-
-    public void setAuthorID(String authorID) {
-        this.authorID = authorID;
+    public int getBookCount() {
+        return bookCount;
     }
 
     public List<Book> getBooks() {

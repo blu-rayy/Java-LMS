@@ -23,7 +23,7 @@ public class Admin_DashboardGUI extends JFrame implements fontComponent {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        //icon for taskbar and yung sa top left corner
+        // Icon for taskbar and top left corner
         ImageIcon taskbarIcon = new ImageIcon("Logos\\ANP orange copy.png");
         Image resizedTaskbarIcon = taskbarIcon.getImage().getScaledInstance(64, 43, Image.SCALE_SMOOTH);
         setIconImage(resizedTaskbarIcon);
@@ -53,9 +53,9 @@ public class Admin_DashboardGUI extends JFrame implements fontComponent {
         navPanel.add(rightNav, BorderLayout.EAST);
 
         return navPanel;
-        }
+    }
 
-        private JPanel createLeftNavigationButtons() {
+    private JPanel createLeftNavigationButtons() {
         JPanel leftNav = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
         leftNav.setBackground(BACKGROUND_COLOR);
 
@@ -75,7 +75,7 @@ public class Admin_DashboardGUI extends JFrame implements fontComponent {
         }
 
         return leftNav;
-        }
+    }
 
         private JButton createNavButton(String text, String className) {
         JButton button = new JButton(text);
@@ -86,57 +86,57 @@ public class Admin_DashboardGUI extends JFrame implements fontComponent {
         button.setFocusPainted(false);
         button.addActionListener(e -> openFeatureWindow(className));
         return button;
-        }
+    }
 
-        private JPanel createRightNavigationPanel() {
-            JPanel rightNav = new JPanel();
-            rightNav.setLayout(new BoxLayout(rightNav, BoxLayout.X_AXIS));
-            rightNav.setBackground(BACKGROUND_COLOR);
-        
-            // Time section (closer together and lower)
-            JPanel timePanel = new JPanel();
-            timePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5)); // Added vertical padding
-            timePanel.setBackground(BACKGROUND_COLOR);
-            
-            ImageIcon timeIcon = new ImageIcon("Logos\\clockIcon.png"); 
-            Image scaledTimeIcon = timeIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-            JLabel timeIconLabel = new JLabel(new ImageIcon(scaledTimeIcon));
-            timeIconLabel.setVerticalAlignment(JLabel.BOTTOM); // Align to bottom
-            
-            JLabel timeLabel = new JLabel();
-            timeLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
-            timeLabel.setForeground(PRIMARY_COLOR);
-            timeLabel.setVerticalAlignment(JLabel.BOTTOM); // Align to bottom
+    private JPanel createRightNavigationPanel() {
+        JPanel rightNav = new JPanel();
+        rightNav.setLayout(new BoxLayout(rightNav, BoxLayout.X_AXIS));
+        rightNav.setBackground(BACKGROUND_COLOR);
+
+        // Time section (closer together and lower)
+        JPanel timePanel = new JPanel();
+        timePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5)); // Added vertical padding
+        timePanel.setBackground(BACKGROUND_COLOR);
+
+        ImageIcon timeIcon = new ImageIcon("Logos\\clockIcon.png");
+        Image scaledTimeIcon = timeIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        JLabel timeIconLabel = new JLabel(new ImageIcon(scaledTimeIcon));
+        timeIconLabel.setVerticalAlignment(JLabel.BOTTOM); // Align to bottom
+
+        JLabel timeLabel = new JLabel();
+        timeLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        timeLabel.setForeground(PRIMARY_COLOR);
+        timeLabel.setVerticalAlignment(JLabel.BOTTOM); // Align to bottom
+        updateTime(timeLabel);
+
+        timePanel.add(timeIconLabel);
+        timePanel.add(timeLabel);
+
+        // Greeting
+        JLabel greetingLabel = new JLabel();
+        greetingLabel.setFont(new Font("Segoe UI", Font.ITALIC, 16));
+        greetingLabel.setForeground(PRIMARY_COLOR);
+        updateGreeting(greetingLabel);
+
+        // Timer
+        Timer timer = new Timer(1000, e -> {
             updateTime(timeLabel);
-            
-            timePanel.add(timeIconLabel);
-            timePanel.add(timeLabel);
-        
-            // Greeting
-            JLabel greetingLabel = new JLabel();
-            greetingLabel.setFont(new Font("Segoe UI", Font.ITALIC, 16));
-            greetingLabel.setForeground(PRIMARY_COLOR);
             updateGreeting(greetingLabel);
-        
-            // Timer
-            Timer timer = new Timer(1000, e -> {
-                updateTime(timeLabel);
-                updateGreeting(greetingLabel);
-            });
-            timer.start();
-        
-            // Profile button
-            JLabel profileButton = createProfileButton();
-        
-            // Add components with rigid areas for spacing
-            rightNav.add(timePanel);
-            rightNav.add(Box.createRigidArea(new Dimension(30, 0))); // Spacing between time and greeting
-            rightNav.add(greetingLabel);
-            rightNav.add(Box.createRigidArea(new Dimension(30, 0))); // Spacing between greeting and profile
-            rightNav.add(profileButton);
-        
-            return rightNav;
-        }
+        });
+        timer.start();
+
+        // Profile button
+        JLabel profileButton = createProfileButton();
+
+        // Add components with rigid areas for spacing
+        rightNav.add(timePanel);
+        rightNav.add(Box.createRigidArea(new Dimension(30, 0))); // Spacing between time and greeting
+        rightNav.add(greetingLabel);
+        rightNav.add(Box.createRigidArea(new Dimension(30, 0))); // Spacing between greeting and profile
+        rightNav.add(profileButton);
+
+        return rightNav;
+    }
 
 private JLabel createProfileButton() {
     ImageIcon profileIcon = new ImageIcon("Logos\\profileIcon.png");
@@ -230,41 +230,40 @@ private JLabel createProfileButton() {
     private JPanel createDashboardContentPanel() {
         JPanel contentPanel = new JPanel(new GridLayout(2, 3, 15, 15));
         contentPanel.setBackground(BACKGROUND_COLOR);
-    
+
         // Top Row: Statistics
-        // very important on third row; determines the name of the .java
         String[][] statsData = {
             {"Books", "Logos\\bookIcon.png", "BookList"},
-            {"Circulation","Logos\\circulationIcon.png", "CheckedOutBooks"},
+            {"Circulation", "Logos\\circulationIcon.png", "CheckedOutBooks"},
             {"Users", "Logos\\usersIcon.png", "UserList"},
         };
-    
+
         for (String[] stat : statsData) {
             contentPanel.add(createStatisticsCard(stat[0], stat[1], stat.length > 2 ? stat[2] : null));
         }
-    
+
         // Bottom Row: Action Buttons
         String[][] actionData = {
             {"Manage Books", "Logos\\managebookIcon.png", "EditBooks"},
             {"Authors", "Logos\\authorIcon.png", "AuthorList"},
             {"Manage Users", "Logos\\manageusersIcon.png", "EditUsers"},
         };
-    
+
         for (String[] action : actionData) {
             contentPanel.add(createActionCard(action[0], action[1], action[2]));
         }
-    
+
         return contentPanel;
     }
-    
+
     private JPanel createStatisticsCard(String title, String iconPath, String windowClass) {
         return createInteractivePanel(title, iconPath, windowClass);
     }
-    
+
     private JPanel createActionCard(String title, String iconPath, String windowClass) {
         return createInteractivePanel(title, iconPath, windowClass);
     }
-    
+
     private JPanel createInteractivePanel(String title, String iconPath, String windowClass) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createCompoundBorder(
@@ -272,26 +271,26 @@ private JLabel createProfileButton() {
             BorderFactory.createEmptyBorder(15, 15, 15, 15)
         ));
         panel.setBackground(BACKGROUND_COLOR);
-    
+
         // Add image if the path is provided
         if (iconPath != null && !iconPath.isEmpty()) {
             JLabel iconLabel = new JLabel();
             iconLabel.setHorizontalAlignment(JLabel.CENTER);
-    
+
             // Load the image and scale it
             ImageIcon icon = new ImageIcon(iconPath);
             Image scaledIcon = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
             iconLabel.setIcon(new ImageIcon(scaledIcon));
-    
+
             panel.add(iconLabel, BorderLayout.CENTER);
         }
-    
+
         // Add title label
         JLabel titleLabel = new JLabel(title);
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
         panel.add(titleLabel, BorderLayout.SOUTH);
-    
+
         // Mouse listener to open feature window on click
         panel.addMouseListener(new HoverEffectListener(panel));
         panel.addMouseListener(new MouseAdapter() {
@@ -300,16 +299,15 @@ private JLabel createProfileButton() {
                 openFeatureWindow(windowClass);
             }
         });
-    
+
         return panel;
     }
-    
 
     private void openFeatureWindow(String feature) {
         try {
             String className = feature;
             if (!feature.contains(".")) {
-                // opens a .java file based on which dashboard content pannel is sent
+                // opens a .java file based on which dashboard content panel is sent
                 className = "GUI." + feature;  
             }
             
@@ -319,88 +317,94 @@ private JLabel createProfileButton() {
             // Instantiate the class (assuming a no-argument constructor)
             Object featureInstance = clazz.getDeclaredConstructor().newInstance();
         
+            if (featureInstance instanceof JFrame) {
                 JFrame featureWindow = (JFrame) featureInstance;
                 featureWindow.setSize(1200, 700);
                 featureWindow.setLocationRelativeTo(this);
                 featureWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 featureWindow.setVisible(true);
-            
+            } else if (featureInstance instanceof JDialog) {
+                JDialog featureWindow = (JDialog) featureInstance;
+                featureWindow.setSize(1200, 700);
+                featureWindow.setLocationRelativeTo(this);
+                featureWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                featureWindow.setVisible(true);
+            } else {
+                System.out.println("Unsupported feature window type: " + featureInstance.getClass().getName());
+            }
         } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
             JOptionPane.showMessageDialog(this, "Feature not implemented or class not found: " + feature, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
-// Method to show account details
-private void showAccountDetails() {
-    // Create an instance of AboutPage
-    DevelopersList devList = new DevelopersList();
 
-    // Set the AboutPage properties
-    devList.setSize(400, 300); 
-    devList.setLocationRelativeTo(this); 
-    devList.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
-    devList.setVisible(true); 
-}
+    // Method to show account details
+    private void showAccountDetails() {
+        // Create an instance of AboutPage
+        DevelopersList devList = new DevelopersList();
 
-// Method to show About dialog
-private void showAboutDialog() {
-    // Create an instance of AboutPage
-    AboutPage aboutPage = new AboutPage();
-
-    // Set the AboutPage properties
-    aboutPage.setSize(400, 300); 
-    aboutPage.setLocationRelativeTo(this); 
-    aboutPage.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
-    aboutPage.setVisible(true); 
-}
-
-
-private void showDeveloperDialog() {
-    // Create an instance of DevelopersList
-    DevelopersList developersList = new DevelopersList();
-
-    // Set properties for the DevelopersList JFrame
-    developersList.setVisible(true); // Make the JFrame visible
-}
-
-
-
-// Method to confirm logout
-private void confirmLogout() {
-    int response = JOptionPane.showConfirmDialog(
-        this, 
-        "Are you sure you want to log out?", 
-        "Confirm Logout", 
-        JOptionPane.YES_NO_OPTION, 
-        JOptionPane.QUESTION_MESSAGE
-    );
-    
-    if (response == JOptionPane.YES_OPTION) {
-        // Close current admin dashboard
-        this.dispose();
-        
-        // Open login screen (ANPLMSGUI)
-        SwingUtilities.invokeLater(() -> {
-            try {
-                Class<?> loginClass = Class.forName("GUI.ANPLMSGUI");
-                JFrame loginFrame = (JFrame) loginClass.getDeclaredConstructor().newInstance();
-                loginFrame.setVisible(true);
-            } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
-                JOptionPane.showMessageDialog(
-                    null, 
-                    "Error opening login screen: " + e.getMessage(), 
-                    "Logout Error", 
-                    JOptionPane.ERROR_MESSAGE
-                );
-            }
-        });
+        // Set the AboutPage properties
+        devList.setSize(400, 300); 
+        devList.setLocationRelativeTo(this); 
+        devList.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+        devList.setVisible(true); 
     }
-}
+
+    // Method to show About dialog
+    private void showAboutDialog() {
+        // Create an instance of AboutPage
+        AboutPage aboutPage = new AboutPage();
+
+        // Set the AboutPage properties
+        aboutPage.setSize(400, 300); 
+        aboutPage.setLocationRelativeTo(this); 
+        aboutPage.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+        aboutPage.setVisible(true); 
+    }
+
+    private void showDeveloperDialog() {
+        // Create an instance of DevelopersList
+        DevelopersList developersList = new DevelopersList();
+
+        // Set properties for the DevelopersList JFrame
+        developersList.setVisible(true); // Make the JFrame visible
+    }
+
+    // Method to confirm logout
+    private void confirmLogout() {
+        int response = JOptionPane.showConfirmDialog(
+            this, 
+            "Are you sure you want to log out?", 
+            "Confirm Logout", 
+            JOptionPane.YES_NO_OPTION, 
+            JOptionPane.QUESTION_MESSAGE
+        );
+        
+        if (response == JOptionPane.YES_OPTION) {
+            // Close current admin dashboard
+            this.dispose();
+            
+            // Open login screen (ANPLMSGUI)
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    Class<?> loginClass = Class.forName("GUI.ANPLMSGUI");
+                    JFrame loginFrame = (JFrame) loginClass.getDeclaredConstructor().newInstance();
+                    loginFrame.setVisible(true);
+                } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
+                    JOptionPane.showMessageDialog(
+                        null, 
+                        "Error opening login screen: " + e.getMessage(), 
+                        "Logout Error", 
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            });
+        }
+    }
 
     private void updateTime(JLabel timeLabel) {
         timeLabel.setText(java.time.LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")));
-        }
-        
+    }
+
     private static class HoverEffectListener extends MouseAdapter {
         private final JPanel panel;
 
@@ -418,8 +422,8 @@ private void confirmLogout() {
             panel.setBackground(BACKGROUND_COLOR);
         }
     }
-    
-    //greeting message based on time of day
+
+    // Greeting message based on time of day
     private void updateGreeting(JLabel greetingLabel) {
         LocalTime now = LocalTime.now();
         String greeting;
@@ -428,7 +432,6 @@ private void confirmLogout() {
             greeting = "Good Morning, " + adminName + "!";
         } else if (now.isBefore(LocalTime.of(18, 0))) {
             greeting = "Good Afternoon, " + adminName + "!";
-
         } else {
             greeting = "Good Evening, " + adminName + "!";
         }

@@ -12,7 +12,7 @@ public class LibraryDatabase {
         try (Connection conn = SQLiteDatabase.connect()) {
             if (conn != null) {
                 Statement stmt = conn.createStatement();
-
+    
                 // Create Books table
                 String createBooksTable = "CREATE TABLE IF NOT EXISTS books ("
                         + "isbn TEXT PRIMARY KEY, "
@@ -21,25 +21,26 @@ public class LibraryDatabase {
                         + "publicationDate TEXT, "
                         + "availableCopies INTEGER)";
                 stmt.execute(createBooksTable);
-
+    
                 // Create Authors table
                 String createAuthorsTable = "CREATE TABLE IF NOT EXISTS authors ("
                         + "authorID TEXT PRIMARY KEY, "
-                        + "name TEXT NOT NULL)";
+                        + "name TEXT NOT NULL, "
+                        + "bookCount INTEGER)";
                 stmt.execute(createAuthorsTable);
-
+    
                 // Create Members table
-                String createMembersTable = "CREATE TABLE IF NOT EXISTS members (" +
-                    "memberID TEXT PRIMARY KEY, " +
-                    "name TEXT NOT NULL, " +
-                    "username TEXT NOT NULL, " +
-                    "email TEXT NOT NULL, " +
-                    "phoneNumber TEXT NOT NULL, " +
-                    "registrationDate TEXT NOT NULL, " +
-                    "password TEXT NOT NULL, " +
-                    "userType TEXT NOT NULL)";
+                String createMembersTable = "CREATE TABLE IF NOT EXISTS members ("
+                        + "memberID TEXT PRIMARY KEY, "
+                        + "name TEXT NOT NULL, "
+                        + "username TEXT NOT NULL, "
+                        + "email TEXT NOT NULL, "
+                        + "phoneNumber TEXT NOT NULL, "
+                        + "registrationDate TEXT NOT NULL, "
+                        + "password TEXT NOT NULL, "
+                        + "userType TEXT NOT NULL)";
                 stmt.execute(createMembersTable);
-
+    
                 System.out.println("Tables created successfully.");
             }
         } catch (SQLException e) {
@@ -56,8 +57,6 @@ public class LibraryDatabase {
             
             if (rs.next()) {
                 String maxID = rs.getString("maxID");
-                //System.out.println("Current max AuthorID: " + maxID); // for dubugging only
-                
                 if (maxID != null && !maxID.isEmpty()) {
                     int nextID = Integer.parseInt(maxID.substring(1)) + 1;
                     return "A" + String.format("%03d", nextID);
@@ -65,7 +64,6 @@ public class LibraryDatabase {
             }
         } catch (SQLException e) {
             System.out.println("Error generating authorID: " + e.getMessage());
-            //e.printStackTrace();
         }
         return "A001";
     }
@@ -139,13 +137,15 @@ public class LibraryDatabase {
     }
 
     public static void insertAuthor(Author author) {
-        String sql = "INSERT INTO authors(authorID, name) VALUES(?,?)";
-        try (Connection conn = SQLiteDatabase.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        String sql = "INSERT INTO authors(authorID, name, bookCount) VALUES(?, ?, ?)";
+        try (Connection conn = SQLiteDatabase.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             String authorID = generateNextAuthorID();
             author.setAuthorID(authorID);
             
             pstmt.setString(1, authorID);
             pstmt.setString(2, author.getName());
+            pstmt.setInt(3, author.getBookCount());
             
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -155,10 +155,53 @@ public class LibraryDatabase {
             }
         } catch (SQLException e) {
             System.out.println("Error inserting author: " + e.getMessage());
-            //e.printStackTrace();
+        }
+    }
+
+    public static void updateAuthor(Author author) {
+        String sql = "UPDATE authors SET name = ?, bookCount = ? WHERE authorID = ?";
+        try (Connection conn = SQLiteDatabase.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, author.getName());
+            pstmt.setInt(2, author.getBookCount());
+            pstmt.setString(3, author.getAuthorID());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error updating author: " + e.getMessage());
+        }
+    }
+
+    public static void deleteAuthor(String authorID) {
+        String sql = "DELETE FROM authors WHERE authorID = ?";
+        try (Connection conn = SQLiteDatabase.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, authorID);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error deleting author: " + e.getMessage());
         }
     }
     
+    public static List<Author> getAllAuthors() {
+        List<Author> authors = new ArrayList<>();
+        String sql = "SELECT * FROM authors";
+        try (Connection conn = SQLiteDatabase.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Author author = new Author(
+                    rs.getString("authorID"),
+                    rs.getString("name"),
+                    rs.getInt("bookCount")
+                );
+                authors.add(author);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching authors: " + e.getMessage());
+        }
+        return authors;
+    }
+
     public static boolean validateLogin(String username, String password) {
         String sql = "SELECT * FROM members WHERE username = ? AND password = ?";
         try (Connection conn = SQLiteDatabase.connect(); 
@@ -199,15 +242,42 @@ public class LibraryDatabase {
         return null;
     }
 
+    public static Member loginMember(String username, String password) {
+        String sql = "SELECT * FROM members WHERE username = ? AND password = ?";
+        try (Connection conn = SQLiteDatabase.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    Member member = new Member();
+                    member.setMemberID(rs.getString("memberID"));
+                    member.setName(rs.getString("name"));
+                    member.setUsername(rs.getString("username"));
+                    member.setEmail(rs.getString("email"));
+                    member.setPhoneNumber(rs.getString("phoneNumber"));
+                    member.setRegistrationDate(rs.getString("registrationDate"));
+                    member.setPassword(rs.getString("password"));
+                    member.setUserType(rs.getString("userType"));
+                    return member;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error logging in member: " + e.getMessage());
+        }
+        return null;
+    }
+
     // Insert a new member into the database
     public static void insertMember(Member member) {
         String sql = "INSERT INTO members(memberID, name, username, email, phoneNumber, registrationDate, password, userType) VALUES(?,?,?,?,?,?,?,?)";
-        try (Connection conn = SQLiteDatabase.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = SQLiteDatabase.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             String memberID = generateNextMemberID();
             member.setMemberID(memberID);
             String registrationDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
             member.setRegistrationDate(registrationDate);
-
+    
             pstmt.setString(1, memberID);
             pstmt.setString(2, member.getName());
             pstmt.setString(3, member.getUsername());
@@ -216,19 +286,13 @@ public class LibraryDatabase {
             pstmt.setString(6, registrationDate);
             pstmt.setString(7, member.getPassword());
             pstmt.setString(8, member.getUserType());
-
-            int rowsAffected = pstmt.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Member added: " + member.getName() + " with ID: " + memberID);
-            } else {
-                System.out.println("No rows were inserted for member: " + member.getName());
-            }
+    
+            pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error inserting member: " + e.getMessage());
-            //e.printStackTrace();
         }
     }
-    
+
     public static void updateMember(Member member) {
         String sql = "UPDATE members SET name = ?, username = ?, email = ?, phoneNumber = ?, userType = ? WHERE memberID = ?";
         try (Connection conn = SQLiteDatabase.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -255,31 +319,6 @@ public class LibraryDatabase {
         } catch (SQLException e) {
             System.out.println("Error deleting member: " + e.getMessage());
         }
-    }
-
-    public static Member loginMember(String username, String password) {
-        String sql = "SELECT * FROM members WHERE username = ? AND password = ?";
-        try (Connection conn = SQLiteDatabase.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            pstmt.setString(2, password);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                Member member = new Member();
-                member.setMemberID(rs.getString("memberID"));
-                member.setName(rs.getString("name"));
-                member.setUsername(rs.getString("username"));
-                member.setEmail(rs.getString("email"));
-                member.setPhoneNumber(rs.getString("phoneNumber"));
-                member.setRegistrationDate(rs.getString("registrationDate"));
-                member.setPassword(rs.getString("password"));
-                member.setUserType(rs.getString("userType"));
-                return member;
-            }
-        } catch (SQLException e) {
-            System.out.println("Error logging in member: " + e.getMessage());
-            //e.printStackTrace();
-        }
-        return null;
     }
 
     // Read all books from the database
@@ -340,7 +379,6 @@ public class LibraryDatabase {
             }
         } catch (SQLException e) {
             System.out.println("Error fetching members: " + e.getMessage());
-            e.printStackTrace();
         }
         return members;
     }
@@ -406,26 +444,25 @@ public class LibraryDatabase {
     // populate authors
     public static void populateAuthors() {
         List<Author> authors = new ArrayList<>();
-        authors.add(new Author("Agatha Christie", generateNextAuthorID()));
-        authors.add(new Author("Mark Haddon", generateNextAuthorID()));
-        authors.add(new Author("Thomas Cormen", generateNextAuthorID()));
-        authors.add(new Author("Cris Ibarra", generateNextAuthorID()));
-        authors.add(new Author("Arthur Conan Doyle", generateNextAuthorID()));
-        authors.add(new Author("George Orwell", generateNextAuthorID()));
-        authors.add(new Author("Stephen King", generateNextAuthorID()));
-        authors.add(new Author("JK Rowling", generateNextAuthorID()));
-        authors.add(new Author("Harper Lee", generateNextAuthorID()));
-        authors.add(new Author("Ernest Hemingway", generateNextAuthorID()));
-        authors.add(new Author("Charles Dickens", generateNextAuthorID()));
-        authors.add(new Author("Jane Austen", generateNextAuthorID()));
-        authors.add(new Author("Leo Tolstoy", generateNextAuthorID()));
-        authors.add(new Author("William Shakespeare", generateNextAuthorID()));
-        
-
+        authors.add(new Author(generateNextAuthorID(), "Agatha Christie", 5));
+        authors.add(new Author(generateNextAuthorID(), "Mark Haddon", 3));
+        authors.add(new Author(generateNextAuthorID(), "Thomas Cormen", 3));
+        authors.add(new Author(generateNextAuthorID(), "Cris Ibarra", 3));
+        authors.add(new Author(generateNextAuthorID(), "Arthur Conan Doyle", 4));
+        authors.add(new Author(generateNextAuthorID(), "George Orwell", 4));
+        authors.add(new Author(generateNextAuthorID(), "Stephen King", 4));
+        authors.add(new Author(generateNextAuthorID(), "JK Rowling", 4));
+        authors.add(new Author(generateNextAuthorID(), "Harper Lee", 2));
+        authors.add(new Author(generateNextAuthorID(), "Ernest Hemingway", 3));
+        authors.add(new Author(generateNextAuthorID(), "Charles Dickens", 4));
+        authors.add(new Author(generateNextAuthorID(), "Jane Austen", 4));
+        authors.add(new Author(generateNextAuthorID(), "Leo Tolstoy", 2));
+        authors.add(new Author(generateNextAuthorID(), "William Shakespeare", 3));
+    
         for (Author author : authors) {
             insertAuthor(author);
         }
-    }
+    }    
 
     // populate members
     public static void populateMembers() {
