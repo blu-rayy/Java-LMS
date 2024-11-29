@@ -59,7 +59,7 @@ public class EditUsers extends JFrame implements fontComponent {
         JPanel tablePanel = new JPanel(new BorderLayout());
         tablePanel.setBackground(BACKGROUND_COLOR);
 
-        String[] columnNames = {"User ID", "Name", "Email", "Role", "Status", "Registration Date"};
+        String[] columnNames = {"User ID", "Name", "Username", "Email", "Role", "Status", "Registration Date"};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -179,57 +179,82 @@ public class EditUsers extends JFrame implements fontComponent {
             JOptionPane.showMessageDialog(this, "Please select a user to edit.", "No User Selected", JOptionPane.WARNING_MESSAGE);
             return;
         }
-
+    
         String userId = userTable.getValueAt(selectedRow, 0).toString();
         String currentName = userTable.getValueAt(selectedRow, 1).toString();
-        String currentEmail = userTable.getValueAt(selectedRow, 2).toString();
-        String currentRole = userTable.getValueAt(selectedRow, 3).toString();
-
+        String currentUsername = userTable.getValueAt(selectedRow, 2).toString();
+        String currentEmail = userTable.getValueAt(selectedRow, 3).toString();
+        String currentRole = userTable.getValueAt(selectedRow, 4).toString();
+    
         JDialog editUserDialog = new JDialog(this, "Edit User", true);
-        editUserDialog.setSize(400, 300);
-        editUserDialog.setLocationRelativeTo(this);
-
-        JPanel dialogPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+        editUserDialog.setSize(400, 350); // Increased height to accommodate phone number field
+    
+        JPanel dialogPanel = new JPanel(new GridLayout(7, 2, 10, 10)); // Increased rows
         dialogPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-
+    
         dialogPanel.add(new JLabel("Name:"));
         JTextField nameField = new JTextField(currentName);
         dialogPanel.add(nameField);
-
+    
+        dialogPanel.add(new JLabel("Username:"));
+        JTextField usernameField = new JTextField(currentUsername);
+        dialogPanel.add(usernameField);
+    
         dialogPanel.add(new JLabel("Email:"));
         JTextField emailField = new JTextField(currentEmail);
         dialogPanel.add(emailField);
-
+    
+        // Add phone number field
+        dialogPanel.add(new JLabel("Phone Number:"));
+        JTextField phoneNumberField = new JTextField(); // You'll need to fetch and populate the current phone number
+        dialogPanel.add(phoneNumberField);
+    
         dialogPanel.add(new JLabel("Role:"));
         JComboBox<String> roleCombo = new JComboBox<>(new String[]{"Student", "Librarian", "Admin"});
         roleCombo.setSelectedItem(currentRole);
         dialogPanel.add(roleCombo);
-
+    
+        // Fetch the current phone number for the selected user
+        Member currentMember = LibraryDatabase.getMemberById(userId);
+        if (currentMember != null) {
+            phoneNumberField.setText(currentMember.getPhoneNumber());
+        }
+    
         JButton saveButton = new JButton("Save");
         saveButton.addActionListener(e -> {
-            if (nameField.getText().isEmpty() || emailField.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Name and Email cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+            // Validate input fields
+            if (nameField.getText().isEmpty() || 
+                usernameField.getText().isEmpty() || 
+                emailField.getText().isEmpty() || 
+                phoneNumberField.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, 
+                    "Name, Username, Email, and Phone Number cannot be empty.", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
+    
             Member updatedMember = new Member();
             updatedMember.setMemberID(userId);
             updatedMember.setName(nameField.getText());
+            updatedMember.setUsername(usernameField.getText());
             updatedMember.setEmail(emailField.getText());
+            updatedMember.setPhoneNumber(phoneNumberField.getText());
             updatedMember.setUserType(roleCombo.getSelectedItem().toString());
-
+    
             LibraryDatabase.updateMember(updatedMember);
             refreshUserList();
             editUserDialog.dispose();
         });
-
+    
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(e -> editUserDialog.dispose());
-
+    
         dialogPanel.add(saveButton);
         dialogPanel.add(cancelButton);
-
+    
         editUserDialog.add(dialogPanel);
+        editUserDialog.setLocationRelativeTo(this);
         editUserDialog.setVisible(true);
     }
 
@@ -255,6 +280,7 @@ public class EditUsers extends JFrame implements fontComponent {
             tableModel.addRow(new Object[]{
                     member.getMemberID(),
                     member.getName(),
+                    member.getUsername(),
                     member.getEmail(),
                     member.getUserType(),
                     "Active", // Placeholder
