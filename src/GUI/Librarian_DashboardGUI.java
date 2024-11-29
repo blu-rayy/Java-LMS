@@ -317,22 +317,12 @@ private JLabel createProfileButton() {
             // Instantiate the class (assuming a no-argument constructor)
             Object featureInstance = clazz.getDeclaredConstructor().newInstance();
         
-            if (featureInstance instanceof JFrame) {
-                JFrame featureWindow = (JFrame) featureInstance;
-                featureWindow.setSize(1200, 700);
-                featureWindow.setLocationRelativeTo(this);
-                featureWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                featureWindow.setVisible(true);
-            } else if (featureInstance instanceof JDialog) {
-                JDialog featureWindow = (JDialog) featureInstance;
-                featureWindow.setSize(1200, 700);
-                featureWindow.setLocationRelativeTo(this);
-                featureWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                featureWindow.setVisible(true);
-            } else {
-                if (featureInstance != null) System.out.println("Unsupported feature window type: " + featureInstance.getClass().getName());
-                else System.out.println("Feature instance is null.");
-            }
+            JFrame featureWindow = (JFrame) featureInstance;
+            featureWindow.setSize(1200, 700);
+            featureWindow.setLocationRelativeTo(this);
+            featureWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            featureWindow.setVisible(true);
+            
         } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
             JOptionPane.showMessageDialog(this, "Feature not implemented or class not found: " + feature, "Error", JOptionPane.ERROR_MESSAGE);
         }
