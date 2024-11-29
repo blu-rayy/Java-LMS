@@ -135,7 +135,7 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         signUpPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(5, 0, 5, 10);
 
         // Username field with validation label
         gbc.gridx = 0;
@@ -147,7 +147,7 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         gbc.gridx = 1;
         signUpPanel.add(signUpUsernameField, gbc);
 
-        JLabel usernameErrorLabel = new JLabel("Username cannot be empty");
+        JLabel usernameErrorLabel = createFixedErrorLabel("Username cannot be empty");
         usernameErrorLabel.setForeground(Color.RED);
         usernameErrorLabel.setVisible(false);
         gbc.gridy = 1;
@@ -163,7 +163,7 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         gbc.gridx = 1;
         signUpPanel.add(emailField, gbc);
 
-        JLabel emailErrorLabel = new JLabel("Email must end with @gmail.com");
+        JLabel emailErrorLabel = createFixedErrorLabel("Email must end with @gmail.com");
         emailErrorLabel.setForeground(Color.RED);
         emailErrorLabel.setVisible(false);
         gbc.gridy = 3;
@@ -179,7 +179,7 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         gbc.gridx = 1;
         signUpPanel.add(phoneField, gbc);
 
-        JLabel phoneErrorLabel = new JLabel("Phone number must be 11 digits");
+        JLabel phoneErrorLabel = createFixedErrorLabel("Phone number must be 11 digits");
         phoneErrorLabel.setForeground(Color.RED);
         phoneErrorLabel.setVisible(false);
         gbc.gridy = 5;
@@ -195,7 +195,7 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         gbc.gridx = 1;
         signUpPanel.add(signUpPasswordField, gbc);
 
-        JLabel passwordErrorLabel = new JLabel("Password must have 8 alphanumeric letters");
+        JLabel passwordErrorLabel = createFixedErrorLabel("Password must have 8 alphanumeric letters");
         passwordErrorLabel.setForeground(Color.RED);
         passwordErrorLabel.setVisible(false);
         gbc.gridy = 7;
@@ -211,7 +211,7 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         gbc.gridx = 1;
         signUpPanel.add(confirmPasswordField, gbc);
 
-        JLabel confirmPasswordErrorLabel = new JLabel("Passwords do not match");
+        JLabel confirmPasswordErrorLabel = createFixedErrorLabel("Passwords do not match");
         confirmPasswordErrorLabel.setForeground(Color.RED);
         confirmPasswordErrorLabel.setVisible(false);
         gbc.gridy = 9;
@@ -226,13 +226,14 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
 
         // Librarian Password Panel (hidden by default) - when box is ticked, it will appear for librarian verification
         JPanel librarianPasswordPanel = new JPanel(new GridBagLayout());
+        librarianPasswordPanel.setVisible(false); // Initially hidden
         GridBagConstraints libGBC = new GridBagConstraints();
         libGBC.fill = GridBagConstraints.HORIZONTAL;
 
         JPasswordField librarianPasswordField = new JPasswordField(15);
         librarianPasswordField.setFont(PLAIN_FONT);
-        JLabel librarianPasswordLabel = new JLabel("Verification Password");
-        JLabel librarianPasswordErrorLabel = new JLabel("Incorrect librarian password");
+        JLabel librarianPasswordLabel = new JLabel("Librarian Verification Password");
+        JLabel librarianPasswordErrorLabel = createFixedErrorLabel("Incorrect librarian password");
         librarianPasswordErrorLabel.setForeground(Color.RED);
         librarianPasswordErrorLabel.setVisible(false);
 
@@ -246,8 +247,7 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         libGBC.gridwidth = 2;
         librarianPasswordPanel.add(librarianPasswordErrorLabel, libGBC);
 
-        librarianPasswordPanel.setVisible(false);
-        gbc.gridy = 11;
+        gbc.gridy = 12;
         signUpPanel.add(librarianPasswordPanel, gbc);
 
         // Sign-up button
@@ -256,14 +256,21 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         signUpButton.setForeground(Color.WHITE);
         signUpButton.setFont(new Font("Arimo", Font.BOLD, 20));
         gbc.gridx = 0;
-        gbc.gridy = 12;
+        gbc.gridy = 13;
         gbc.gridwidth = 2;
         signUpPanel.add(signUpButton, gbc);
 
         // Librarian Checkbox Listener
         librarianCheckBox.addActionListener(e -> {
-            librarianPasswordPanel.setVisible(librarianCheckBox.isSelected());
-            signUpFrame.pack();
+            boolean isLibrarian = librarianCheckBox.isSelected();
+            librarianPasswordField.setEnabled(isLibrarian);
+            librarianPasswordPanel.setVisible(isLibrarian);
+            
+            // Clear the password field when checkbox is unchecked
+            if (!isLibrarian) {
+                librarianPasswordField.setText("");
+            }
+            
             signUpPanel.revalidate();
             signUpPanel.repaint();
         });
@@ -279,6 +286,7 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
 
             // Validate inputs
             boolean isValid = true;
+            
             String username = signUpUsernameField.getText().trim();
             String email = emailField.getText().trim();
             String phoneNumber = phoneField.getText().trim();
@@ -354,6 +362,15 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
 
         signUpFrame.add(signUpPanel);
         signUpFrame.setVisible(true);
+    }
+
+    // Helper method to create fixed-size labels
+    private JLabel createFixedErrorLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setForeground(Color.RED);
+        label.setVisible(false);
+        label.setPreferredSize(new Dimension(300, 20)); // Fixed size
+        return label;
     }
 
     // Password validation method
