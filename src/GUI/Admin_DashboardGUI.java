@@ -245,7 +245,7 @@ private JLabel createProfileButton() {
         // Bottom Row: Action Buttons
         String[][] actionData = {
             {"Manage Books", "Logos\\managebookIcon.png", "EditBooks"},
-            {"Authors", "Logos\\authorIcon.png", "AuthorList"},
+            {"Authors", "Logos\\authorIcon.png", "EditAuthor"},
             {"Manage Users", "Logos\\manageusersIcon.png", "EditUsers"},
         };
 
