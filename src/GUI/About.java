@@ -14,7 +14,7 @@ public class About {
 
             // Frame settings
             setTitle("About the System");
-            setSize(400, 300);
+            setSize(500, 320);
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             setLocationRelativeTo(null);
             setResizable(false);
@@ -26,16 +26,17 @@ public class About {
             mainPanel.setBackground(BACKGROUND_COLOR);
 
             // Title
-            JLabel titleLabel = new JLabel("About the ANP Library System v.1.0.0");
+            JLabel titleLabel = new JLabel("The ANP-LMS v.1.0.0");
             titleLabel.setFont(TITLE_FONT18);
             titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             mainPanel.add(titleLabel);
 
             // Text description
             JLabel aboutLabel = new JLabel("<html><div style='text-align: center;'>"
-                    + "The ANP Library Management System is designed to streamline library operations,<br>"
-                    + "library operations, manage book collections, and improve<br>"
-                    + "access to resources for students and staff."
+                    + "The Access Navigation Platform-Library Management System (ANP-LMS) is designed to streamline"
+                    + "library operations, manage book collections, and improve access to resources for students and staff.<br><br>"
+                    + "This application is a project made in fulfillment of CCS0023L by Mr. Reginald Cheng. "
+                    + "Any content seen in the application is purely for educational purposes only."
                     + "</div></html>");
             aboutLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
             aboutLabel.setAlignmentX(Component.CENTER_ALIGNMENT);

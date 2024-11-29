@@ -339,7 +339,7 @@ private void showAboutDialog() {
     AboutPage aboutPage = new AboutPage();
 
     // Set the AboutPage properties
-    aboutPage.setSize(400, 300); 
+    aboutPage.setSize(500, 320);; 
     aboutPage.setLocationRelativeTo(this); 
     aboutPage.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
     aboutPage.setVisible(true); 
