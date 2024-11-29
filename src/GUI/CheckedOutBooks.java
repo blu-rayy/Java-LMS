@@ -11,6 +11,7 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
     private DefaultTableModel tableModel;
     private JTextField searchField;
     private TableRowSorter<DefaultTableModel> rowSorter;
+    private JLabel counterLabel;
 
     public CheckedOutBooks() {
         initializeUI();
@@ -43,6 +44,7 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
         mainPanel.add(actionPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
+        updateCounter();
     }
 
     private JPanel createTitlePanel() {
@@ -68,12 +70,21 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
         ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\circulationIconOrange.png");
         Image resizedIcon = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         JLabel iconLabel = new JLabel(new ImageIcon(resizedIcon));
-        JPanel titleContentPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        titleContentPanel.setBackground(BACKGROUND_COLOR);
+        iconLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 8)); //padding
+        
+        //counter label top right
+        counterLabel = new JLabel();
+        counterLabel.setFont(TITLE_FONT14);
+        counterLabel.setForeground(PRIMARY_COLOR);
 
-        titleContentPanel.add(iconLabel);
-        titleContentPanel.add(titleLabel);
-        titlePanel.add(titleContentPanel, BorderLayout.WEST);
+        //title panel
+        JPanel titleContentPanel = new JPanel(new BorderLayout());
+        titleContentPanel.setBackground(BACKGROUND_COLOR);
+        titleContentPanel.add(iconLabel, BorderLayout.WEST);
+        titleContentPanel.add(titleLabel, BorderLayout.CENTER);
+        titleContentPanel.add(counterLabel, BorderLayout.EAST);
+        titlePanel.add(titleContentPanel, BorderLayout.CENTER);
+        
         return titlePanel;
     }
 
@@ -82,7 +93,15 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
         tablePanel.setBackground(BACKGROUND_COLOR);
 
         String[] columnNames = {"Book ID", "Title", "Author", "Borrower", "Borrow Date", "Due Date", "Status"};
-        tableModel = new DefaultTableModel(columnNames, 0);
+
+        tableModel = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; //al cells are non-editble
+            }
+        };
+
+        //tableModel = new DefaultTableModel(columnNames, 0);
         borrowedBooksTable = new JTable(tableModel);
         rowSorter = new TableRowSorter<>(tableModel);
         borrowedBooksTable.setRowSorter(rowSorter);
@@ -106,6 +125,24 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
         Object[][] sampleData = {
             {"B001", "Java Programming", "John Smith", "Alice Brown", "2024-02-15", "2024-03-15", "Overdue"},
             {"B002", "Database Systems", "Jane Doe", "Bob Wilson", "2024-02-20", "2024-03-20", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
             {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"}
         };
 
@@ -163,6 +200,23 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
         if (newStatus != null && !newStatus.equals(currentStatus)) {
             tableModel.setValueAt(newStatus, selectedRow, 6);
         }
+    }
+
+    //update the counter label with the number of checked out and available books
+    private void updateCounter() {
+        int checkedOutCount = 0;
+        int availableCount = 0;
+
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
+            String status = (String) tableModel.getValueAt(i, 6);
+            if ("Active".equalsIgnoreCase(status) || "Overdue".equalsIgnoreCase(status)) {
+                checkedOutCount++;
+            } else if ("Returned".equalsIgnoreCase(status)) {
+                availableCount++;
+            }
+        }
+
+        counterLabel.setText("Checked Out: " + checkedOutCount + " | Available: " + availableCount);
     }
 
     private JButton createStyledButton(String text, String iconPath) {
