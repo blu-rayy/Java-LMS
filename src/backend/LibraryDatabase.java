@@ -120,6 +120,51 @@ public class LibraryDatabase {
         return null;
     }
 
+    // Count all rows in Books table
+    public static int countBooks() {
+        String sql = "SELECT COUNT(*) AS total FROM books";
+        try (Connection conn = SQLiteDatabase.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error counting books: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    // Count all rows in Members table
+    public static int countMembers() {
+        String sql = "SELECT COUNT(*) AS total FROM members";
+        try (Connection conn = SQLiteDatabase.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error counting members: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    // Count all rows in Authors table
+    public static int countAuthors() {
+        String sql = "SELECT COUNT(*) AS total FROM authors";
+        try (Connection conn = SQLiteDatabase.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error counting authors: " + e.getMessage());
+        }
+        return 0;
+    }
+
     // Insert a new book into the database
     public static void insertBook(Book book) {
         String sql = "INSERT INTO books(title, author, isbn, publicationDate, availableCopies) VALUES(?,?,?,?,?)";

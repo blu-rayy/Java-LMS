@@ -1,5 +1,6 @@
 package GUI;
 
+import backend.LibraryDatabase;
 import backend.SQLiteDatabase;
 import java.awt.*;
 import java.sql.*;
@@ -34,23 +35,33 @@ public class MemberAuthorList extends JFrame implements fontComponent {
     }
  
 
-    private JPanel createTitlePanel() {
-        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+  private JPanel createTitlePanel() {
+        JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.setBackground(BACKGROUND_COLOR);
-
-        // Add icon beside title
-        ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\authorIconOrange.png"); // Replace with the path to your icon
-        Image resizedTaskbarIcon = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-        setIconImage(resizedTaskbarIcon);
-        JLabel iconLabel = new JLabel(new ImageIcon(resizedTaskbarIcon));
 
         JLabel titleLabel = new JLabel("Author List");
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(PRIMARY_COLOR);
         titleLabel.setPreferredSize(new Dimension(300, 30));
 
-        titlePanel.add(iconLabel);
-        titlePanel.add(titleLabel);
+        // Add icon beside title
+        ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\authorIconOrange.png"); // Replace with the path to your icon
+        Image resizedTaskbarIcon = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        setIconImage(resizedTaskbarIcon);
+        JLabel iconLabel = new JLabel(new ImageIcon(resizedTaskbarIcon));
+        
+        JLabel CountLabel = new JLabel("Total Authors: " + LibraryDatabase.countBooks());
+        CountLabel.setFont(TITLE_FONT14);
+        CountLabel.setForeground(PRIMARY_COLOR);
+
+        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        leftPanel.setBackground(BACKGROUND_COLOR);
+        leftPanel.add(iconLabel);
+        leftPanel.add(titleLabel);
+
+        titlePanel.add(leftPanel, BorderLayout.WEST);
+        titlePanel.add(CountLabel, BorderLayout.EAST);
+
         return titlePanel;
     }
 
