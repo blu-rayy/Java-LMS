@@ -162,7 +162,7 @@ private JLabel createProfileButton() {
             setPreferredSize(new Dimension(250, 40));
             setBorderPainted(false); // Ensure border is disabled for a clean look
             
-            setForeground(Color.BLACK); // Set initial text color to black
+            setForeground(new Color(52, 50, 49)); // Set initial text color to off black
     
             addMouseListener(new MouseAdapter() {
                 @Override
@@ -177,7 +177,7 @@ private JLabel createProfileButton() {
                 public void mouseExited(MouseEvent e) {
                     setBackground(null); // Reset background color when not hovered
                     setOpaque(false);
-                    setForeground(Color.BLACK); // Reset text color to black
+                    setForeground(new Color(52, 50, 49)); // Reset text color to off black
                     repaint(); // Repaint to revert hover effect
                 }
             });
