@@ -341,13 +341,12 @@ private JLabel createProfileButton() {
     // Method to show account details
     private void showAccountDetails() {
         // Create an instance of AboutPage
-        DevelopersList devList = new DevelopersList();
+        AccountDetails accDetails = new AccountDetails(adminName);
 
-        // Set the AboutPage properties
-        devList.setSize(400, 300); 
-        devList.setLocationRelativeTo(this); 
-        devList.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
-        devList.setVisible(true); 
+        accDetails.setSize(500, 600); 
+        accDetails.setLocationRelativeTo(this); 
+        accDetails.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+        accDetails.setVisible(true); 
     }
 
     // Method to show About dialog
@@ -355,7 +354,6 @@ private JLabel createProfileButton() {
         // Create an instance of AboutPage
         AboutPage aboutPage = new AboutPage();
 
-        // Set the AboutPage properties
         aboutPage.setSize(400, 300); 
         aboutPage.setLocationRelativeTo(this); 
         aboutPage.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
@@ -366,8 +364,9 @@ private JLabel createProfileButton() {
         // Create an instance of DevelopersList
         DevelopersList developersList = new DevelopersList();
 
-        // Set properties for the DevelopersList JFrame
-        developersList.setVisible(true); // Make the JFrame visible
+        developersList.setLocationRelativeTo(this); 
+        developersList.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+        developersList.setVisible(true); 
     }
 
     // Method to confirm logout

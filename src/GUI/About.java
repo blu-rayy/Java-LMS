@@ -26,14 +26,14 @@ public class About {
             mainPanel.setBackground(BACKGROUND_COLOR);
 
             // Title
-            JLabel titleLabel = new JLabel("About the ANP Library System");
+            JLabel titleLabel = new JLabel("About the ANP Library System v.1.0.0");
             titleLabel.setFont(TITLE_FONT18);
             titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             mainPanel.add(titleLabel);
 
             // Text description
             JLabel aboutLabel = new JLabel("<html><div style='text-align: center;'>"
-                    + "The ANP Library Management System is designed to streamline<br>"
+                    + "The ANP Library Management System is designed to streamline library operations,<br>"
                     + "library operations, manage book collections, and improve<br>"
                     + "access to resources for students and staff."
                     + "</div></html>");
@@ -104,7 +104,7 @@ public class About {
                 JLabel nameLabel = new JLabel(dev[0]);
                 nameLabel.setFont(PLAIN_FONT);
                 JLabel roleLabel = new JLabel(dev[1]);
-                roleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+                roleLabel.setFont(TITLE_FONT12);
 
                 textPanel.add(nameLabel);
                 textPanel.add(roleLabel);

@@ -9,8 +9,8 @@ import javax.swing.*;
 
 public class AccountDetails extends JFrame implements fontComponent {
     public AccountDetails(String username) {
-        // Fetch member details from database -- for testing purposes, i set my name for now
-        Member member = LibraryDatabase.getMemberDetails("kristian");
+        // Fetch member details from database -- for testing purposes, i set a name
+        Member member = LibraryDatabase.getMemberDetails("erichiii");
         
         // Set up frame
         setTitle("Account Details");
@@ -60,10 +60,10 @@ public class AccountDetails extends JFrame implements fontComponent {
         
         for (String[] detail : accountData) {
             JLabel keyLabel = new JLabel(detail[0] + ":");
-            keyLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+            keyLabel.setFont(PLAIN_FONT);
             
             JLabel valueLabel = new JLabel(detail[1]);
-            valueLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+            valueLabel.setFont(PLAIN_FONT);
             
             detailsPanel.add(keyLabel);
             detailsPanel.add(valueLabel);
@@ -94,7 +94,7 @@ public class AccountDetails extends JFrame implements fontComponent {
     // Optional: Main method for standalone testing
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new AccountDetails("testuser").setVisible(true);
+            new AccountDetails("").setVisible(true);
         });
     }
 }
