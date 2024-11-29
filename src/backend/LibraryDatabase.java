@@ -340,7 +340,6 @@ public class LibraryDatabase {
             }
         } catch (SQLException e) {
             System.out.println("Error fetching members: " + e.getMessage());
-            e.printStackTrace();
         }
         return members;
     }

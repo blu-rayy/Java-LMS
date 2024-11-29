@@ -65,23 +65,26 @@ public class Admin_DashboardGUI extends JFrame implements fontComponent {
         JLabel logoLabel = new JLabel(new ImageIcon(scaledLogoIcon));
         leftNav.add(logoLabel);
 
-        String[] navButtons = {"Books", "Users", "Inventory"};
+        // Mapping of button text to corresponding class names
+        String[] navButtons = {"Books", "Users"};
+        String[] classNames = {"BookList", "UserList"};
 
-        for (String buttonText : navButtons) {
-            leftNav.add(createNavButton(buttonText));
+        for (int i = 0; i < navButtons.length; i++) {
+            JButton button = createNavButton(navButtons[i], classNames[i]);
+            leftNav.add(button);
         }
 
         return leftNav;
         }
 
-        private JButton createNavButton(String text) {
+        private JButton createNavButton(String text, String className) {
         JButton button = new JButton(text);
         button.setFont(TITLE_FONT14);
         button.setBackground(BACKGROUND_COLOR);
         button.setForeground(PRIMARY_COLOR); // Set font color to PRIMARY_COLOR
         button.setBorderPainted(false);
         button.setFocusPainted(false);
-        button.addActionListener(e -> openFeatureWindow(text));
+        button.addActionListener(e -> openFeatureWindow(className));
         return button;
         }
 
@@ -153,20 +156,17 @@ private JLabel createProfileButton() {
     
     // Custom menu item with orange highlight
     class CustomMenuItem extends JMenuItem {
-        private boolean isHovered = false; // Track hover state
-    
         CustomMenuItem(String text) {
             super(text);
             setFont(PLAIN_FONT16);
             setPreferredSize(new Dimension(250, 40));
             setBorderPainted(false); // Ensure border is disabled for a clean look
             
-            setForeground(Color.BLACK); // Set initial text color to black
+            setForeground(new Color(52, 50, 49)); // Set initial text color to off black
     
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseEntered(MouseEvent e) {
-                    isHovered = true;
                     setBackground(PRIMARY_COLOR); // Set background color for hover
                     setOpaque(true);
                     setForeground(Color.WHITE); // Change text color to white
@@ -175,10 +175,9 @@ private JLabel createProfileButton() {
                 
                 @Override
                 public void mouseExited(MouseEvent e) {
-                    isHovered = false;
                     setBackground(null); // Reset background color when not hovered
                     setOpaque(false);
-                    setForeground(Color.BLACK); // Reset text color to black
+                    setForeground(new Color(52, 50, 49)); // Reset text color to off black
                     repaint(); // Repaint to revert hover effect
                 }
             });

@@ -46,6 +46,7 @@ public class BookList extends JFrame implements fontComponent {
         JLabel titleLabel = new JLabel("Book List");
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(PRIMARY_COLOR);
+        titleLabel.setPreferredSize(new Dimension(300, 30));
 
         titlePanel.add(iconLabel);
         titlePanel.add(titleLabel);
