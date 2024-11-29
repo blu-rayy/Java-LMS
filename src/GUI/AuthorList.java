@@ -1,10 +1,10 @@
 package GUI;
 
-import backend.LibraryDatabase;
 import backend.Author;
-import java.util.List;
+import backend.LibraryDatabase;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.table.*;
 
@@ -227,7 +227,7 @@ public class AuthorList extends JFrame implements fontComponent {
         }
 
         try {
-            Integer.parseInt(count);
+            Integer.valueOf(count);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, 
                 "Book Count must be a number", 

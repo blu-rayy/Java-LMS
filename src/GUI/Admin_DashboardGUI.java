@@ -330,7 +330,8 @@ private JLabel createProfileButton() {
                 featureWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 featureWindow.setVisible(true);
             } else {
-                System.out.println("Unsupported feature window type: " + featureInstance.getClass().getName());
+                if (featureInstance != null) System.out.println("Unsupported feature window type: " + featureInstance.getClass().getName());
+                else System.out.println("Feature instance is null.");
             }
         } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
             JOptionPane.showMessageDialog(this, "Feature not implemented or class not found: " + feature, "Error", JOptionPane.ERROR_MESSAGE);
