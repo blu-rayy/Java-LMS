@@ -344,7 +344,7 @@ private JLabel createProfileButton() {
         // Create an instance of AboutPage
         AboutPage aboutPage = new AboutPage();
 
-        aboutPage.setSize(500, 320);; 
+        aboutPage.setSize(500, 320); 
         aboutPage.setLocationRelativeTo(this); 
         aboutPage.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
         aboutPage.setVisible(true); 
