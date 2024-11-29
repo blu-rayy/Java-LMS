@@ -33,7 +33,7 @@ public class About {
 
             // Text description
             JLabel aboutLabel = new JLabel("<html><div style='text-align: center;'>"
-                    + "The Access Navigation Platform-Library Management System (ANP-LMS) is designed to streamline"
+                    + "The Access Navigation Platform-Library Management System (ANP-LMS) is designed to streamline "
                     + "library operations, manage book collections, and improve access to resources for students and staff.<br><br>"
                     + "This application is a project made in fulfillment of CCS0023L by Mr. Reginald Cheng. "
                     + "Any content seen in the application is purely for educational purposes only."
