@@ -364,7 +364,6 @@ private JLabel createProfileButton() {
         // Create an instance of DevelopersList
         DevelopersList developersList = new DevelopersList();
 
-        developersList.setSize(400, 300); 
         developersList.setLocationRelativeTo(this); 
         developersList.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
         developersList.setVisible(true); 

@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public class AccountDetails extends JFrame implements fontComponent {
     public AccountDetails(String username) {
-        // Fetch member details from database -- for testing purposes, i set my name for now
+        // Fetch member details from database -- for testing purposes, i set a name
         Member member = LibraryDatabase.getMemberDetails("erichiii");
         
         // Set up frame
