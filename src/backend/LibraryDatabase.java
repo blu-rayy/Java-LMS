@@ -93,7 +93,7 @@ public class LibraryDatabase {
 
     // Get member details by name
     public static Member getMemberDetails(String name) {
-        String sql = "SELECT * FROM members WHERE name = ?";
+        String sql = "SELECT * FROM members WHERE username = ?";
         try (Connection conn = SQLiteDatabase.connect(); 
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
