@@ -1,8 +1,8 @@
 package GUI;
 
 import backend.Book;
-import backend.SQLiteDatabase;
 import backend.LibraryDatabase;
+import backend.SQLiteDatabase;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.Connection;
@@ -44,7 +44,7 @@ public class EditBooks extends JFrame implements fontComponent {
         titlePanel.setBackground(BACKGROUND_COLOR);
 
         // Add icon beside title
-        ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\managebookIconOrange.png"); // Replace with the path to your icon
+        ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\managebookIconOrange.png");
         Image resizedTaskbarIcon = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         setIconImage(resizedTaskbarIcon);
         JLabel iconLabel = new JLabel(new ImageIcon(resizedTaskbarIcon));
@@ -52,6 +52,7 @@ public class EditBooks extends JFrame implements fontComponent {
         JLabel titleLabel = new JLabel("Book Management");
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(PRIMARY_COLOR);
+        titleLabel.setPreferredSize(new Dimension(300, 30));
 
         titlePanel.add(iconLabel);
         titlePanel.add(titleLabel);
