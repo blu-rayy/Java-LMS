@@ -9,10 +9,10 @@ import java.time.LocalTime;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
-public class User_DashboardGUI extends JFrame implements fontComponent {
+public class Member_DashboardGUI extends JFrame implements fontComponent {
     private final String userName;
 
-    public User_DashboardGUI(String userName) {
+    public Member_DashboardGUI(String userName) {
         this.userName = userName;
         initializeUI();
     }
@@ -227,7 +227,7 @@ public class User_DashboardGUI extends JFrame implements fontComponent {
         String[][] statsData = {
             {"Books", "Logos\\bookIcon.png", "BookList"},
             {"Circulation","Logos\\circulationIcon.png", "CheckedOutBooks"},
-            {"Authors", "Logos\\authorIcon.png", "UserAuthorList"},
+            {"Authors", "Logos\\authorIcon.png", "MemberAuthorList"},
         };
     
         for (String[] stat : statsData) {
@@ -427,7 +427,7 @@ private void showDeveloperDialog() {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> 
-            new User_DashboardGUI("User")
+            new Member_DashboardGUI("User")
         );
     }
 }

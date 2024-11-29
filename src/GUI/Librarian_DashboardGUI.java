@@ -9,10 +9,10 @@ import java.time.LocalTime;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
-public class Admin_DashboardGUI extends JFrame implements fontComponent {
+public class Librarian_DashboardGUI extends JFrame implements fontComponent {
     private final String adminName;
 
-    public Admin_DashboardGUI(String adminName) {
+    public Librarian_DashboardGUI(String adminName) {
         this.adminName = adminName;
         initializeUI();
     }
@@ -441,7 +441,7 @@ private JLabel createProfileButton() {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> 
-            new Admin_DashboardGUI("Administrator")
+            new Librarian_DashboardGUI("Administrator")
         );
     }
 }
