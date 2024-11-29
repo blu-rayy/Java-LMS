@@ -85,7 +85,7 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         rightPanel.add(usernameLabel, gbc);
 
         usernameField = new JTextField(20);
-        usernameField.setFont(TITLE_FONT18); 
+        usernameField.setFont(PLAIN_FONT16); 
         gbc.gridy = 3;
         rightPanel.add(usernameField, gbc);
 
@@ -96,7 +96,7 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         rightPanel.add(passwordLabel, gbc);
 
         passwordField = new JPasswordField(20);
-        passwordField.setFont(TITLE_FONT18); 
+        passwordField.setFont(PLAIN_FONT16); 
         gbc.gridy = 5;
         rightPanel.add(passwordField, gbc);
 
