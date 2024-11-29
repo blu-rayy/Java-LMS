@@ -102,6 +102,24 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
         Object[][] sampleData = {
             {"B001", "Java Programming", "John Smith", "Alice Brown", "2024-02-15", "2024-03-15", "Overdue"},
             {"B002", "Database Systems", "Jane Doe", "Bob Wilson", "2024-02-20", "2024-03-20", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
+            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
             {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"}
         };
 
