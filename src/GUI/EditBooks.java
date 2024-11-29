@@ -194,6 +194,12 @@ public class EditBooks extends JFrame implements fontComponent {
                 tableModel.addRow(row);
     
                 addBookDialog.dispose();
+
+                JOptionPane.showMessageDialog(this, 
+                "Book added successfully", 
+                "Add Book", 
+                JOptionPane.INFORMATION_MESSAGE
+            );
             }
         });
     
@@ -323,6 +329,12 @@ public class EditBooks extends JFrame implements fontComponent {
         
                 // Close the edit dialog
                 editBookDialog.dispose();
+
+                JOptionPane.showMessageDialog(this, 
+                "Book details updated successfully", 
+                "Update Book Details", 
+                JOptionPane.INFORMATION_MESSAGE
+                );
             }
         });
     
@@ -351,18 +363,41 @@ public class EditBooks extends JFrame implements fontComponent {
             );
             return;
         }
-
+    
+        // Get the ISBN of the selected book
+        String isbnToDelete = bookTable.getValueAt(selectedRow, 0).toString(); // Assuming ISBN is in column 0
+    
         int confirmDelete = JOptionPane.showConfirmDialog(this, 
             "Are you sure you want to delete this book?", 
             "Confirm Deletion", 
             JOptionPane.YES_NO_OPTION
         );
-
+    
         if (confirmDelete == JOptionPane.YES_OPTION) {
-            tableModel.removeRow(selectedRow);
+            // Delete the book from the database
+            try {
+                long isbn = Long.parseLong(isbnToDelete); // Parse ISBN to long if needed
+                LibraryDatabase.deleteBook(isbn); // Call to delete from DB
+    
+                // Remove the book from the table model
+                tableModel.removeRow(selectedRow);
+    
+                // Show success message
+                JOptionPane.showMessageDialog(this, 
+                    "Book deleted successfully", 
+                    "Delete Book", 
+                    JOptionPane.INFORMATION_MESSAGE
+                );
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, 
+                    "Invalid ISBN format", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
         }
     }
-
+    
     private void refreshBookList() {
         // Clear the current table data
         tableModel.setRowCount(0);
