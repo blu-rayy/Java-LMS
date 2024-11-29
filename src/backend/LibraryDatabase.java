@@ -308,6 +308,32 @@ public class LibraryDatabase {
             System.out.println("Error updating member: " + e.getMessage());
         }
     }
+
+    public static Member getMemberById(String memberId) {
+        String sql = "SELECT * FROM members WHERE memberID = ?";
+        try (Connection conn = SQLiteDatabase.connect(); 
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, memberId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                Member member = new Member();
+                member.setMemberID(rs.getString("memberID"));
+                member.setName(rs.getString("name"));
+                member.setUsername(rs.getString("username"));
+                member.setEmail(rs.getString("email"));
+                member.setPhoneNumber(rs.getString("phoneNumber"));
+                member.setUserType(rs.getString("userType"));
+                member.setRegistrationDate(rs.getString("registrationDate"));
+                
+                return member;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching member: " + e.getMessage());
+        }
+        return null;
+    }
     
     // Delete a member
     public static void deleteMember(String memberID) {
