@@ -28,7 +28,7 @@ public class MemberBorrowBooks extends JFrame implements fontComponent {
         setLocationRelativeTo(null);
 
         // Set icon for taskbar
-        ImageIcon taskbarIcon = new ImageIcon("Logos\\orangeIcons\\bookIconOrange.png");
+        ImageIcon taskbarIcon = new ImageIcon("Logos\\orangeIcons\\borrowBookIconOrange.png");
         Image resizedTaskbarIcon = taskbarIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         setIconImage(resizedTaskbarIcon);
 
@@ -57,7 +57,7 @@ public class MemberBorrowBooks extends JFrame implements fontComponent {
         bookCountLabel.setForeground(PRIMARY_COLOR);
 
         // Icon
-        ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\bookIconOrange.png");
+        ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\borrowBookIconOrange.png");
         Image resizedIcon = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         JLabel iconLabel = new JLabel(new ImageIcon(resizedIcon));
 
