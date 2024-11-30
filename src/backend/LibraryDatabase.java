@@ -120,6 +120,51 @@ public class LibraryDatabase {
         return null;
     }
 
+    // Count all rows in Books table
+    public static int countBooks() {
+        String sql = "SELECT COUNT(*) AS total FROM books";
+        try (Connection conn = SQLiteDatabase.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error counting books: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    // Count all rows in Members table
+    public static int countMembers() {
+        String sql = "SELECT COUNT(*) AS total FROM members";
+        try (Connection conn = SQLiteDatabase.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error counting members: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    // Count all rows in Authors table
+    public static int countAuthors() {
+        String sql = "SELECT COUNT(*) AS total FROM authors";
+        try (Connection conn = SQLiteDatabase.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error counting authors: " + e.getMessage());
+        }
+        return 0;
+    }
+
     // Insert a new book into the database
     public static void insertBook(Book book) {
         String sql = "INSERT INTO books(title, author, isbn, publicationDate, availableCopies) VALUES(?,?,?,?,?)";
@@ -373,17 +418,67 @@ public class LibraryDatabase {
     }
 
     // Delete a book from the database
-    public static void deleteBook(int bookId) {
-        String sql = "DELETE FROM books WHERE id = ?";
+    public static void deleteBook(long isbn) {
+        String sql = "DELETE FROM books WHERE isbn = ?";
         try (Connection conn = SQLiteDatabase.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, bookId);
-            pstmt.executeUpdate();
-            System.out.println("Book deleted.");
+            pstmt.setLong(1, isbn); // Use the correct column name
+            int rowsAffected = pstmt.executeUpdate();
+            System.out.println("Rows affected: " + rowsAffected); // Debugging output
         } catch (SQLException e) {
             System.out.println("Error deleting book: " + e.getMessage());
         }
     }
 
+    //Update the database
+    public static void updateBook(Book book) {
+        String sql = "UPDATE books SET title = ?, author = ?, publicationDate = ?, availableCopies = ? WHERE isbn = ?";
+        
+        try (Connection conn = SQLiteDatabase.connect(); 
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    
+            // Setting values for the query
+            pstmt.setString(1, book.getTitle());
+            pstmt.setString(2, book.getAuthor());
+            pstmt.setString(3, book.getPublicationDate());
+            pstmt.setInt(4, book.getAvailableCopies());
+            pstmt.setString(5, book.getISBN());
+    
+            // Execute update
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Book updated successfully.");
+            } else {
+                System.out.println("No book found with the given ISBN: " + book.getISBN());
+            }
+    
+        } catch (SQLException e) {
+            System.out.println("Error updating book: " + e.getMessage());
+        }
+    }
+
+    //For Refresh Method
+    public static List<Book> getAllBooks() throws SQLException {
+        List<Book> books = new ArrayList<>();
+        String sql = "SELECT isbn, title, author, publicationDate, availableCopies FROM books";
+    
+        try (Connection conn = SQLiteDatabase.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+    
+            while (rs.next()) {
+                String isbn = rs.getString("isbn");
+                String title = rs.getString("title");
+                String author = rs.getString("author");
+                String publicationDate = rs.getString("publicationDate");
+                int availableCopies = rs.getInt("availableCopies");
+    
+                Book book = new Book(title, author, isbn, publicationDate, availableCopies);
+                books.add(book);
+            }
+        }
+        return books;
+    }
+    
     public static List<Member> getAllMembers() {
         List<Member> members = new ArrayList<>();
         String sql = "SELECT * FROM members";

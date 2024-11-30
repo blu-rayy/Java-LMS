@@ -390,10 +390,10 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
             this.setVisible(false);
 
             if ("Librarian".equals(userType)) {
-                Admin_DashboardGUI adminDashboard = new Admin_DashboardGUI(username);
+                Librarian_DashboardGUI adminDashboard = new Librarian_DashboardGUI(username);
                 adminDashboard.setVisible(true);
             } else {
-                User_DashboardGUI userDashboard = new User_DashboardGUI(username);
+                Member_DashboardGUI userDashboard = new Member_DashboardGUI(username);
                 userDashboard.setVisible(true);
             }
         } else {

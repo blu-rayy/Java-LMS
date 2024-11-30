@@ -92,16 +92,15 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
         JPanel tablePanel = new JPanel(new BorderLayout());
         tablePanel.setBackground(BACKGROUND_COLOR);
 
-        String[] columnNames = {"Book ID", "Title", "Author", "Borrower", "Borrow Date", "Due Date", "Status"};
+        String[] columnNames = {"Transaction ID", "Member Name", "Book Title", "Transaction Type", "Transaction Date"};
 
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; //al cells are non-editble
+                return false; //all cells are non-editable
             }
         };
 
-        //tableModel = new DefaultTableModel(columnNames, 0);
         borrowedBooksTable = new JTable(tableModel);
         rowSorter = new TableRowSorter<>(tableModel);
         borrowedBooksTable.setRowSorter(rowSorter);
@@ -123,27 +122,9 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
 
     private void addSampleBorrowedBooks() {
         Object[][] sampleData = {
-            {"B001", "Java Programming", "John Smith", "Alice Brown", "2024-02-15", "2024-03-15", "Overdue"},
-            {"B002", "Database Systems", "Jane Doe", "Bob Wilson", "2024-02-20", "2024-03-20", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"}
+            {"T001", "Alice Brown", "Java Programming", "Borrow", "2024-02-15"},
+            {"T002", "Bob Wilson", "Database Systems", "Borrow", "2024-02-20"},
+            {"T003", "Carol Davis", "Software Engineering", "Borrow", "2024-02-25"}
         };
 
         for (Object[] row : sampleData) {
@@ -185,7 +166,7 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
         }
 
         String[] statusOptions = {"Active", "Overdue", "Returned"};
-        String currentStatus = (String) tableModel.getValueAt(selectedRow, 6);
+        String currentStatus = (String) tableModel.getValueAt(selectedRow, 3);
         
         String newStatus = (String) JOptionPane.showInputDialog(
             this, 
@@ -198,7 +179,7 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
         );
 
         if (newStatus != null && !newStatus.equals(currentStatus)) {
-            tableModel.setValueAt(newStatus, selectedRow, 6);
+            tableModel.setValueAt(newStatus, selectedRow, 3);
         }
     }
 
@@ -208,15 +189,15 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
         int availableCount = 0;
 
         for (int i = 0; i < tableModel.getRowCount(); i++) {
-            String status = (String) tableModel.getValueAt(i, 6);
-            if ("Active".equalsIgnoreCase(status) || "Overdue".equalsIgnoreCase(status)) {
+            String status = (String) tableModel.getValueAt(i, 3);
+            if ("Borrow".equalsIgnoreCase(status) || "Overdue".equalsIgnoreCase(status)) {
                 checkedOutCount++;
             } else if ("Returned".equalsIgnoreCase(status)) {
                 availableCount++;
             }
         }
 
-        counterLabel.setText("Checked Out: " + checkedOutCount + " | Available: " + availableCount);
+        counterLabel.setText("Borrowed: " + checkedOutCount + " | Available: " + availableCount);
     }
 
     private JButton createStyledButton(String text, String iconPath) {
