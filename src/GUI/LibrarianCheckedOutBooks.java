@@ -1,5 +1,6 @@
 package GUI;
 
+import backend.LibraryDatabase;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.Connection;
@@ -19,7 +20,7 @@ public class LibrarianCheckedOutBooks extends JFrame implements fontComponent {
     private TableRowSorter<DefaultTableModel> rowSorter;
     private JLabel counterLabel;
 
-    private static final String DB_URL = "jdbc:sqlite:library.db"; // Update with your actual DB path
+    private static final String DB_URL = "jdbc:sqlite:library.db";
 
     public LibrarianCheckedOutBooks() {
         initializeUI();
@@ -254,21 +255,30 @@ public class LibrarianCheckedOutBooks extends JFrame implements fontComponent {
         }
         
         private void updateTransactionStatus(String transactionID, String newTransactionType) {
-            String insertQuery = "INSERT INTO transactions (memberID, isbn, transactionType, transactionDate) " +
-                                 "SELECT memberID, isbn, ?, CURRENT_DATE " +
-                                "FROM transactions WHERE transactionID = ?";
-
-            try (Connection conn = DriverManager.getConnection(DB_URL);
-                 PreparedStatement insertStmt = conn.prepareStatement(insertQuery)) {
+            try {
+                // Generate a new transaction ID
+                String newTransactionID = LibraryDatabase.generateNextTransactionID();
         
-                // Set the new transaction type and the transaction ID for the query
-                insertStmt.setString(1, newTransactionType); // New transaction type (e.g., "Returned", "Borrow", "Overdue")
-                insertStmt.setString(2, transactionID);      // Use the selected transaction as the basis
-                insertStmt.executeUpdate();
+                // Delegate the transaction status update to LibraryDatabase
+                boolean updateSuccess = LibraryDatabase.updateTransactionStatus(transactionID, newTransactionType, newTransactionID);
         
+                if (updateSuccess) {
+                    // Optional: Add success notification if needed
+                    JOptionPane.showMessageDialog(this, 
+                        "Transaction status updated successfully", 
+                        "Update Successful", 
+                        JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, 
+                        "Failed to update transaction status", 
+                        "Update Failed", 
+                        JOptionPane.ERROR_MESSAGE);
+                }
             } catch (SQLException e) {
-                JOptionPane.showMessageDialog(this, "Error inserting new transaction record: " + e.getMessage(),
-                                              "Database Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, 
+                    "Error updating transaction record: " + e.getMessage(),
+                    "Database Error", 
+                    JOptionPane.ERROR_MESSAGE);
             }
         }
         

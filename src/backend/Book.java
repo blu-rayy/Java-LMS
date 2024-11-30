@@ -56,7 +56,7 @@ public class Book implements LibraryItem {
     }
 
     @Override
-    public boolean borrowBook() {
+    public boolean borrowBook(Book book) {
         if (availableCopies > 0) {
             availableCopies--;
             return true;
@@ -65,7 +65,7 @@ public class Book implements LibraryItem {
     }
 
     @Override
-    public void returnBook() {
+    public void returnBook(Book book) {
         availableCopies++;
     }
 }

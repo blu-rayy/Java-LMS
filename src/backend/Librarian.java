@@ -6,17 +6,17 @@ public class Librarian extends Person implements LibraryItem {
         super(id, name, username, email, phoneNumber, registrationDate, password, "Librarian"); // Set userType to "Librarian"
     }
 
+    // performs a different behavior compared to Member.java 
     @Override
-    public boolean borrowBook() {
-        // to centralize all the SQL queries, this will redirect to LibraryDatabase.java
-        System.out.println("Sample");
-        return false;
+    public boolean borrowBook(Book book) {
+
+        System.out.println("The Librarian does not need to borrow a book directly!");
+                return false;
     }
 
     @Override
-    public void returnBook() {
-        // to centralize all the SQL queries, this will redirect to LibraryDatabase.java
-        System.out.println("Sample");
+    public void returnBook(Book book) {
+        System.out.println("The Librarian does not need to return a book directly!");
     }
 
     // Method to process borrowing on behalf of a specific member

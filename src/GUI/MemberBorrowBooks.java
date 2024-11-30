@@ -1,9 +1,9 @@
 package GUI;
 
 import backend.Book;
+import backend.LibraryDatabase;
 import backend.SQLiteDatabase;
 import java.awt.*;
-import java.awt.event.*;
 import java.sql.*;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -16,7 +16,7 @@ public class MemberBorrowBooks extends JFrame implements fontComponent {
     private JTextField searchField;
 
     public MemberBorrowBooks(String userName) {
-        this.userName = userName;
+        this.userName = "erichiii";
         initializeUI();
     }
 
@@ -50,7 +50,6 @@ public class MemberBorrowBooks extends JFrame implements fontComponent {
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(PRIMARY_COLOR);
         titleLabel.setPreferredSize(new Dimension(300, 30));
-
         JLabel bookCountLabel = new JLabel("Available Books: " + countAvailableBooks());
         bookCountLabel.setFont(TITLE_FONT14);
         bookCountLabel.setForeground(PRIMARY_COLOR);
@@ -112,7 +111,7 @@ public class MemberBorrowBooks extends JFrame implements fontComponent {
         JTableHeader header = availableBooksTable.getTableHeader();
         header.setBackground(PRIMARY_COLOR);
         header.setForeground(Color.WHITE);
-        header.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        header.setFont(TITLE_FONT14);
 
         JScrollPane scrollPane = new JScrollPane(availableBooksTable);
         scrollPane.setBorder(BorderFactory.createLineBorder(PRIMARY_COLOR, 1));
@@ -155,7 +154,7 @@ public class MemberBorrowBooks extends JFrame implements fontComponent {
         borrowButton.setBackground(PRIMARY_COLOR);
         borrowButton.setForeground(Color.WHITE);
         borrowButton.setFont(PLAIN_FONT);
-        borrowButton.addActionListener(this::borrowSelectedBook);
+        borrowButton.addActionListener(e -> borrowSelectedBook());
 
         borrowPanel.add(borrowButton);
 
@@ -186,7 +185,7 @@ public class MemberBorrowBooks extends JFrame implements fontComponent {
         sorter.setRowFilter(filter);
     }
 
-    private void borrowSelectedBook(ActionEvent e) {
+    private void borrowSelectedBook() {
         int selectedRow = availableBooksTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, 
@@ -278,7 +277,8 @@ public class MemberBorrowBooks extends JFrame implements fontComponent {
 
     private boolean canBorrowBook(String username) throws SQLException {
         String query = "SELECT COUNT(*) AS borrowedCount FROM transactions " +
-                       "WHERE username = ? AND returned_date IS NULL";
+                       "WHERE memberID = (SELECT memberID FROM members WHERE username = ?) " +
+                       "AND transactionDate IS NULL";
         
         try (Connection connection = SQLiteDatabase.connect();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -294,47 +294,41 @@ public class MemberBorrowBooks extends JFrame implements fontComponent {
         return false;
     }
 
-    private boolean borrowBook(String username, String isbn) {
-        String insertBorrowQuery = "INSERT INTO transactions " +
-                                   "(username, ISBN, borrow_date, due_date, returned_date) " +
-                                   "VALUES (?, ?, date('now'), date('now', '+14 days'), NULL)";
-        
-        String updateBookQuery = "UPDATE books SET availableCopies = availableCopies - 1 " +
-                                 "WHERE ISBN = ? AND availableCopies > 0";
-        
-        try (Connection connection = SQLiteDatabase.connect()) {
-            // Begin transaction
-            connection.setAutoCommit(false);
-            
-            try (PreparedStatement borrowStmt = connection.prepareStatement(insertBorrowQuery);
-                 PreparedStatement updateStmt = connection.prepareStatement(updateBookQuery)) {
-                
-                // Insert borrowing record
-                borrowStmt.setString(1, username);
-                borrowStmt.setString(2, isbn);
-                borrowStmt.executeUpdate();
-                
-                // Update book availability
-                updateStmt.setString(1, isbn);
-                updateStmt.executeUpdate();
-                
-                // Commit transaction
-                connection.commit();
-                return true;
-                
-            } catch (SQLException e) {
-                // Rollback in case of error
-                connection.rollback();
-                System.out.println("Borrow book error: " + e.getMessage());
-                return false;
-            } finally {
-                connection.setAutoCommit(true);
-            }
-        } catch (SQLException e) {
-            System.out.println("Database connection error: " + e.getMessage());
+private boolean borrowBook(String username, String isbn) throws SQLException {
+    try {
+        // First, check if the user can borrow more books
+        if (!canBorrowBook(username)) {
+            JOptionPane.showMessageDialog(this, 
+                "You have reached the maximum number of borrowed books.", 
+                "Borrow Limit Exceeded", 
+                JOptionPane.WARNING_MESSAGE);
             return false;
         }
+
+        // Use LibraryDatabase to handle the borrow transaction
+        boolean borrowSuccess = LibraryDatabase.borrowBook(isbn, username);
+
+        if (borrowSuccess) {
+            // Refresh the table to reflect the updated book availability
+            refreshBookTable();
+            
+            return true;
+        } else {
+            JOptionPane.showMessageDialog(this, 
+                "Failed to borrow the book. Please try again.", 
+                "Borrow Failed", 
+                JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, 
+            "Database error: " + ex.getMessage(), 
+            "Database Error", 
+            JOptionPane.ERROR_MESSAGE);
+        throw ex; // Re-throw to allow calling method to handle if needed
     }
+}
+    
 
     private void refreshBookTable() {
         // Fetch updated available books
@@ -352,11 +346,6 @@ public class MemberBorrowBooks extends JFrame implements fontComponent {
                 book.getPublicationDate(), 
                 book.getAvailableCopies()
             });
-        }
-        
-        // Update book count label
-        for (ActionListener al : ((JPanel)getContentPane().getComponent(0)).getComponents()[0].getListeners(ActionListener.class)) {
-            // Find the book count label
         }
     }
 
