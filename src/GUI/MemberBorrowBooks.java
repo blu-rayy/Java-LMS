@@ -278,7 +278,7 @@ public class MemberBorrowBooks extends JFrame implements fontComponent {
     }
 
     private boolean canBorrowBook(String username) throws SQLException {
-        String query = "SELECT COUNT(*) AS borrowedCount FROM book_borrowings " +
+        String query = "SELECT COUNT(*) AS borrowedCount FROM transactions " +
                        "WHERE username = ? AND returned_date IS NULL";
         
         try (Connection connection = SQLiteDatabase.connect();
