@@ -11,6 +11,18 @@ public class Member extends Person implements LibraryItem {
         this.borrowedBooks = new ArrayList<>();
     }
 
+    @Override
+    public void borrowBook() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'borrowBook'");
+    }
+
+    @Override
+    public void returnBook() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'returnBook'");
+    }
+
     public Member(){
         super();
         this.borrowedBooks = new ArrayList<>();
@@ -43,17 +55,5 @@ public class Member extends Person implements LibraryItem {
             book.returnBook();
             borrowedBooks.remove(book);
         }
-    }
-
-    @Override
-    public void borrowBook() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'borrowBook'");
-    }
-
-    @Override
-    public void returnBook() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'returnBook'");
     }
 }
