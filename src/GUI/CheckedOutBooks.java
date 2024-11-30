@@ -2,9 +2,18 @@ package GUI;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+
+import backend.SQLiteDatabase;
 
 public class CheckedOutBooks extends JFrame implements fontComponent {
     private JTable borrowedBooksTable;
@@ -13,10 +22,72 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
     private TableRowSorter<DefaultTableModel> rowSorter;
     private JLabel counterLabel;
 
+ private static final String DB_URL = "jdbc:sqlite:library.db"; // Update with your actual DB path
+
     public CheckedOutBooks() {
         initializeUI();
     }
 
+    private void fetchCheckedOutBooks() {
+        String query = "SELECT transactionID, memberID, isbn, transactionType, transactionDate " +
+                       "FROM transactions WHERE transactionType = 'Borrow'";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+    
+            // Clear any existing data in the table
+            tableModel.setRowCount(0);
+    
+            // Iterate through the result set and populate the table
+            while (rs.next()) {
+                String transactionID = rs.getString("transactionID");
+                String memberID = rs.getString("memberID");
+                String isbn = rs.getString("isbn");
+                String transactionDate = rs.getString("transactionDate");
+    
+                String bookTitle = fetchBookTitle(conn, isbn);
+                String memberName = fetchMemberName(conn, memberID);
+    
+                if (bookTitle != null && memberName != null) {
+                    tableModel.addRow(new Object[]{transactionID, memberID, isbn, bookTitle, memberName, transactionDate});
+                }
+            }
+    
+            // Update the counter label with the number of rows
+            counterLabel.setText("Checked Out: " + tableModel.getRowCount());
+    
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error fetching checked out books: " + e.getMessage(),
+                                          "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private String fetchBookTitle(Connection conn, String isbn) throws SQLException {
+        String bookQuery = "SELECT title FROM books WHERE isbn = ?";
+        try (PreparedStatement bookStmt = conn.prepareStatement(bookQuery)) {
+            bookStmt.setString(1, isbn);
+            try (ResultSet bookRs = bookStmt.executeQuery()) {
+                if (bookRs.next()) {
+                    return bookRs.getString("title");
+                }
+            }
+        }
+        return null;
+    }
+    
+    private String fetchMemberName(Connection conn, String memberID) throws SQLException {
+        String memberQuery = "SELECT name FROM members WHERE memberID = ?";
+        try (PreparedStatement memberStmt = conn.prepareStatement(memberQuery)) {
+            memberStmt.setString(1, memberID);
+            try (ResultSet memberRs = memberStmt.executeQuery()) {
+                if (memberRs.next()) {
+                    return memberRs.getString("name");
+                }
+            }
+        }
+        return null;
+    }
+    
     private void initializeUI() {
         setTitle("ANP LMS - Checked Out Books");
         setSize(1200, 700);
@@ -91,66 +162,37 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
     private JPanel createBorrowedBooksTablePanel() {
         JPanel tablePanel = new JPanel(new BorderLayout());
         tablePanel.setBackground(BACKGROUND_COLOR);
-
-        String[] columnNames = {"Book ID", "Title", "Author", "Borrower", "Borrow Date", "Due Date", "Status"};
+    
+        // Updated column names to match the new query
+        String[] columnNames = {"Transaction ID", "Member ID", "Book ID", "Title", "Member Name", "Transaction Date"};
 
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; //al cells are non-editble
+                return false; // All cells are non-editable
             }
         };
-
-        //tableModel = new DefaultTableModel(columnNames, 0);
+    
         borrowedBooksTable = new JTable(tableModel);
         rowSorter = new TableRowSorter<>(tableModel);
         borrowedBooksTable.setRowSorter(rowSorter);
-
+    
         borrowedBooksTable.setFont(PLAIN_FONT16);
         borrowedBooksTable.setRowHeight(30);
         borrowedBooksTable.getTableHeader().setFont(TITLE_FONT14);
         borrowedBooksTable.getTableHeader().setBackground(PRIMARY_COLOR);
         borrowedBooksTable.getTableHeader().setForeground(Color.WHITE);
-
-        addSampleBorrowedBooks();
-
+    
+        // Load the data from the database into the table
+        fetchCheckedOutBooks();
+    
         JScrollPane scrollPane = new JScrollPane(borrowedBooksTable);
         scrollPane.getViewport().setBackground(BACKGROUND_COLOR);
-
+    
         tablePanel.add(scrollPane, BorderLayout.CENTER);
         return tablePanel;
     }
-
-    private void addSampleBorrowedBooks() {
-        Object[][] sampleData = {
-            {"B001", "Java Programming", "John Smith", "Alice Brown", "2024-02-15", "2024-03-15", "Overdue"},
-            {"B002", "Database Systems", "Jane Doe", "Bob Wilson", "2024-02-20", "2024-03-20", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"},
-            {"B003", "Software Engineering", "Mike Johnson", "Carol Davis", "2024-02-25", "2024-03-25", "Active"}
-        };
-
-        for (Object[] row : sampleData) {
-            tableModel.addRow(row);
-        }
-    }
-
+    
     private JPanel createActionPanel() {
         JPanel actionPanel = new JPanel(new BorderLayout(10, 10));
         actionPanel.setBackground(BACKGROUND_COLOR);
@@ -202,23 +244,68 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
         }
     }
 
-    //update the counter label with the number of checked out and available books
     private void updateCounter() {
-        int checkedOutCount = 0;
-        int availableCount = 0;
-
-        for (int i = 0; i < tableModel.getRowCount(); i++) {
-            String status = (String) tableModel.getValueAt(i, 6);
-            if ("Active".equalsIgnoreCase(status) || "Overdue".equalsIgnoreCase(status)) {
-                checkedOutCount++;
-            } else if ("Returned".equalsIgnoreCase(status)) {
-                availableCount++;
-            }
-        }
-
-        counterLabel.setText("Checked Out: " + checkedOutCount + " | Available: " + availableCount);
+        int checkedOutCount = tableModel.getRowCount(); // Total number of rows in the table
+    
+        // Update the label to reflect the count
+        counterLabel.setText("Checked Out: " + checkedOutCount);
     }
-
+    
+    private void loadBorrowedBooks() {
+        String query = "SELECT t.transactionID, t.memberID, t.isbn, t.transactionDate FROM transactions t";
+    
+        try (Connection conn = SQLiteDatabase.connect(); 
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+    
+            // Clear the table before loading new data
+            tableModel.setRowCount(0);
+    
+            // Loop through each transaction
+            while (rs.next()) {
+                String transactionID = rs.getString("transactionID");
+                String memberID = rs.getString("memberID");
+                String isbn = rs.getString("isbn");
+                String transactionDate = rs.getString("transactionDate");
+    
+                // Query for book title
+                String bookQuery = "SELECT title FROM books WHERE isbn = ?";
+                String bookTitle = null;
+                try (PreparedStatement bookStmt = conn.prepareStatement(bookQuery)) {
+                    bookStmt.setString(1, isbn);
+                    try (ResultSet bookRs = bookStmt.executeQuery()) {
+                        if (bookRs.next()) {
+                            bookTitle = bookRs.getString("title");
+                        }
+                    }
+                }
+    
+                // Query for member name
+                String memberName = null;
+                String memberQuery = "SELECT name FROM members WHERE memberID = ?";
+                try (PreparedStatement memberStmt = conn.prepareStatement(memberQuery)) {
+                    memberStmt.setString(1, memberID);
+                    try (ResultSet memberRs = memberStmt.executeQuery()) {
+                        if (memberRs.next()) {
+                            memberName = memberRs.getString("name");
+                        }
+                    }
+                }
+    
+                // Ensure that we have valid values before adding the row
+                if (bookTitle != null && memberName != null) {
+                    // Add row to tableModel
+                    tableModel.addRow(new Object[]{
+                        transactionID, memberID, isbn, bookTitle, memberName, transactionDate
+                    });
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
     private JButton createStyledButton(String text, String iconPath) {
         JButton button = new JButton(text);
         button.setFont(TITLE_FONT14);

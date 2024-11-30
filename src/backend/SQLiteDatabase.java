@@ -2,6 +2,7 @@ package backend;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class SQLiteDatabase {
     private static final String DATABASE_URL = "jdbc:sqlite:library.db";
@@ -10,6 +11,10 @@ public class SQLiteDatabase {
     public static Connection connect() {
         try {
             Connection connection = DriverManager.getConnection(DATABASE_URL);
+
+            Statement stmt = connection.createStatement();
+            stmt.execute("PRAGMA foreign_keys = ON;");  // Enabling foreign key constraints
+
             return connection;
         } catch (SQLException e) {
             System.out.println("Connection to SQLite failed: " + e.getMessage());
