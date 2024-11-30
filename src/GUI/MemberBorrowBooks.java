@@ -1,7 +1,6 @@
 package GUI;
 
 import backend.Book;
-import backend.LibraryDatabase;
 import backend.SQLiteDatabase;
 import java.awt.*;
 import java.awt.event.*;
@@ -278,7 +277,7 @@ public class MemberBorrowBooks extends JFrame implements fontComponent {
     }
 
     private boolean canBorrowBook(String username) throws SQLException {
-        String query = "SELECT COUNT(*) AS borrowedCount FROM book_borrowings " +
+        String query = "SELECT COUNT(*) AS borrowedCount FROM transactions " +
                        "WHERE username = ? AND returned_date IS NULL";
         
         try (Connection connection = SQLiteDatabase.connect();
@@ -296,7 +295,7 @@ public class MemberBorrowBooks extends JFrame implements fontComponent {
     }
 
     private boolean borrowBook(String username, String isbn) {
-        String insertBorrowQuery = "INSERT INTO book_borrowings " +
+        String insertBorrowQuery = "INSERT INTO transactions " +
                                    "(username, ISBN, borrow_date, due_date, returned_date) " +
                                    "VALUES (?, ?, date('now'), date('now', '+14 days'), NULL)";
         
