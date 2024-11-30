@@ -1,6 +1,6 @@
 package backend;
 public interface LibraryItem {
-    void borrowBook();
+    boolean borrowBook();
     void returnBook();
 }
 
