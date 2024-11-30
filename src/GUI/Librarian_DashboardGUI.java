@@ -234,8 +234,8 @@ public class Librarian_DashboardGUI extends JFrame implements fontComponent {
         // Top Row: Statistics
         String[][] statsData = {
             {"Books", "Logos\\bookIcon.png", "BookList"},
-            {"Circulation", "Logos\\circulationIcon.png", "CheckedOutBooks"},
-            {"Users", "Logos\\usersIcon.png", "UserList"},
+            {"Circulation", "Logos\\circulationIcon.png", "LibrarianCheckedOutBooks"},
+            {"Users", "Logos\\usersIcon.png", "LibrarianUserList"},
         };
 
         for (String[] stat : statsData) {
@@ -244,9 +244,9 @@ public class Librarian_DashboardGUI extends JFrame implements fontComponent {
 
         // Bottom Row: Action Buttons
         String[][] actionData = {
-            {"Manage Books", "Logos\\managebookIcon.png", "EditBooks"},
-            {"Authors", "Logos\\authorIcon.png", "EditAuthor"},
-            {"Manage Users", "Logos\\manageusersIcon.png", "EditUsers"},
+            {"Manage Books", "Logos\\managebookIcon.png", "LibrarianEditBooks"},
+            {"Authors", "Logos\\authorIcon.png", "LibrarianEditAuthor"},
+            {"Manage Users", "Logos\\manageusersIcon.png", "LibrarianEditUsers"},
         };
 
         for (String[] action : actionData) {

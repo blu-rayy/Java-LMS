@@ -8,11 +8,11 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.table.*;
 
-public class UserList extends JFrame implements fontComponent {
+public class LibrarianUserList extends JFrame implements fontComponent {
     private JTable userTable;
     private DefaultTableModel tableModel;
 
-    public UserList() {
+    public LibrarianUserList() {
         initializeUI();
         loadUserData();
     }
@@ -198,7 +198,7 @@ public class UserList extends JFrame implements fontComponent {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new UserList().setVisible(true);
+            new LibrarianUserList().setVisible(true);
         });
     }
 }

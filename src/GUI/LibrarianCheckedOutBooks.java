@@ -6,14 +6,14 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
-public class CheckedOutBooks extends JFrame implements fontComponent {
+public class LibrarianCheckedOutBooks extends JFrame implements fontComponent {
     private JTable borrowedBooksTable;
     private DefaultTableModel tableModel;
     private JTextField searchField;
     private TableRowSorter<DefaultTableModel> rowSorter;
     private JLabel counterLabel;
 
-    public CheckedOutBooks() {
+    public LibrarianCheckedOutBooks() {
         initializeUI();
     }
 
@@ -218,7 +218,7 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new CheckedOutBooks().setVisible(true);
+            new LibrarianCheckedOutBooks().setVisible(true);
         });
     }
 }

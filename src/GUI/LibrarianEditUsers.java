@@ -9,11 +9,11 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
-public class EditUsers extends JFrame implements fontComponent {
+public class LibrarianEditUsers extends JFrame implements fontComponent {
     private JTable userTable;
     private DefaultTableModel tableModel;
 
-    public EditUsers() {
+    public LibrarianEditUsers() {
         initializeUI();
         refreshUserList(); // Load data from the database
     }
@@ -300,6 +300,6 @@ public class EditUsers extends JFrame implements fontComponent {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new EditUsers().setVisible(true));
+        SwingUtilities.invokeLater(() -> new LibrarianEditUsers().setVisible(true));
     }
 }

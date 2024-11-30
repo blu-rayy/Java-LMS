@@ -8,11 +8,11 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.table.*;
 
-public class EditAuthor extends JFrame implements fontComponent {
+public class LibrarianEditAuthor extends JFrame implements fontComponent {
     private JTable authorTable;
     private DefaultTableModel tableModel;
 
-    public EditAuthor() {
+    public LibrarianEditAuthor() {
         initializeUI();
         loadAuthorsFromDatabase();
     }
@@ -379,6 +379,6 @@ public class EditAuthor extends JFrame implements fontComponent {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new EditAuthor().setVisible(true));
+        SwingUtilities.invokeLater(() -> new LibrarianEditAuthor().setVisible(true));
     }
 }

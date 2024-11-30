@@ -15,11 +15,11 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
-public class EditBooks extends JFrame implements fontComponent {
+public class LibrarianEditBooks extends JFrame implements fontComponent {
     private JTable bookTable;
     private DefaultTableModel tableModel;
 
-    public EditBooks() {
+    public LibrarianEditBooks() {
         initializeUI();
     }
 
@@ -469,7 +469,7 @@ public class EditBooks extends JFrame implements fontComponent {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new EditBooks().setVisible(true);
+            new LibrarianEditBooks().setVisible(true);
         });
     }
 }
