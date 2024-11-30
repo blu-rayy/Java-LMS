@@ -201,15 +201,24 @@ public class MemberBorrowedBooks extends JFrame implements fontComponent {
 
     private ArrayList<Book> fetchBorrowedBooksFromDatabase() {
         ArrayList<Book> borrowedBooks = new ArrayList<>();
+        
+        // Corrected query
         String query = "SELECT b.ISBN, b.title, b.author, b.publicationDate, b.availableCopies " +
                        "FROM transactions t " +
                        "JOIN books b ON t.ISBN = b.ISBN " +
-                       "WHERE t.transactionType = 'Borrow'";
-    
+                       "WHERE t.transactionType = 'Borrow' " +
+                       "AND NOT EXISTS ( " +
+                       "    SELECT 1 " +
+                       "    FROM transactions t2 " +
+                       "    WHERE t2.ISBN = t.ISBN " +
+                       "    AND t2.memberID = t.memberID " +
+                       "    AND t2.transactionType = 'Returned' " +
+                       ");";
+        
         try (Connection connection = SQLiteDatabase.connect();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
-    
+        
             while (resultSet.next()) {
                 String isbn = resultSet.getString("ISBN");
                 String title = resultSet.getString("title");
@@ -226,9 +235,8 @@ public class MemberBorrowedBooks extends JFrame implements fontComponent {
         }
     
         return borrowedBooks;
-    }
+    }    
     
-
     private int countBorrowedBooks() {
         // Implement the logic to count borrowed books from the database
         ArrayList<Book> borrowedBooks = fetchBorrowedBooksFromDatabase();
