@@ -138,64 +138,64 @@ public class Admin_DashboardGUI extends JFrame implements fontComponent {
         return rightNav;
     }
 
-private JLabel createProfileButton() {
-    ImageIcon profileIcon = new ImageIcon("Logos\\profileIcon.png");
-    Image scaledProfileIcon = profileIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-    JLabel profileLabel = new JLabel(new ImageIcon(scaledProfileIcon));
-    profileLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    
-    // Create custom dropdown menu
-    JPopupMenu dropdownMenu = new JPopupMenu() {
-        @Override
-        public void show(Component invoker, int x, int y) {
-            // Calculate position to show from the left side of the profile icon
-            super.show(invoker, -getPreferredSize().width + invoker.getWidth(), invoker.getHeight());
-        }
-    };
-    dropdownMenu.setBorder(new LineBorder(PRIMARY_COLOR, 1, true));
-    
-    // Custom menu item with orange highlight
-    class CustomMenuItem extends JMenuItem {
-        CustomMenuItem(String text) {
-            super(text);
-            setFont(PLAIN_FONT16);
-            setPreferredSize(new Dimension(250, 40));
-            setBorderPainted(false); // Ensure border is disabled for a clean look
-            
-            setForeground(new Color(52, 50, 49)); // Set initial text color to off black
-    
-            addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    setBackground(PRIMARY_COLOR); // Set background color for hover
-                    setOpaque(true);
-                    setForeground(Color.WHITE); // Change text color to white
-                    repaint(); // Repaint to apply hover effect
-                }
-                
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    setBackground(null); // Reset background color when not hovered
-                    setOpaque(false);
-                    setForeground(new Color(52, 50, 49)); // Reset text color to off black
-                    repaint(); // Repaint to revert hover effect
-                }
-            });
-        }
-    
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g); // Ensure the default painting happens first
-            
-            // Paint the custom background only if opaque
-            if (isOpaque()) {
-                g.setColor(getBackground());
-                g.fillRect(0, 0, getWidth(), getHeight()); // Fill the background with the custom color
+    private JLabel createProfileButton() {
+        ImageIcon profileIcon = new ImageIcon("Logos\\profileIcon.png");
+        Image scaledProfileIcon = profileIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        JLabel profileLabel = new JLabel(new ImageIcon(scaledProfileIcon));
+        profileLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        
+        // Create custom dropdown menu
+        JPopupMenu dropdownMenu = new JPopupMenu() {
+            @Override
+            public void show(Component invoker, int x, int y) {
+                // Calculate position to show from the left side of the profile icon
+                super.show(invoker, -getPreferredSize().width + invoker.getWidth(), invoker.getHeight());
             }
-            g.setColor(getForeground()); //pag eto lang, gumagana yung color pero walang text
-            super.paintComponent(g); //pag eto lang, walang color yung hover pero may text
+        };
+        dropdownMenu.setBorder(new LineBorder(PRIMARY_COLOR, 1, true));
+        
+        // Custom menu item with orange highlight
+        class CustomMenuItem extends JMenuItem {
+            CustomMenuItem(String text) {
+                super(text);
+                setFont(PLAIN_FONT16);
+                setPreferredSize(new Dimension(250, 40));
+                setBorderPainted(false); // Ensure border is disabled for a clean look
+                
+                setForeground(new Color(52, 50, 49)); // Set initial text color to off black
+        
+                addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        setBackground(PRIMARY_COLOR); // Set background color for hover
+                        setOpaque(true);
+                        setForeground(Color.WHITE); // Change text color to white
+                        repaint(); // Repaint to apply hover effect
+                    }
+                    
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        setBackground(null); // Reset background color when not hovered
+                        setOpaque(false);
+                        setForeground(new Color(52, 50, 49)); // Reset text color to off black
+                        repaint(); // Repaint to revert hover effect
+                    }
+                });
+            }
+        
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g); // Ensure the default painting happens first
+                
+                // Paint the custom background only if opaque
+                if (isOpaque()) {
+                    g.setColor(getBackground());
+                    g.fillRect(0, 0, getWidth(), getHeight()); // Fill the background with the custom color
+                }
+                g.setColor(getForeground()); //pag eto lang, gumagana yung color pero walang text
+                super.paintComponent(g); //pag eto lang, walang color yung hover pero may text
+            }
         }
-    }
     
     // Account Menu Item
     CustomMenuItem accountMenuItem = new CustomMenuItem("Account");

@@ -162,29 +162,38 @@ public class User_DashboardGUI extends JFrame implements fontComponent {
                 setPreferredSize(new Dimension(250, 40));
                 setBorderPainted(false); // Ensure border is disabled for a clean look
                 
+                setForeground(new Color(52, 50, 49)); // Set initial text color to off black
+        
                 addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseEntered(MouseEvent e) {
-                        setBackground(PRIMARY_COLOR);
+                        setBackground(PRIMARY_COLOR); // Set background color for hover
                         setOpaque(true);
-                        repaint();
+                        setForeground(Color.WHITE); // Change text color to white
+                        repaint(); // Repaint to apply hover effect
                     }
                     
                     @Override
                     public void mouseExited(MouseEvent e) {
-                        setBackground(null);
+                        setBackground(null); // Reset background color when not hovered
                         setOpaque(false);
-                        repaint();
+                        setForeground(new Color(52, 50, 49)); // Reset text color to off black
+                        repaint(); // Repaint to revert hover effect
                     }
                 });
             }
+        
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g); // Ensure the default painting happens first
+                
+                // Paint the custom background only if opaque
                 if (isOpaque()) {
                     g.setColor(getBackground());
                     g.fillRect(0, 0, getWidth(), getHeight()); // Fill the background with the custom color
                 }
+                g.setColor(getForeground()); //pag eto lang, gumagana yung color pero walang text
+                super.paintComponent(g); //pag eto lang, walang color yung hover pero may text
             }
         }
         
