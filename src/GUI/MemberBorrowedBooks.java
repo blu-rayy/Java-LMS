@@ -3,7 +3,6 @@ package GUI;
 import backend.Book;
 import backend.SQLiteDatabase;
 import java.awt.*;
-import java.awt.event.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +17,7 @@ public class MemberBorrowedBooks extends JFrame implements fontComponent {
     private TableRowSorter<DefaultTableModel> rowSorter;
 
     public MemberBorrowedBooks(String userName) {
-        this.userName = userName;
+        this.userName = "erichiii";
         initializeUI();
     }
 
@@ -48,10 +47,10 @@ public class MemberBorrowedBooks extends JFrame implements fontComponent {
         JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.setBackground(BACKGROUND_COLOR);
 
-        JLabel titleLabel = new JLabel("Borrowed Books");
+        JLabel titleLabel = new JLabel("Borrowed Books of " + userName);
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(PRIMARY_COLOR);
-        titleLabel.setPreferredSize(new Dimension(300, 30));
+        titleLabel.setPreferredSize(new Dimension(400, 30)); // Increased width to ensure enough space
 
         bookCountLabel = new JLabel("Total Borrowed Books: " + countBorrowedBooks());
         bookCountLabel.setFont(TITLE_FONT14);
@@ -201,30 +200,34 @@ public class MemberBorrowedBooks extends JFrame implements fontComponent {
     }
 
     private ArrayList<Book> fetchBorrowedBooksFromDatabase() {
-        ArrayList<Book> availableBooks = new ArrayList<>();
-        String query = "SELECT ISBN, title, author, publicationDate, availableCopies " +
-                       "FROM transactions WHERE availableCopies > 0";
-
+        ArrayList<Book> borrowedBooks = new ArrayList<>();
+        String query = "SELECT b.ISBN, b.title, b.author, b.publicationDate, b.availableCopies " +
+                       "FROM transactions t " +
+                       "JOIN books b ON t.ISBN = b.ISBN " +
+                       "WHERE t.transactionType = 'Borrow'";
+    
         try (Connection connection = SQLiteDatabase.connect();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
-
+    
             while (resultSet.next()) {
                 String isbn = resultSet.getString("ISBN");
                 String title = resultSet.getString("title");
                 String author = resultSet.getString("author");
                 String publicationDate = resultSet.getString("publicationDate");
                 int availableCopies = resultSet.getInt("availableCopies");
-
-                availableBooks.add(new Book(title, author, isbn, publicationDate, availableCopies));
+    
+                // Create a Book object and add it to the list
+                borrowedBooks.add(new Book(title, author, isbn, publicationDate, availableCopies));
             }
-
+    
         } catch (SQLException e) {
-            System.out.println("Error fetching available books: " + e.getMessage());
+            System.out.println("Error fetching borrowed books: " + e.getMessage());
         }
-
-        return availableBooks;
+    
+        return borrowedBooks;
     }
+    
 
     private int countBorrowedBooks() {
         // Implement the logic to count borrowed books from the database

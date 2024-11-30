@@ -10,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -161,19 +160,19 @@ public class LibrarianCheckedOutBooks extends JFrame implements fontComponent {
             JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
             searchPanel.setBackground(BACKGROUND_COLOR);
         
-            JTextField searchField = new JTextField(20);
-            searchField.setFont(PLAIN_FONT);
-            searchField.setBorder(BorderFactory.createCompoundBorder(
+            JTextField localSearchField = new JTextField(20);
+            localSearchField.setFont(PLAIN_FONT);
+            localSearchField.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(PRIMARY_COLOR, 1),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)
             ));
-            searchField.setToolTipText("Search by Title, Author, or ISBN");
+            localSearchField.setToolTipText("Search by Title, Author, or ISBN");
         
             JButton searchButton = new JButton("Search");
             searchButton.setBackground(PRIMARY_COLOR);
             searchButton.setForeground(Color.WHITE);
             searchButton.setFont(PLAIN_FONT);
-            searchButton.addActionListener(e -> performSearch(searchField.getText()));
+            searchButton.addActionListener(e -> performSearch(localSearchField.getText()));
         
             searchPanel.add(new JLabel("Search:"));
             searchPanel.add(searchField);
