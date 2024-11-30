@@ -203,7 +203,7 @@ public class MemberBorrowedBooks extends JFrame implements fontComponent {
     private ArrayList<Book> fetchBorrowedBooksFromDatabase() {
         ArrayList<Book> availableBooks = new ArrayList<>();
         String query = "SELECT ISBN, title, author, publicationDate, availableCopies " +
-                       "FROM book_borrowing WHERE availableCopies > 0";
+                       "FROM transactions WHERE availableCopies > 0";
 
         try (Connection connection = SQLiteDatabase.connect();
              Statement statement = connection.createStatement();
