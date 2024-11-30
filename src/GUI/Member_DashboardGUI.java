@@ -310,20 +310,25 @@ public class Member_DashboardGUI extends JFrame implements fontComponent {
             if (!feature.contains(".")) {
                 className = "GUI." + feature;  
             }
-            
+    
             // Load the class dynamically
-            Class<?> clazz = Class.forName(className);  // Fully qualified name (e.g., "GUI.BookList")
-            
-            // Instantiate the class (assuming a no-argument constructor)
-            Object featureInstance = clazz.getDeclaredConstructor().newInstance();
-        
+            Class<?> clazz = Class.forName(className);  // Fully qualified name (e.g., "GUI.MemberBorrowBooks")
+    
+            // Check if the class requires the userName parameter in the constructor
+            Object featureInstance;
+            if (className.equals("GUI.MemberBorrowBooks") || className.equals("GUI.MemberBorrowedBooks")) {
+                featureInstance = clazz.getDeclaredConstructor(String.class).newInstance(userName);
+            } else {
+                featureInstance = clazz.getDeclaredConstructor().newInstance();
+            }
+    
             JFrame featureWindow = (JFrame) featureInstance;
             featureWindow.setSize(1200, 700);
             featureWindow.setLocationRelativeTo(this);
             featureWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             featureWindow.setVisible(true);
-
-        } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
+    
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Feature not implemented or class not found: " + feature, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
