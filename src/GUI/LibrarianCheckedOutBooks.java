@@ -1,5 +1,6 @@
 package GUI;
 
+import backend.SQLiteDatabase;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.Connection;
@@ -8,14 +9,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
-import backend.SQLiteDatabase;
-
-public class CheckedOutBooks extends JFrame implements fontComponent {
+public class LibrarianCheckedOutBooks extends JFrame implements fontComponent {
     private JTable borrowedBooksTable;
     private DefaultTableModel tableModel;
     private JTextField searchField;
@@ -24,7 +22,7 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
 
  private static final String DB_URL = "jdbc:sqlite:library.db"; // Update with your actual DB path
 
-    public CheckedOutBooks() {
+    public LibrarianCheckedOutBooks() {
         initializeUI();
     }
 
@@ -227,7 +225,7 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
         }
 
         String[] statusOptions = {"Active", "Overdue", "Returned"};
-        String currentStatus = (String) tableModel.getValueAt(selectedRow, 6);
+        String currentStatus = (String) tableModel.getValueAt(selectedRow, 3);
         
         String newStatus = (String) JOptionPane.showInputDialog(
             this, 
@@ -240,7 +238,7 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
         );
 
         if (newStatus != null && !newStatus.equals(currentStatus)) {
-            tableModel.setValueAt(newStatus, selectedRow, 6);
+            tableModel.setValueAt(newStatus, selectedRow, 3);
         }
     }
 
@@ -324,7 +322,7 @@ public class CheckedOutBooks extends JFrame implements fontComponent {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new CheckedOutBooks().setVisible(true);
+            new LibrarianCheckedOutBooks().setVisible(true);
         });
     }
 }

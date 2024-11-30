@@ -1,22 +1,21 @@
 package backend;
 
-public class Librarian extends Person {
+public class Librarian extends Person implements LibraryItem {
 
     public Librarian(String id, String name, String username, String email, String phoneNumber, String registrationDate, String password) {
         super(id, name, username, email, phoneNumber, registrationDate, password, "Librarian"); // Set userType to "Librarian"
     }
 
-    // Override the borrowBook method with Book parameter
     @Override
-    public boolean borrowBook(Book book) {
-        System.out.println("Librarian " + getName() + " is ready to assist with borrowing the book: " + book.getTitle());
-        return false; // Default return value as Librarian doesn’t borrow books directly
+    public void borrowBook() {
+        // to centralize all the SQL queries, this will redirect to LibraryDatabase.java
+        System.out.println("Sample");
     }
 
-    // Override the returnBook method with Book parameter
     @Override
-    public void returnBook(Book book) {
-        System.out.println("Librarian " + getName() + " is ready to assist with returning the book: " + book.getTitle());
+    public void returnBook() {
+        // to centralize all the SQL queries, this will redirect to LibraryDatabase.java
+        System.out.println("Sample");
     }
 
     // Method to process borrowing on behalf of a specific member

@@ -148,8 +148,8 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         signUpPanel.add(signUpUsernameField, gbc);
 
         JLabel usernameErrorLabel = createFixedErrorLabel("Username cannot be empty");
-        usernameErrorLabel.setForeground(Color.RED);
-        usernameErrorLabel.setVisible(false);
+        usernameErrorLabel.setForeground(new Color(255, 0, 0, 0));
+        usernameErrorLabel.setVisible(true);
         gbc.gridy = 1;
         signUpPanel.add(usernameErrorLabel, gbc);
 
@@ -164,8 +164,8 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         signUpPanel.add(emailField, gbc);
 
         JLabel emailErrorLabel = createFixedErrorLabel("Email must end with @gmail.com");
-        emailErrorLabel.setForeground(Color.RED);
-        emailErrorLabel.setVisible(false);
+        emailErrorLabel.setForeground(new Color(255, 0, 0, 0));
+        emailErrorLabel.setVisible(true);
         gbc.gridy = 3;
         signUpPanel.add(emailErrorLabel, gbc);
 
@@ -180,8 +180,8 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         signUpPanel.add(phoneField, gbc);
 
         JLabel phoneErrorLabel = createFixedErrorLabel("Phone number must be 11 digits");
-        phoneErrorLabel.setForeground(Color.RED);
-        phoneErrorLabel.setVisible(false);
+        phoneErrorLabel.setForeground(new Color(255, 0, 0, 0));
+        phoneErrorLabel.setVisible(true);
         gbc.gridy = 5;
         signUpPanel.add(phoneErrorLabel, gbc);
 
@@ -196,8 +196,8 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         signUpPanel.add(signUpPasswordField, gbc);
 
         JLabel passwordErrorLabel = createFixedErrorLabel("Password must have 8 alphanumeric letters");
-        passwordErrorLabel.setForeground(Color.RED);
-        passwordErrorLabel.setVisible(false);
+        passwordErrorLabel.setForeground(new Color(255, 0, 0, 0));
+        passwordErrorLabel.setVisible(true);
         gbc.gridy = 7;
         signUpPanel.add(passwordErrorLabel, gbc);
 
@@ -212,8 +212,8 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         signUpPanel.add(confirmPasswordField, gbc);
 
         JLabel confirmPasswordErrorLabel = createFixedErrorLabel("Passwords do not match");
-        confirmPasswordErrorLabel.setForeground(Color.RED);
-        confirmPasswordErrorLabel.setVisible(false);
+        confirmPasswordErrorLabel.setForeground(new Color(255, 0, 0, 0));
+        confirmPasswordErrorLabel.setVisible(true);
         gbc.gridy = 9;
         signUpPanel.add(confirmPasswordErrorLabel, gbc);
 
@@ -235,8 +235,8 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         librarianPasswordField.setFont(PLAIN_FONT);
         JLabel librarianPasswordLabel = new JLabel("Librarian Verification Password");
         JLabel librarianPasswordErrorLabel = createFixedErrorLabel("Incorrect librarian password");
-        librarianPasswordErrorLabel.setForeground(Color.RED);
-        librarianPasswordErrorLabel.setVisible(false);
+        librarianPasswordErrorLabel.setForeground(new Color(255, 0, 0, 0));
+        librarianPasswordErrorLabel.setVisible(true);
 
         libGBC.gridx = 0;
         libGBC.gridy = 0;
@@ -278,13 +278,13 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
 
         signUpButton.addActionListener(e -> {
             // Reset error labels
-            usernameErrorLabel.setVisible(false);
-            emailErrorLabel.setVisible(false);
-            phoneErrorLabel.setVisible(false);
-            passwordErrorLabel.setVisible(false);
-            confirmPasswordErrorLabel.setVisible(false);
-            librarianPasswordErrorLabel.setVisible(false);
-
+            usernameErrorLabel.setForeground(new Color(255, 0, 0, 0));
+            emailErrorLabel.setForeground(new Color(255, 0, 0, 0));
+            phoneErrorLabel.setForeground(new Color(255, 0, 0, 0));
+            passwordErrorLabel.setForeground(new Color(255, 0, 0, 0));
+            confirmPasswordErrorLabel.setForeground(new Color(255, 0, 0, 0));
+            librarianPasswordErrorLabel.setForeground(new Color(255, 0, 0, 0));
+    
             // Validate inputs
             boolean isValid = true;
             
@@ -293,43 +293,43 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
             String phoneNumber = phoneField.getText().trim();
             String password = new String(signUpPasswordField.getPassword());
             String confirmPassword = new String(confirmPasswordField.getPassword());
-
+    
             // Username validation
             if (username.isEmpty()) {
-                usernameErrorLabel.setVisible(true);
+                usernameErrorLabel.setForeground(Color.RED);
                 isValid = false;
             }
-
+    
             // Email validation
             if (!email.endsWith("@gmail.com")) {
-                emailErrorLabel.setVisible(true);
+                emailErrorLabel.setForeground(Color.RED);
                 isValid = false;
             }
-
+    
             // Phone number validation
             if (!phoneNumber.matches("^\\d{11}$")) {
-                phoneErrorLabel.setVisible(true);
+                phoneErrorLabel.setForeground(Color.RED);
                 isValid = false;
             }
-
+    
             // Password validation
             if (!isValidPassword(password)) {
-                passwordErrorLabel.setVisible(true);
+                passwordErrorLabel.setForeground(Color.RED);
                 isValid = false;
             }
-
+    
             // Confirm password validation
             if (!password.equals(confirmPassword)) {
-                confirmPasswordErrorLabel.setVisible(true);
+                confirmPasswordErrorLabel.setForeground(Color.RED);
                 isValid = false;
             }
-
+    
             // Librarian verification
             boolean isLibrarian = librarianCheckBox.isSelected();
             if (isLibrarian) {
                 String librarianPassword = new String(librarianPasswordField.getPassword());
                 if (!librarianPassword.equals("adminLibrary.147")) {
-                    librarianPasswordErrorLabel.setVisible(true);
+                    librarianPasswordErrorLabel.setForeground(Color.RED);
                     isValid = false;
                 }
             }
@@ -369,8 +369,7 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
     private JLabel createFixedErrorLabel(String text) {
         JLabel label = new JLabel(text);
         label.setForeground(Color.RED);
-        label.setVisible(false);
-        label.setPreferredSize(new Dimension(300, 20)); // Fixed size
+        label.setPreferredSize(new Dimension(300, 20)); // Fixed size to reserve space
         return label;
     }
 

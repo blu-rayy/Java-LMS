@@ -5,8 +5,11 @@ import java.util.List;
 public class Author {
     private String name;
     private String authorID;
-    private int bookCount;
     private final List<Book> books;
+
+    // added a suppress warning to remove yellow line
+    @SuppressWarnings("FieldMayBeFinal")
+    private int bookCount;
 
     public Author(String authorID, String name, int bookCount) {
         this.authorID = authorID;

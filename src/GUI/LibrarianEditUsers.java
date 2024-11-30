@@ -9,11 +9,11 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
-public class EditUsers extends JFrame implements fontComponent {
+public class LibrarianEditUsers extends JFrame implements fontComponent {
     private JTable userTable;
     private DefaultTableModel tableModel;
 
-    public EditUsers() {
+    public LibrarianEditUsers() {
         initializeUI();
         refreshUserList(); // Load data from the database
     }
@@ -36,22 +36,32 @@ public class EditUsers extends JFrame implements fontComponent {
     }
 
     private JPanel createTitlePanel() {
-        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.setBackground(BACKGROUND_COLOR);
-
-        // Add icon beside title
-        ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\manageusersIconOrange.png");
-        Image resizedTaskbarIcon = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-        setIconImage(resizedTaskbarIcon);
-        JLabel iconLabel = new JLabel(new ImageIcon(resizedTaskbarIcon));
 
         JLabel titleLabel = new JLabel("User Management");
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(PRIMARY_COLOR);
         titleLabel.setPreferredSize(new Dimension(300, 30));
 
-        titlePanel.add(iconLabel);
-        titlePanel.add(titleLabel);
+        // Add icon beside title
+        ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\manageuserIconOrange.png");
+        Image resizedTaskbarIcon = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        setIconImage(resizedTaskbarIcon);
+        JLabel iconLabel = new JLabel(new ImageIcon(resizedTaskbarIcon));
+
+        JLabel CountLabel = new JLabel("Total Users: " + LibraryDatabase.countMembers());
+        CountLabel.setFont(TITLE_FONT14);
+        CountLabel.setForeground(PRIMARY_COLOR);
+
+        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        leftPanel.setBackground(BACKGROUND_COLOR);
+        leftPanel.add(iconLabel);
+        leftPanel.add(titleLabel);
+
+        titlePanel.add(leftPanel, BorderLayout.WEST);
+        titlePanel.add(CountLabel, BorderLayout.EAST);
+
         return titlePanel;
     }
 
@@ -290,6 +300,6 @@ public class EditUsers extends JFrame implements fontComponent {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new EditUsers().setVisible(true));
+        SwingUtilities.invokeLater(() -> new LibrarianEditUsers().setVisible(true));
     }
 }
