@@ -11,6 +11,8 @@ public class Main {
         // LibraryDatabase.populateBooks();
         // LibraryDatabase.populateAuthors();
         // LibraryDatabase.populateMembers();
+
+        LibraryDatabase.createTables();
         
         ANPLMSGUI gui = new ANPLMSGUI();
         gui.setVisible(true);

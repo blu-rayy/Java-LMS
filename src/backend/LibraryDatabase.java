@@ -40,6 +40,17 @@ public class LibraryDatabase {
                         + "password TEXT NOT NULL, "
                         + "userType TEXT NOT NULL)";
                 stmt.execute(createMembersTable);
+
+                String createTransactionsTable = "CREATE TABLE IF NOT EXISTS transactions ("
+                        + "TransactionID INT AUTO_INCREMENT PRIMARY KEY, "
+                        + "TransactionType VARCHAR(255) NOT NULL, "
+                        + "TransactionDate DATE NOT NULL, "
+                        + "ISBN VARCHAR(13), "
+                        + "MemberID INT, "
+                        + "FOREIGN KEY (ISBN) REFERENCES Books(ISBN), "
+                        + "FOREIGN KEY (MemberID) REFERENCES Members(MemberID))";
+                stmt.execute(createTransactionsTable);
+
     
                 System.out.println("Tables created successfully.");
             }

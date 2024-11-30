@@ -235,7 +235,7 @@ public class Member_DashboardGUI extends JFrame implements fontComponent {
         // very important on third row; determines the name of the .java
         String[][] statsData = {
             {"Books", "Logos\\bookIcon.png", "BookList"},
-            {"Books Borrowed","Logos\\circulationIcon.png", "BorrowedBooks"},
+            {"Books Borrowed","Logos\\circulationIcon.png", "MemberBorrowedBooks"},
             {"Authors", "Logos\\authorIcon.png", "MemberAuthorList"},
         };
     
