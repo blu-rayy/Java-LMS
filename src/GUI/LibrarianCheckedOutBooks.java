@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -130,32 +132,73 @@ public class LibrarianCheckedOutBooks extends JFrame implements fontComponent {
         }
         
         private JPanel createActionPanel() {
-        JPanel actionPanel = new JPanel(new BorderLayout(10, 10));
-        actionPanel.setBackground(BACKGROUND_COLOR);
-        
-        // Search panel now added to bottom left
-        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        searchPanel.setBackground(BACKGROUND_COLOR);
-        searchPanel.add(new JLabel("Search: "));
-        searchPanel.add(searchField);
-        actionPanel.add(searchPanel, BorderLayout.WEST);
-        
-        // Modify and Refresh buttons on bottom right
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        buttonPanel.setBackground(BACKGROUND_COLOR);
-        JButton modifyButton = createStyledButton("Modify Status", "Logos\\editIcon.png");
-        modifyButton.setPreferredSize(new Dimension(150, 40));
-        modifyButton.addActionListener(e -> modifyBookStatus());
-        buttonPanel.add(modifyButton);
+            JPanel actionPanel = new JPanel(new BorderLayout(10, 10));
+            actionPanel.setBackground(BACKGROUND_COLOR);
 
-        JButton refreshButton = createStyledButton("Refresh", "Logos\\refreshIcon.png");
-        refreshButton.setPreferredSize(new Dimension(150, 40));
-        refreshButton.addActionListener(e -> refreshTable());
-        buttonPanel.add(refreshButton);
+            JPanel searchPanel = createSearchPanel();
+            actionPanel.add(searchPanel, BorderLayout.WEST);
+            
+            // Modify and Refresh buttons on bottom right
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            buttonPanel.setBackground(BACKGROUND_COLOR);
+            JButton modifyButton = createStyledButton("Modify Status", "Logos\\editIcon.png");
+            modifyButton.setPreferredSize(new Dimension(150, 40));
+            modifyButton.addActionListener(e -> modifyBookStatus());
+            buttonPanel.add(modifyButton);
 
-        actionPanel.add(buttonPanel, BorderLayout.EAST);
+            JButton refreshButton = createStyledButton("Refresh", "Logos\\refreshIcon.png");
+            refreshButton.setPreferredSize(new Dimension(150, 40));
+            refreshButton.addActionListener(e -> refreshTable());
+            buttonPanel.add(refreshButton);
+
+            actionPanel.add(buttonPanel, BorderLayout.EAST);
+            
+            return actionPanel;
+            }
+
+        private JPanel createSearchPanel() {
+            JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+            searchPanel.setBackground(BACKGROUND_COLOR);
         
-        return actionPanel;
+            JTextField searchField = new JTextField(20);
+            searchField.setFont(PLAIN_FONT);
+            searchField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(PRIMARY_COLOR, 1),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)
+            ));
+            searchField.setToolTipText("Search by Title, Author, or ISBN");
+        
+            JButton searchButton = new JButton("Search");
+            searchButton.setBackground(PRIMARY_COLOR);
+            searchButton.setForeground(Color.WHITE);
+            searchButton.setFont(PLAIN_FONT);
+            searchButton.addActionListener(e -> performSearch(searchField.getText()));
+        
+            searchPanel.add(new JLabel("Search:"));
+            searchPanel.add(searchField);
+            searchPanel.add(searchButton);
+        
+            return searchPanel;
+        }
+
+        private void performSearch(String searchText) {
+            TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
+            borrowedBooksTable.setRowSorter(sorter);
+
+            if (searchText.trim().isEmpty()) {
+                sorter.setRowFilter(null);
+                return;
+            }
+
+            RowFilter<DefaultTableModel, Object> filter = RowFilter.orFilter(
+                Arrays.asList(
+                    RowFilter.regexFilter("(?i)" + searchText, 1), // Title column
+                    RowFilter.regexFilter("(?i)" + searchText, 2), // Member Name column
+                    RowFilter.regexFilter("(?i)" + searchText, 0)  // Transaction ID column
+                )
+            );
+
+            sorter.setRowFilter(filter);
         }
 
         private void refreshTable() {
