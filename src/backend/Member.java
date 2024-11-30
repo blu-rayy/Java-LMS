@@ -12,7 +12,7 @@ public class Member extends Person implements LibraryItem {
     }
 
     @Override
-    public void borrowBook() {
+    public boolean borrowBook() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'borrowBook'");
     }

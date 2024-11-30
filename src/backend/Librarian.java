@@ -7,9 +7,10 @@ public class Librarian extends Person implements LibraryItem {
     }
 
     @Override
-    public void borrowBook() {
+    public boolean borrowBook() {
         // to centralize all the SQL queries, this will redirect to LibraryDatabase.java
         System.out.println("Sample");
+        return false;
     }
 
     @Override
