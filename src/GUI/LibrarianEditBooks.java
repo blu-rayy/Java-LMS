@@ -10,16 +10,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import java.util.List;
 
-public class EditBooks extends JFrame implements fontComponent {
+public class LibrarianEditBooks extends JFrame implements fontComponent {
     private JTable bookTable;
     private DefaultTableModel tableModel;
 
-    public EditBooks() {
+    public LibrarianEditBooks() {
         initializeUI();
     }
 
@@ -38,11 +38,16 @@ public class EditBooks extends JFrame implements fontComponent {
         mainPanel.add(createActionButtonPanel(), BorderLayout.SOUTH);
 
         add(mainPanel);
-    }
+        }
 
-    private JPanel createTitlePanel() {
-        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        private JPanel createTitlePanel() {
+        JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.setBackground(BACKGROUND_COLOR);
+
+        JLabel titleLabel = new JLabel("Book Management");
+        titleLabel.setFont(TITLE_FONT);
+        titleLabel.setForeground(PRIMARY_COLOR);
+        titleLabel.setPreferredSize(new Dimension(300, 30));
 
         // Add icon beside title
         ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\managebookIconOrange.png");
@@ -50,17 +55,22 @@ public class EditBooks extends JFrame implements fontComponent {
         setIconImage(resizedTaskbarIcon);
         JLabel iconLabel = new JLabel(new ImageIcon(resizedTaskbarIcon));
 
-        JLabel titleLabel = new JLabel("Book Management");
-        titleLabel.setFont(TITLE_FONT);
-        titleLabel.setForeground(PRIMARY_COLOR);
-        titleLabel.setPreferredSize(new Dimension(300, 30));
+        JLabel CountLabel = new JLabel("Total Books: " + LibraryDatabase.countBooks());
+        CountLabel.setFont(TITLE_FONT14);
+        CountLabel.setForeground(PRIMARY_COLOR);
 
-        titlePanel.add(iconLabel);
-        titlePanel.add(titleLabel);
+        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        leftPanel.setBackground(BACKGROUND_COLOR);
+        leftPanel.add(iconLabel);
+        leftPanel.add(titleLabel);
+
+        titlePanel.add(leftPanel, BorderLayout.WEST);
+        titlePanel.add(CountLabel, BorderLayout.EAST);
+
         return titlePanel;
-    }
+        }
 
-    private JPanel createBookTablePanel() {
+        private JPanel createBookTablePanel() {
         JPanel tablePanel = new JPanel(new BorderLayout());
         tablePanel.setBackground(BACKGROUND_COLOR);
 
@@ -459,7 +469,7 @@ public class EditBooks extends JFrame implements fontComponent {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new EditBooks().setVisible(true);
+            new LibrarianEditBooks().setVisible(true);
         });
     }
 }

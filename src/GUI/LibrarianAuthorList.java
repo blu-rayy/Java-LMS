@@ -7,12 +7,12 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.util.List;
 
-public class AuthorList extends JFrame implements fontComponent {
+public class LibrarianAuthorList extends JFrame implements fontComponent {
     private JTable authorTable;
     private DefaultTableModel tableModel;
     private JTextField searchField;
 
-    public AuthorList() {
+    public LibrarianAuthorList() {
         initializeUI();
         loadAuthorsFromDatabase();
     }
@@ -136,6 +136,6 @@ public class AuthorList extends JFrame implements fontComponent {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new AuthorList().setVisible(true));
+        SwingUtilities.invokeLater(() -> new LibrarianAuthorList().setVisible(true));
     }
 }

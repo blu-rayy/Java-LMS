@@ -40,6 +40,17 @@ public class LibraryDatabase {
                         + "password TEXT NOT NULL, "
                         + "userType TEXT NOT NULL)";
                 stmt.execute(createMembersTable);
+
+                String createTransactionsTable = "CREATE TABLE IF NOT EXISTS transactions ("
+                        + "TransactionID INT AUTO_INCREMENT PRIMARY KEY, "
+                        + "TransactionType VARCHAR(255) NOT NULL, "
+                        + "TransactionDate DATE NOT NULL, "
+                        + "ISBN VARCHAR(13), "
+                        + "MemberID INT, "
+                        + "FOREIGN KEY (ISBN) REFERENCES Books(ISBN), "
+                        + "FOREIGN KEY (MemberID) REFERENCES Members(MemberID))";
+                stmt.execute(createTransactionsTable);
+
     
                 System.out.println("Tables created successfully.");
             }
@@ -118,6 +129,51 @@ public class LibraryDatabase {
             //e.printStackTrace();
         }
         return null;
+    }
+
+    // Count all rows in Books table
+    public static int countBooks() {
+        String sql = "SELECT COUNT(*) AS total FROM books";
+        try (Connection conn = SQLiteDatabase.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error counting books: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    // Count all rows in Members table
+    public static int countMembers() {
+        String sql = "SELECT COUNT(*) AS total FROM members";
+        try (Connection conn = SQLiteDatabase.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error counting members: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    // Count all rows in Authors table
+    public static int countAuthors() {
+        String sql = "SELECT COUNT(*) AS total FROM authors";
+        try (Connection conn = SQLiteDatabase.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error counting authors: " + e.getMessage());
+        }
+        return 0;
     }
 
     // Insert a new book into the database
