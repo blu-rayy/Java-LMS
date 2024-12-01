@@ -132,29 +132,26 @@ public class LibrarianCheckedOutBooks extends JFrame implements fontComponent {
         }
         
         private JPanel createActionPanel() {
-            JPanel actionPanel = new JPanel(new BorderLayout(10, 10));
+            JPanel actionPanel = new JPanel(new BorderLayout());
             actionPanel.setBackground(BACKGROUND_COLOR);
-
-            JPanel searchPanel = createSearchPanel();
-            actionPanel.add(searchPanel, BorderLayout.WEST);
+        
+            // Add search panel and action buttons panel to the same container
+            actionPanel.add(createSearchPanel(), BorderLayout.WEST);
             
             // Modify and Refresh buttons on bottom right
-            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
             buttonPanel.setBackground(BACKGROUND_COLOR);
-            JButton modifyButton = createStyledButton("Modify Status", "Logos\\editIcon.png");
-            modifyButton.setPreferredSize(new Dimension(150, 40));
-            modifyButton.addActionListener(e -> modifyBookStatus());
+        
+            JButton modifyButton = createStyledButton("Modify Status", e -> modifyBookStatus());
+            JButton refreshButton = createStyledButton("Refresh", e -> refreshTable());
+        
             buttonPanel.add(modifyButton);
-
-            JButton refreshButton = createStyledButton("Refresh", "Logos\\refreshIcon.png");
-            refreshButton.setPreferredSize(new Dimension(150, 40));
-            refreshButton.addActionListener(e -> refreshTable());
             buttonPanel.add(refreshButton);
-
+        
             actionPanel.add(buttonPanel, BorderLayout.EAST);
             
             return actionPanel;
-            }
+        }
 
         private JPanel createSearchPanel() {
             JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
@@ -324,21 +321,16 @@ public class LibrarianCheckedOutBooks extends JFrame implements fontComponent {
         }
         
 
-    private JButton createStyledButton(String text, String iconPath) {
-        JButton button = new JButton(text);
-        button.setFont(TITLE_FONT14);
-        button.setBackground(PRIMARY_COLOR);
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-
-        if (iconPath != null && !iconPath.isEmpty()) {
-            ImageIcon icon = new ImageIcon(iconPath);
-            Image scaledIcon = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-            button.setIcon(new ImageIcon(scaledIcon));
+        private JButton createStyledButton(String text, ActionListener listener) {
+            JButton button = new JButton(text);
+            button.setFont(PLAIN_FONT);
+            button.setBackground(PRIMARY_COLOR);
+            button.setForeground(Color.WHITE);
+            button.setBorderPainted(false);
+            button.setFocusPainted(false);
+            button.addActionListener(listener);
+            return button;
         }
-
-        return button;
-    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
