@@ -45,6 +45,7 @@ public class LibraryDatabase {
                         + "TransactionID TEXT PRIMARY KEY, "
                         + "TransactionType VARCHAR(255) NOT NULL, "
                         + "TransactionDate DATE NOT NULL, "
+                        + "dueDate DATE GENERATED ALWAYS AS (DATE(TransactionDate, '+7 days')) STORED,"
                         + "ISBN VARCHAR(13), "
                         + "MemberID INT, "
                         + "FOREIGN KEY (ISBN) REFERENCES Books(ISBN), "
