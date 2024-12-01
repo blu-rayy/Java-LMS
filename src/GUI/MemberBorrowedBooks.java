@@ -250,21 +250,26 @@ public class MemberBorrowedBooks extends JFrame implements fontComponent {
     private void refreshBookTable() {
         // Fetch borrowed books from the database
         ArrayList<BorrowedBook> borrowedBooks = fetchBorrowedBooksFromDatabase();
-
         // Clear existing data
         tableModel.setRowCount(0);
-
         // Add new data
-        for (Book book : borrowedBooks) {
+        for (BorrowedBook book : borrowedBooks) {
             tableModel.addRow(new Object[]{
                 book.getISBN(),
                 book.getTitle(),
                 book.getAuthor(),
+                book.getBorrowDate(),
+                book.getDueDate()
             });
         }
-
         // Update book count label
         bookCountLabel.setText("Total Borrowed Books: " + borrowedBooks.size());
+        
+        // Show refresh confirmation message
+        JOptionPane.showMessageDialog(this, 
+            "Borrowed books table has been refreshed", 
+            "Refresh Complete", 
+            JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void returnBookMessage() {
