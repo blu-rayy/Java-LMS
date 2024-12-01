@@ -234,7 +234,7 @@ public class Librarian_DashboardGUI extends JFrame implements fontComponent {
         // Top Row: Statistics
         String[][] statsData = {
             {"Books", "Logos\\bookIcon.png", "BookList"},
-            {"Circulation", "Logos\\circulationIcon.png", "LibrarianCheckedOutBooks"},
+            {"Transactions", "Logos\\circulationIcon.png", "LibrarianCheckedOutBooks"},
             {"Users", "Logos\\usersIcon.png", "LibrarianUserList"},
         };
 

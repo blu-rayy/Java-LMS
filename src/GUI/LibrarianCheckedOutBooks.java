@@ -60,7 +60,7 @@ public class LibrarianCheckedOutBooks extends JFrame implements fontComponent {
         JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.setBackground(BACKGROUND_COLOR);
         
-        JLabel titleLabel = new JLabel("Checked Out Books");
+        JLabel titleLabel = new JLabel("Transaction History");
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(PRIMARY_COLOR);
         titleLabel.setPreferredSize(new Dimension(300, 30));
