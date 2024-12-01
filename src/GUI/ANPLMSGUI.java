@@ -231,21 +231,22 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
         libGBC.fill = GridBagConstraints.HORIZONTAL;
         libGBC.insets = new Insets(0, 0, 0, 5); // Add padding to the individual components
 
-        JPasswordField librarianPasswordField = new JPasswordField(15);
+        JPasswordField librarianPasswordField = new JPasswordField(20); // Changed from 15 to 20
         librarianPasswordField.setFont(PLAIN_FONT);
-        JLabel librarianPasswordLabel = new JLabel("Librarian Verification Password");
+        JLabel librarianPasswordLabel = new JLabel("Librarian Password");
         JLabel librarianPasswordErrorLabel = createFixedErrorLabel("Incorrect librarian password");
         librarianPasswordErrorLabel.setForeground(new Color(255, 0, 0, 0));
         librarianPasswordErrorLabel.setVisible(true);
 
-        libGBC.gridx = 0;
+        libGBC.gridx = 1;
         libGBC.gridy = 0;
         librarianPasswordPanel.add(librarianPasswordLabel, libGBC);
-        libGBC.gridx = 1;
+        libGBC.gridx = 2;
+        libGBC.gridwidth = 5;
         librarianPasswordPanel.add(librarianPasswordField, libGBC);
-        libGBC.gridx = 0;
+        libGBC.gridx = 2;
         libGBC.gridy = 1;
-        libGBC.gridwidth = 2;
+        libGBC.gridwidth = 5;
         librarianPasswordPanel.add(librarianPasswordErrorLabel, libGBC);
 
         gbc.gridy = 12;
