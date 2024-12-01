@@ -169,10 +169,10 @@ public class LibrarianCheckedOutBooks extends JFrame implements fontComponent {
             searchButton.setBackground(PRIMARY_COLOR);
             searchButton.setForeground(Color.WHITE);
             searchButton.setFont(PLAIN_FONT);
-            searchButton.addActionListener(e -> performSearch(localSearchField.getText()));
+            searchButton.addActionListener((_) -> performSearch(localSearchField.getText()));
         
             searchPanel.add(new JLabel("Search:"));
-            searchPanel.add(searchField);
+            searchPanel.add(localSearchField);
             searchPanel.add(searchButton);
         
             return searchPanel;
