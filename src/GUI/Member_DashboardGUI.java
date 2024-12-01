@@ -328,7 +328,7 @@ public class Member_DashboardGUI extends JFrame implements fontComponent {
             featureWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             featureWindow.setVisible(true);
     
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
             JOptionPane.showMessageDialog(this, "Feature not implemented or class not found: " + feature, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }

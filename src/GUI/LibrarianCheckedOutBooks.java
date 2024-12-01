@@ -1,5 +1,6 @@
 package GUI;
 
+import backend.LibraryDatabase;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.Connection;
@@ -9,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -21,7 +21,7 @@ public class LibrarianCheckedOutBooks extends JFrame implements fontComponent {
     private TableRowSorter<DefaultTableModel> rowSorter;
     private JLabel counterLabel;
 
-    private static final String DB_URL = "jdbc:sqlite:library.db"; // Update with your actual DB path
+    private static final String DB_URL = "jdbc:sqlite:library.db";
 
     public LibrarianCheckedOutBooks() {
         initializeUI();
@@ -60,7 +60,7 @@ public class LibrarianCheckedOutBooks extends JFrame implements fontComponent {
         JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.setBackground(BACKGROUND_COLOR);
         
-        JLabel titleLabel = new JLabel("Checked Out Books");
+        JLabel titleLabel = new JLabel("Transaction History");
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(PRIMARY_COLOR);
         titleLabel.setPreferredSize(new Dimension(300, 30));
@@ -160,19 +160,19 @@ public class LibrarianCheckedOutBooks extends JFrame implements fontComponent {
             JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
             searchPanel.setBackground(BACKGROUND_COLOR);
         
-            JTextField searchField = new JTextField(20);
-            searchField.setFont(PLAIN_FONT);
-            searchField.setBorder(BorderFactory.createCompoundBorder(
+            JTextField localSearchField = new JTextField(20);
+            localSearchField.setFont(PLAIN_FONT);
+            localSearchField.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(PRIMARY_COLOR, 1),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)
             ));
-            searchField.setToolTipText("Search by Title, Author, or ISBN");
+            localSearchField.setToolTipText("Search by Title, Author, or ISBN");
         
             JButton searchButton = new JButton("Search");
             searchButton.setBackground(PRIMARY_COLOR);
             searchButton.setForeground(Color.WHITE);
             searchButton.setFont(PLAIN_FONT);
-            searchButton.addActionListener(e -> performSearch(searchField.getText()));
+            searchButton.addActionListener(e -> performSearch(localSearchField.getText()));
         
             searchPanel.add(new JLabel("Search:"));
             searchPanel.add(searchField);
@@ -297,21 +297,29 @@ public class LibrarianCheckedOutBooks extends JFrame implements fontComponent {
         }
         
         private void updateTransactionStatus(String transactionID, String newTransactionType) {
-            String insertQuery = "INSERT INTO transactions (memberID, isbn, transactionType, transactionDate) " +
-                                 "SELECT memberID, isbn, ?, CURRENT_DATE " +
-                                "FROM transactions WHERE transactionID = ?";
-
-            try (Connection conn = DriverManager.getConnection(DB_URL);
-                 PreparedStatement insertStmt = conn.prepareStatement(insertQuery)) {
+            try {
+                // Generate a new transaction ID
+                String newTransactionID = LibraryDatabase.generateNextTransactionID();
         
-                // Set the new transaction type and the transaction ID for the query
-                insertStmt.setString(1, newTransactionType); // New transaction type (e.g., "Returned", "Borrow", "Overdue")
-                insertStmt.setString(2, transactionID);      // Use the selected transaction as the basis
-                insertStmt.executeUpdate();
+                // Delegate the transaction status update to LibraryDatabase
+                boolean updateSuccess = LibraryDatabase.updateTransactionStatus(transactionID, newTransactionType, newTransactionID);
         
+                if (updateSuccess) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Transaction status updated successfully", 
+                        "Update Successful", 
+                        JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, 
+                        "Failed to update transaction status", 
+                        "Update Failed", 
+                        JOptionPane.ERROR_MESSAGE);
+                }
             } catch (SQLException e) {
-                JOptionPane.showMessageDialog(this, "Error inserting new transaction record: " + e.getMessage(),
-                                              "Database Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, 
+                    "Error updating transaction record: " + e.getMessage(),
+                    "Database Error", 
+                    JOptionPane.ERROR_MESSAGE);
             }
         }
         

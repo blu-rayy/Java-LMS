@@ -42,9 +42,10 @@ public class LibraryDatabase {
                 stmt.execute(createMembersTable);
 
                 String createTransactionsTable = "CREATE TABLE IF NOT EXISTS transactions ("
-                        + "TransactionID INT AUTO_INCREMENT PRIMARY KEY, "
+                        + "TransactionID TEXT PRIMARY KEY, "
                         + "TransactionType VARCHAR(255) NOT NULL, "
                         + "TransactionDate DATE NOT NULL, "
+                        + "dueDate DATE GENERATED ALWAYS AS (DATE(TransactionDate, '+7 days')) STORED,"
                         + "ISBN VARCHAR(13), "
                         + "MemberID INT, "
                         + "FOREIGN KEY (ISBN) REFERENCES Books(ISBN), "
@@ -100,6 +101,26 @@ public class LibraryDatabase {
             //e.printStackTrace();
         }
         return "M001";
+    }
+
+    // Generate the next transactionID
+    public static String generateNextTransactionID() {
+        String sql = "SELECT MAX(transactionID) AS maxID FROM transactions";
+        try (Connection conn = SQLiteDatabase.connect(); 
+             Statement stmt = conn.createStatement(); 
+             ResultSet rs = stmt.executeQuery(sql)) {
+            
+            if (rs.next()) {
+                String maxID = rs.getString("maxID");
+                if (maxID != null && !maxID.isEmpty()) {
+                    int nextID = Integer.parseInt(maxID.substring(1)) + 1;
+                    return "T" + String.format("%03d", nextID);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error generating transactionID: " + e.getMessage());
+        }
+        return "T001";
     }
 
     // Get member details by name
@@ -256,9 +277,112 @@ public class LibraryDatabase {
             System.out.println("Error fetching authors: " + e.getMessage());
         }
         return authors;
-    }
+        }
 
-    public static boolean validateLogin(String username, String password) {
+        public static boolean borrowBook(String isbn, String username) throws SQLException {
+        String insertBorrowQuery = "INSERT INTO transactions " +
+                   "(transactionID, transactionType, transactionDate, ISBN, memberID) " +
+                   "VALUES (?, 'Borrow', date('now'), ?, " +
+                   "(SELECT memberID FROM members WHERE username = ?))";
+        
+        String updateBookQuery = "UPDATE books SET availableCopies = availableCopies - 1 " +
+                     "WHERE ISBN = ? AND availableCopies > 0";
+        
+        try (Connection connection = SQLiteDatabase.connect()) {
+            // Begin transaction
+            connection.setAutoCommit(false);
+            
+            try (PreparedStatement borrowStmt = connection.prepareStatement(insertBorrowQuery);
+             PreparedStatement updateStmt = connection.prepareStatement(updateBookQuery)) {
+            
+            // Generate transaction ID
+            String transactionID = generateNextTransactionID();
+            
+            // Insert borrowing record
+            borrowStmt.setString(1, transactionID);
+            borrowStmt.setString(2, isbn);
+            borrowStmt.setString(3, username);
+            borrowStmt.executeUpdate();
+            
+            // Update book availability
+            updateStmt.setString(1, isbn);
+            int rowsUpdated = updateStmt.executeUpdate();
+            
+            if (rowsUpdated == 0) {
+                throw new SQLException("No available copies for ISBN: " + isbn);
+            }
+            
+            // Commit transaction
+            connection.commit();
+            return true;
+            
+            } catch (SQLException e) {
+            // Rollback in case of error
+            connection.rollback();
+            System.out.println("Borrow book error: " + e.getMessage());
+            throw e; // Re-throw to allow calling method to handle
+            } finally {
+            connection.setAutoCommit(true);
+            }
+        }
+        }
+
+        public static boolean updateTransactionStatus(String originalTransactionID, String newTransactionType, String newTransactionID) throws SQLException {
+            String insertQuery = "INSERT INTO transactions (transactionID, memberID, isbn, transactionType, transactionDate) " +
+                                 "SELECT ?, memberID, isbn, ?, CURRENT_DATE " +
+                                 "FROM transactions WHERE transactionID = ?";
+        
+            try (Connection conn = SQLiteDatabase.connect();
+                 PreparedStatement insertStmt = conn.prepareStatement(insertQuery)) {
+                
+                // Set the new transaction ID, new transaction type, and original transaction ID
+                insertStmt.setString(1, newTransactionID);
+                insertStmt.setString(2, newTransactionType); 
+                insertStmt.setString(3, originalTransactionID);      
+                
+                int rowsAffected = insertStmt.executeUpdate();
+
+                if ("Returned".equalsIgnoreCase(newTransactionType)) {
+                    returnBook(originalTransactionID);
+                }
+                
+                return rowsAffected > 0;
+            }
+        }
+
+        public static void returnBook(String transactionID) throws SQLException {
+            String updateTransactionQuery = "UPDATE transactions SET transactionType = 'Borrow', transactionDate = date('now') WHERE transactionID = ?";
+            String updateBookQuery = "UPDATE books SET availableCopies = availableCopies + 1 WHERE isbn = (SELECT isbn FROM transactions WHERE transactionID = ?)";
+
+            try (Connection connection = SQLiteDatabase.connect()) {
+                // Begin transaction
+                connection.setAutoCommit(false);
+
+                try (PreparedStatement updateTransactionStmt = connection.prepareStatement(updateTransactionQuery);
+                     PreparedStatement updateBookStmt = connection.prepareStatement(updateBookQuery)) {
+
+                    // Update transaction type to 'Returned'
+                    updateTransactionStmt.setString(1, transactionID);
+                    updateTransactionStmt.executeUpdate();
+
+                    // Increment book availability
+                    updateBookStmt.setString(1, transactionID);
+                    updateBookStmt.executeUpdate();
+
+                    // Commit transaction
+                    connection.commit();
+                } catch (SQLException e) {
+                    // Rollback in case of error
+                    connection.rollback();
+                    System.out.println("Return book error: " + e.getMessage());
+                    throw e; // Re-throw to allow calling method to handle
+                } finally {
+                    connection.setAutoCommit(true);
+                }
+            }
+        }
+
+        public static boolean validateLogin(String username, String password) {
         String sql = "SELECT * FROM members WHERE username = ? AND password = ?";
         try (Connection conn = SQLiteDatabase.connect(); 
              PreparedStatement pstmt = conn.prepareStatement(sql)) {

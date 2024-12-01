@@ -11,6 +11,8 @@ public class Library {
         this.members = new ArrayList<>();
     }
 
+    //generally used on LibraryDatabase.java
+
     public List<Book> getBooks() {
         return books;
     }
