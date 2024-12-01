@@ -1,6 +1,5 @@
 package GUI;
 
-import backend.Book;
 import backend.LibraryDatabase;
 import backend.SQLiteDatabase;
 import java.awt.*;
@@ -9,49 +8,51 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
-public class BookList extends JFrame implements fontComponent {
-    private JTable bookTable;
+public class MemberAuthorList extends JFrame implements fontComponent {
+    private JTable authorTable;
     private DefaultTableModel tableModel;
 
-    public BookList() {
+    public MemberAuthorList() {
         initializeUI();
+        loadAuthorsFromDatabase();
     }
 
     private void initializeUI() {
-        setTitle("ANP LMS - Book List");
+        setTitle("ANP LMS - Author List");
         setSize(1200, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-
+    
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         mainPanel.setBackground(BACKGROUND_COLOR);
-
+    
         mainPanel.add(createTitlePanel(), BorderLayout.NORTH);
-        mainPanel.add(createBookTablePanel(), BorderLayout.CENTER);
-        mainPanel.add(createSearchPanel(), BorderLayout.SOUTH);
-        
+        mainPanel.add(createAuthorTablePanel(), BorderLayout.CENTER);
+        mainPanel.add(createSearchAndActionPanel(), BorderLayout.SOUTH); // Combined panel here
+    
         add(mainPanel);
-         }
-        
-        private JPanel createTitlePanel() {
+    }
+ 
+
+  private JPanel createTitlePanel() {
         JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.setBackground(BACKGROUND_COLOR);
 
-        JLabel titleLabel = new JLabel("Book List");
+        JLabel titleLabel = new JLabel("Author List");
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(PRIMARY_COLOR);
         titleLabel.setPreferredSize(new Dimension(300, 30));
 
         // Add icon beside title
-        ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\bookIconOrange.png"); // Replace with the path to your icon
+        ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\authorIconOrange.png"); // Replace with the path to your icon
         Image resizedTaskbarIcon = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         setIconImage(resizedTaskbarIcon);
         JLabel iconLabel = new JLabel(new ImageIcon(resizedTaskbarIcon));
-
-        JLabel bookCountLabel = new JLabel("Total Books: " + LibraryDatabase.countBooks());
-        bookCountLabel.setFont(TITLE_FONT14);
-        bookCountLabel.setForeground(PRIMARY_COLOR);
+        
+        JLabel CountLabel = new JLabel("Total Authors: " + LibraryDatabase.countBooks());
+        CountLabel.setFont(TITLE_FONT14);
+        CountLabel.setForeground(PRIMARY_COLOR);
 
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(BACKGROUND_COLOR);
@@ -59,132 +60,123 @@ public class BookList extends JFrame implements fontComponent {
         leftPanel.add(titleLabel);
 
         titlePanel.add(leftPanel, BorderLayout.WEST);
-        titlePanel.add(bookCountLabel, BorderLayout.EAST);
+        titlePanel.add(CountLabel, BorderLayout.EAST);
 
         return titlePanel;
-        }
+    }
 
-        private JPanel createBookTablePanel() {
+    private JPanel createAuthorTablePanel() {
         JPanel tablePanel = new JPanel(new BorderLayout());
         tablePanel.setBackground(BACKGROUND_COLOR);
-
-        // Define column names
-        String[] columnNames = {
-            "ISBN", "Title", "Author", "Publication Date", "Available Copies"
-        };
-
-        // Fetch books from the database
-        ArrayList<Book> booksFromDB = fetchBooksFromDatabase();
-
-        // Convert Book objects to table data
-        Object[][] data = new Object[booksFromDB.size()][5];
-        for (int i = 0; i < booksFromDB.size(); i++) {
-            Book book = booksFromDB.get(i);
-            data[i] = new Object[]{
-                book.getISBN(), 
-                book.getTitle(), 
-                book.getAuthor(), 
-                book.getPublicationDate(), 
-                book.getAvailableCopies()
-            };
-        }
-
-        tableModel = new DefaultTableModel(data, columnNames) {
+    
+        String[] columnNames = {"Author ID", "Author Name", "Book Count"};
+    
+        tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Make table non-editable
+                return false; // Make all cells non-editable
             }
         };
-
-        bookTable = new JTable(tableModel);
-        bookTable.setFont(PLAIN_FONT);
-        bookTable.setRowHeight(35);
-        bookTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        // Customize table header
-        JTableHeader header = bookTable.getTableHeader();
+    
+        authorTable = new JTable(tableModel);
+        authorTable.setFont(PLAIN_FONT);
+        authorTable.setRowHeight(30);
+        authorTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    
+        JTableHeader header = authorTable.getTableHeader();
         header.setBackground(PRIMARY_COLOR);
         header.setForeground(Color.WHITE);
         header.setFont(new Font("Segoe UI", Font.BOLD, 14));
-
-        JScrollPane scrollPane = new JScrollPane(bookTable);
+    
+        JScrollPane scrollPane = new JScrollPane(authorTable);
         scrollPane.setBorder(BorderFactory.createLineBorder(PRIMARY_COLOR, 1));
-
+    
         tablePanel.add(scrollPane, BorderLayout.CENTER);
         return tablePanel;
     }
-  
+    
+
+    private JPanel createSearchAndActionPanel() {
+        JPanel searchAndActionPanel = new JPanel(new BorderLayout());
+        searchAndActionPanel.setBackground(BACKGROUND_COLOR);
+    
+        // Add search panel and action buttons panel to the same container
+        searchAndActionPanel.add(createSearchPanel(), BorderLayout.WEST);
+    
+        return searchAndActionPanel;
+    }
+
     private JPanel createSearchPanel() {
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         searchPanel.setBackground(BACKGROUND_COLOR);
-
+    
         JTextField searchField = new JTextField(20);
         searchField.setFont(PLAIN_FONT);
         searchField.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(PRIMARY_COLOR, 1),
-            BorderFactory.createEmptyBorder(5, 5, 5, 5)
+                BorderFactory.createLineBorder(PRIMARY_COLOR, 1),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)
         ));
-        searchField.setToolTipText("Search by Title, Author, or ISBN");
-
+        searchField.setToolTipText("Search by Author Name");
+    
         JButton searchButton = new JButton("Search");
         searchButton.setBackground(PRIMARY_COLOR);
         searchButton.setForeground(Color.WHITE);
         searchButton.setFont(PLAIN_FONT);
         searchButton.addActionListener(e -> performSearch(searchField.getText()));
-
+    
         searchPanel.add(new JLabel("Search:"));
         searchPanel.add(searchField);
         searchPanel.add(searchButton);
-
+    
         return searchPanel;
     }
 
     private void performSearch(String searchText) {
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
-        bookTable.setRowSorter(sorter);
+        authorTable.setRowSorter(sorter);
 
         if (searchText.trim().isEmpty()) {
             sorter.setRowFilter(null);
             return;
         }
 
-        RowFilter<DefaultTableModel, Object> filter = RowFilter.orFilter(
-            Arrays.asList(
-                RowFilter.regexFilter("(?i)" + searchText, 1), // Title column
-                RowFilter.regexFilter("(?i)" + searchText, 2), // Author column
-                RowFilter.regexFilter("(?i)" + searchText, 0)  // ISBN column
-            )
-        );
-
+        RowFilter<DefaultTableModel, Object> filter = RowFilter.regexFilter("(?i)" + searchText, 0);
         sorter.setRowFilter(filter);
     }
 
-    private ArrayList<Book> fetchBooksFromDatabase() {
-        ArrayList<Book> books = new ArrayList<>();
-        String query = "SELECT ISBN, title, author, publicationDate, availableCopies FROM books";
+    private void loadAuthorsFromDatabase() {
+        tableModel.setRowCount(0);
+        Map<String, Integer> authorCountMap = fetchAuthorsFromDatabase();
+
+        int id = 1;
+        for (Map.Entry<String, Integer> entry : authorCountMap.entrySet()) {
+            tableModel.addRow(new Object[]{"A" + id++, entry.getKey(), entry.getValue()});
+        }
+    }
+
+    private Map<String, Integer> fetchAuthorsFromDatabase() {
+        Map<String, Integer> authorCountMap = new HashMap<>();
+
+        String query = "SELECT author, COUNT(*) AS book_count FROM books GROUP BY author";
 
         try (Connection connection = SQLiteDatabase.connect();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
 
             while (resultSet.next()) {
-                String isbn = resultSet.getString("ISBN");
-                String title = resultSet.getString("title");
                 String author = resultSet.getString("author");
-                String publicationDate = resultSet.getString("publicationDate");
-                int availableCopies = resultSet.getInt("availableCopies");
-
-                books.add(new Book(title, author, isbn, publicationDate, availableCopies));
+                int bookCount = resultSet.getInt("book_count");
+                authorCountMap.put(author, bookCount);
             }
 
         } catch (SQLException e) {
-            System.out.println("Error fetching books from database: " + e.getMessage());
+            System.out.println("Error fetching authors from database: " + e.getMessage());
         }
 
-        return books;
+        return authorCountMap;
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new BookList().setVisible(true));
+        SwingUtilities.invokeLater(() -> new MemberAuthorList().setVisible(true));
     }
 }

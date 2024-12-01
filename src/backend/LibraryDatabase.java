@@ -40,6 +40,17 @@ public class LibraryDatabase {
                         + "password TEXT NOT NULL, "
                         + "userType TEXT NOT NULL)";
                 stmt.execute(createMembersTable);
+
+                String createTransactionsTable = "CREATE TABLE IF NOT EXISTS transactions ("
+                        + "TransactionID TEXT PRIMARY KEY, "
+                        + "TransactionType VARCHAR(255) NOT NULL, "
+                        + "TransactionDate DATE NOT NULL, "
+                        + "ISBN VARCHAR(13), "
+                        + "MemberID INT, "
+                        + "FOREIGN KEY (ISBN) REFERENCES Books(ISBN), "
+                        + "FOREIGN KEY (MemberID) REFERENCES Members(MemberID))";
+                stmt.execute(createTransactionsTable);
+
     
                 System.out.println("Tables created successfully.");
             }
@@ -91,9 +102,29 @@ public class LibraryDatabase {
         return "M001";
     }
 
+    // Generate the next transactionID
+    public static String generateNextTransactionID() {
+        String sql = "SELECT MAX(transactionID) AS maxID FROM transactions";
+        try (Connection conn = SQLiteDatabase.connect(); 
+             Statement stmt = conn.createStatement(); 
+             ResultSet rs = stmt.executeQuery(sql)) {
+            
+            if (rs.next()) {
+                String maxID = rs.getString("maxID");
+                if (maxID != null && !maxID.isEmpty()) {
+                    int nextID = Integer.parseInt(maxID.substring(1)) + 1;
+                    return "T" + String.format("%03d", nextID);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error generating transactionID: " + e.getMessage());
+        }
+        return "T001";
+    }
+
     // Get member details by name
     public static Member getMemberDetails(String name) {
-        String sql = "SELECT * FROM members WHERE name = ?";
+        String sql = "SELECT * FROM members WHERE username = ?";
         try (Connection conn = SQLiteDatabase.connect(); 
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
@@ -118,6 +149,51 @@ public class LibraryDatabase {
             //e.printStackTrace();
         }
         return null;
+    }
+
+    // Count all rows in Books table
+    public static int countBooks() {
+        String sql = "SELECT COUNT(*) AS total FROM books";
+        try (Connection conn = SQLiteDatabase.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error counting books: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    // Count all rows in Members table
+    public static int countMembers() {
+        String sql = "SELECT COUNT(*) AS total FROM members";
+        try (Connection conn = SQLiteDatabase.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error counting members: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    // Count all rows in Authors table
+    public static int countAuthors() {
+        String sql = "SELECT COUNT(*) AS total FROM authors";
+        try (Connection conn = SQLiteDatabase.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error counting authors: " + e.getMessage());
+        }
+        return 0;
     }
 
     // Insert a new book into the database
@@ -200,6 +276,84 @@ public class LibraryDatabase {
             System.out.println("Error fetching authors: " + e.getMessage());
         }
         return authors;
+        }
+
+    public static boolean borrowBook(String isbn, String username) throws SQLException {
+        String insertBorrowQuery = "INSERT INTO transactions " +
+                   "(transactionID, transactionType, transactionDate, ISBN, memberID) " +
+                   "VALUES (?, 'Borrow', date('now'), ?, " +
+                   "(SELECT memberID FROM members WHERE username = ?))";
+        
+        String updateBookQuery = "UPDATE books SET availableCopies = availableCopies - 1 " +
+                     "WHERE ISBN = ? AND availableCopies > 0";
+        
+        try (Connection connection = SQLiteDatabase.connect()) {
+            // Begin transaction
+            connection.setAutoCommit(false);
+            
+            try (PreparedStatement borrowStmt = connection.prepareStatement(insertBorrowQuery);
+             PreparedStatement updateStmt = connection.prepareStatement(updateBookQuery)) {
+            
+            // Generate transaction ID
+            String transactionID = generateNextTransactionID();
+            
+            // Insert borrowing record
+            borrowStmt.setString(1, transactionID);
+            borrowStmt.setString(2, isbn);
+            borrowStmt.setString(3, username);
+            borrowStmt.executeUpdate();
+            
+            // Update book availability
+            updateStmt.setString(1, isbn);
+            int rowsUpdated = updateStmt.executeUpdate();
+            
+            if (rowsUpdated == 0) {
+                throw new SQLException("No available copies for ISBN: " + isbn);
+            }
+            
+            // Commit transaction
+            connection.commit();
+            return true;
+            
+            } catch (SQLException e) {
+            // Rollback in case of error
+            connection.rollback();
+            System.out.println("Borrow book error: " + e.getMessage());
+            throw e; // Re-throw to allow calling method to handle
+            } finally {
+            connection.setAutoCommit(true);
+            }
+        }
+        }
+
+    public static boolean updateTransactionStatus(String originalTransactionID, String newTransactionType, String newTransactionID) throws SQLException {
+            String insertQuery = "INSERT INTO transactions (transactionID, memberID, isbn, transactionType, transactionDate) " +
+                                 "SELECT ?, memberID, isbn, ?, CURRENT_DATE " +
+                                 "FROM transactions WHERE transactionID = ?";
+        
+            try (Connection conn = SQLiteDatabase.connect();
+                 PreparedStatement insertStmt = conn.prepareStatement(insertQuery)) {
+                
+                // Set the new transaction ID, new transaction type, and original transaction ID
+                insertStmt.setString(1, newTransactionID);
+                insertStmt.setString(2, newTransactionType); 
+                insertStmt.setString(3, originalTransactionID);      
+                
+                int rowsAffected = insertStmt.executeUpdate();
+                
+                return rowsAffected > 0;
+            }
+        }
+
+    public static void deleteTransaction(String transactionID) throws SQLException {
+            String sql = "DELETE FROM transactions WHERE transactionID = ?";
+            try (Connection conn = SQLiteDatabase.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, transactionID);
+                pstmt.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println("Error deleting transaction: " + e.getMessage());
+                throw e;
+            }
     }
 
     public static boolean validateLogin(String username, String password) {
@@ -360,30 +514,98 @@ public class LibraryDatabase {
     }
 
     // Update book availability in the database
-    public static void updateBookAvailability(int bookId, int availableCopies) {
-        String sql = "UPDATE books SET availableCopies = ? WHERE id = ?";
+    public static void updateBookAvailability(String isbn, int increment) throws SQLException {
+        String sql = "UPDATE books SET availableCopies = availableCopies + ? WHERE isbn = ?";
         try (Connection conn = SQLiteDatabase.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, availableCopies);
-            pstmt.setInt(2, bookId);
+            pstmt.setInt(1, increment);
+            pstmt.setString(2, isbn);
             pstmt.executeUpdate();
-            System.out.println("Book availability updated.");
+            System.out.println("Book availability updated: " + isbn);
         } catch (SQLException e) {
             System.out.println("Error updating book availability: " + e.getMessage());
+            throw e;
+        }
+    }
+    
+    public static void markTransactionAsReturned(String username, String isbn) throws SQLException {
+        String sql = "INSERT INTO transactions (transactionID, memberID, isbn, transactionType, transactionDate) " +
+                     "SELECT ?, memberID, ?, 'Returned', CURRENT_DATE " +
+                     "FROM members WHERE username = ?";
+        try (Connection conn = SQLiteDatabase.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            String transactionID = generateNextTransactionID();
+            pstmt.setString(1, transactionID);
+            pstmt.setString(2, isbn);
+            pstmt.setString(3, username);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error marking transaction as returned: " + e.getMessage());
+            throw e;
         }
     }
 
     // Delete a book from the database
-    public static void deleteBook(int bookId) {
-        String sql = "DELETE FROM books WHERE id = ?";
+    public static void deleteBook(long isbn) {
+        String sql = "DELETE FROM books WHERE isbn = ?";
         try (Connection conn = SQLiteDatabase.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, bookId);
-            pstmt.executeUpdate();
-            System.out.println("Book deleted.");
+            pstmt.setLong(1, isbn); // Use the correct column name
+            int rowsAffected = pstmt.executeUpdate();
+            System.out.println("Rows affected: " + rowsAffected); // Debugging output
         } catch (SQLException e) {
             System.out.println("Error deleting book: " + e.getMessage());
         }
     }
 
+    //Update the database
+    public static void updateBook(Book book) {
+        String sql = "UPDATE books SET title = ?, author = ?, publicationDate = ?, availableCopies = ? WHERE isbn = ?";
+        
+        try (Connection conn = SQLiteDatabase.connect(); 
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    
+            // Setting values for the query
+            pstmt.setString(1, book.getTitle());
+            pstmt.setString(2, book.getAuthor());
+            pstmt.setString(3, book.getPublicationDate());
+            pstmt.setInt(4, book.getAvailableCopies());
+            pstmt.setString(5, book.getISBN());
+    
+            // Execute update
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Book updated successfully.");
+            } else {
+                System.out.println("No book found with the given ISBN: " + book.getISBN());
+            }
+    
+        } catch (SQLException e) {
+            System.out.println("Error updating book: " + e.getMessage());
+        }
+    }
+
+    //For Refresh Method
+    public static List<Book> getAllBooks() throws SQLException {
+        List<Book> books = new ArrayList<>();
+        String sql = "SELECT isbn, title, author, publicationDate, availableCopies FROM books";
+    
+        try (Connection conn = SQLiteDatabase.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+    
+            while (rs.next()) {
+                String isbn = rs.getString("isbn");
+                String title = rs.getString("title");
+                String author = rs.getString("author");
+                String publicationDate = rs.getString("publicationDate");
+                int availableCopies = rs.getInt("availableCopies");
+    
+                Book book = new Book(title, author, isbn, publicationDate, availableCopies);
+                books.add(book);
+            }
+        }
+        return books;
+    }
+    
     public static List<Member> getAllMembers() {
         List<Member> members = new ArrayList<>();
         String sql = "SELECT * FROM members";
