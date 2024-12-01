@@ -15,6 +15,14 @@ public class Book implements LibraryItem {
         this.availableCopies = availableCopies;
     }
 
+    //constructor used for MemberBorrowedBooks display
+    public Book(String title, String author, String ISBN, String publicationDate) {
+        this.title = title;
+        this.author = author;
+        this.ISBN = ISBN;
+        this.publicationDate = publicationDate;
+    }
+
     public String getTitle() {
         return title;
     }

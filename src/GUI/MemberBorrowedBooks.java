@@ -1,6 +1,7 @@
 package GUI;
 
 import backend.Book;
+import backend.LibraryDatabase;
 import backend.SQLiteDatabase;
 import java.awt.*;
 import java.sql.*;
@@ -78,23 +79,21 @@ public class MemberBorrowedBooks extends JFrame implements fontComponent {
 
         // Define column names
         String[] columnNames = {
-            "ISBN", "Title", "Author", "Borrow Date", "Due Date", "Status"
+            "ISBN", "Title", "Author", "Publication Date"
         };
 
         // Fetch borrowed books from the database
         ArrayList<Book> borrowedBooks = fetchBorrowedBooksFromDatabase();
 
         // Convert Book objects to table data
-        Object[][] data = new Object[borrowedBooks.size()][6];
+        Object[][] data = new Object[borrowedBooks.size()][4];
         for (int i = 0; i < borrowedBooks.size(); i++) {
             Book book = borrowedBooks.get(i);
             data[i] = new Object[]{
                 book.getISBN(), 
                 book.getTitle(), 
                 book.getAuthor(), 
-                //book.getBorrowDate(),
-                //book.getDueDate(),
-                //book.getStatus()
+                book.getPublicationDate()
             };
         }
 
@@ -157,7 +156,7 @@ public class MemberBorrowedBooks extends JFrame implements fontComponent {
         returnButton.setBackground(PRIMARY_COLOR);
         returnButton.setForeground(Color.WHITE);
         returnButton.setFont(PLAIN_FONT);
-        //returnButton.addActionListener(this::returnSelectedBook);
+        returnButton.addActionListener(e -> returnSelectedBook());
 
         JButton refreshButton = new JButton("Refresh");
         refreshButton.setBackground(PRIMARY_COLOR);
@@ -190,9 +189,7 @@ public class MemberBorrowedBooks extends JFrame implements fontComponent {
             Arrays.asList(
                 RowFilter.regexFilter("(?i)" + searchText, 0), // ISBN
                 RowFilter.regexFilter("(?i)" + searchText, 1), // Title
-                RowFilter.regexFilter("(?i)" + searchText, 2), // Author
-                RowFilter.regexFilter("(?i)" + searchText, 4), // Due Date
-                RowFilter.regexFilter("(?i)" + searchText, 5)  // Status
+                RowFilter.regexFilter("(?i)" + searchText, 2)  // Author
             )
         );
 
@@ -203,31 +200,27 @@ public class MemberBorrowedBooks extends JFrame implements fontComponent {
         ArrayList<Book> borrowedBooks = new ArrayList<>();
         
         // Corrected query
-        String query = "SELECT b.ISBN, b.title, b.author, b.publicationDate, b.availableCopies " +
+        String query = "SELECT b.ISBN, b.title, b.author, b.publicationDate " +
                        "FROM transactions t " +
                        "JOIN books b ON t.ISBN = b.ISBN " +
                        "WHERE t.transactionType = 'Borrow' " +
-                       "AND NOT EXISTS ( " +
-                       "    SELECT 1 " +
-                       "    FROM transactions t2 " +
-                       "    WHERE t2.ISBN = t.ISBN " +
-                       "    AND t2.memberID = t.memberID " +
-                       "    AND t2.transactionType = 'Returned' " +
-                       ");";
+                       "AND t.memberID = (SELECT memberID FROM members WHERE username = ?)" +
+                       "AND NOT EXISTS (SELECT 1 FROM transactions t2 WHERE t2.ISBN = t.ISBN AND t2.memberID = t.memberID AND t2.transactionType = 'Returned')";
         
         try (Connection connection = SQLiteDatabase.connect();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
+             PreparedStatement statement = connection.prepareStatement(query)) {
+             
+            statement.setString(1, userName);
+            ResultSet resultSet = statement.executeQuery();
         
             while (resultSet.next()) {
                 String isbn = resultSet.getString("ISBN");
                 String title = resultSet.getString("title");
                 String author = resultSet.getString("author");
                 String publicationDate = resultSet.getString("publicationDate");
-                int availableCopies = resultSet.getInt("availableCopies");
     
                 // Create a Book object and add it to the list
-                borrowedBooks.add(new Book(title, author, isbn, publicationDate, availableCopies));
+                borrowedBooks.add(new Book(title, author, isbn, publicationDate));
             }
     
         } catch (SQLException e) {
@@ -243,28 +236,55 @@ public class MemberBorrowedBooks extends JFrame implements fontComponent {
         return borrowedBooks.size();
     }
 
+    private void returnSelectedBook() {
+        int selectedRow = borrowedBooksTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a book to return.", "No Book Selected", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+    
+        int modelRow = borrowedBooksTable.convertRowIndexToModel(selectedRow);
+        String isbn = borrowedBooksTable.getModel().getValueAt(modelRow, 0).toString();
+    
+        try {
+            // Mark the transaction as returned in the database
+            LibraryDatabase.markTransactionAsReturned(userName, isbn);
+    
+            // Increase the available copies of the book
+            LibraryDatabase.updateBookAvailability(isbn, 1);
+    
+            // Immediately remove the row from the table
+            tableModel.removeRow(modelRow);
+    
+            // Update book count label
+            bookCountLabel.setText("Total Borrowed Books: " + tableModel.getRowCount());
+    
+            JOptionPane.showMessageDialog(this, "Book returned successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error returning book: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private void refreshBookTable() {
         // Fetch borrowed books from the database
         ArrayList<Book> borrowedBooks = fetchBorrowedBooksFromDatabase();
-
+    
         // Clear existing data
         tableModel.setRowCount(0);
-
+    
         // Add new data
         for (Book book : borrowedBooks) {
             tableModel.addRow(new Object[]{
                 book.getISBN(),
                 book.getTitle(),
                 book.getAuthor(),
-                //book.getBorrowDate(),
-                //book.getDueDate(),
-                //book.getStatus()
+                book.getPublicationDate()
             });
         }
-
+    
         // Update book count label
         bookCountLabel.setText("Total Borrowed Books: " + borrowedBooks.size());
-    }
+    }    
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new MemberBorrowedBooks("TestUser").setVisible(true));

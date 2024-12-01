@@ -278,7 +278,7 @@ public class LibraryDatabase {
         return authors;
         }
 
-        public static boolean borrowBook(String isbn, String username) throws SQLException {
+    public static boolean borrowBook(String isbn, String username) throws SQLException {
         String insertBorrowQuery = "INSERT INTO transactions " +
                    "(transactionID, transactionType, transactionDate, ISBN, memberID) " +
                    "VALUES (?, 'Borrow', date('now'), ?, " +
@@ -326,7 +326,7 @@ public class LibraryDatabase {
         }
         }
 
-        public static boolean updateTransactionStatus(String originalTransactionID, String newTransactionType, String newTransactionID) throws SQLException {
+    public static boolean updateTransactionStatus(String originalTransactionID, String newTransactionType, String newTransactionID) throws SQLException {
             String insertQuery = "INSERT INTO transactions (transactionID, memberID, isbn, transactionType, transactionDate) " +
                                  "SELECT ?, memberID, isbn, ?, CURRENT_DATE " +
                                  "FROM transactions WHERE transactionID = ?";
@@ -345,7 +345,18 @@ public class LibraryDatabase {
             }
         }
 
-        public static boolean validateLogin(String username, String password) {
+    public static void deleteTransaction(String transactionID) throws SQLException {
+            String sql = "DELETE FROM transactions WHERE transactionID = ?";
+            try (Connection conn = SQLiteDatabase.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, transactionID);
+                pstmt.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println("Error deleting transaction: " + e.getMessage());
+                throw e;
+            }
+    }
+
+    public static boolean validateLogin(String username, String password) {
         String sql = "SELECT * FROM members WHERE username = ? AND password = ?";
         try (Connection conn = SQLiteDatabase.connect(); 
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -503,15 +514,33 @@ public class LibraryDatabase {
     }
 
     // Update book availability in the database
-    public static void updateBookAvailability(int bookId, int availableCopies) {
-        String sql = "UPDATE books SET availableCopies = ? WHERE id = ?";
+    public static void updateBookAvailability(String isbn, int increment) throws SQLException {
+        String sql = "UPDATE books SET availableCopies = availableCopies + ? WHERE isbn = ?";
         try (Connection conn = SQLiteDatabase.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, availableCopies);
-            pstmt.setInt(2, bookId);
+            pstmt.setInt(1, increment);
+            pstmt.setString(2, isbn);
             pstmt.executeUpdate();
-            System.out.println("Book availability updated.");
+            System.out.println("Book availability updated: " + isbn);
         } catch (SQLException e) {
             System.out.println("Error updating book availability: " + e.getMessage());
+            throw e;
+        }
+    }
+    
+    public static void markTransactionAsReturned(String username, String isbn) throws SQLException {
+        String sql = "INSERT INTO transactions (transactionID, memberID, isbn, transactionType, transactionDate) " +
+                     "SELECT ?, memberID, ?, 'Returned', CURRENT_DATE " +
+                     "FROM members WHERE username = ?";
+        try (Connection conn = SQLiteDatabase.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            String transactionID = generateNextTransactionID();
+            pstmt.setString(1, transactionID);
+            pstmt.setString(2, isbn);
+            pstmt.setString(3, username);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error marking transaction as returned: " + e.getMessage());
+            throw e;
         }
     }
 
