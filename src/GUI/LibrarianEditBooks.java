@@ -184,11 +184,11 @@ public class LibrarianEditBooks extends JFrame implements fontComponent {
             if (validateBookInput(isbnField.getText(), titleField.getText(), authorField.getText())) {
                 // Insert the new book into the database
                 Book newBook = new Book(
-                    titleField.getText(),               // Correctly map Title
-                    authorField.getText(),              // Correctly map Author
-                    isbnField.getText(),                // Correctly map ISBN
-                    publicationDateField.getText(),     // Correctly map Publication Date
-                    (int) copiesSpinner.getValue()      // Correctly map Available Copies
+                    titleField.getText(),              
+                    authorField.getText(),              
+                    isbnField.getText(),             
+                    publicationDateField.getText(),   
+                    (int) copiesSpinner.getValue()      
                 );
     
                 LibraryDatabase.insertBook(newBook);
@@ -226,6 +226,8 @@ public class LibrarianEditBooks extends JFrame implements fontComponent {
         addBookDialog.add(buttonPanel, BorderLayout.SOUTH);
     
         addBookDialog.setVisible(true);
+
+        refreshBookList();
     }
     
     private boolean validateBookInput(String isbn, String title, String author) {
@@ -361,6 +363,8 @@ public class LibrarianEditBooks extends JFrame implements fontComponent {
         editBookDialog.add(buttonPanel, BorderLayout.SOUTH);
     
         editBookDialog.setVisible(true);
+
+        refreshBookList();
     }
 
     private void deleteSelectedBook() {
@@ -406,6 +410,8 @@ public class LibrarianEditBooks extends JFrame implements fontComponent {
                 );
             }
         }
+
+        refreshBookList();
     }
     
     private void refreshBookList() {
@@ -427,12 +433,6 @@ public class LibrarianEditBooks extends JFrame implements fontComponent {
                 tableModel.addRow(rowData);
             }
             
-            // Show confirmation message
-            JOptionPane.showMessageDialog(this, 
-                "Book list refreshed successfully", 
-                "Refresh", 
-                JOptionPane.INFORMATION_MESSAGE
-            );
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, 
                 "Error refreshing book list: " + e.getMessage(), 

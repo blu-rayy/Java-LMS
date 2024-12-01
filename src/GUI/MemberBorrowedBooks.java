@@ -201,11 +201,13 @@ public class MemberBorrowedBooks extends JFrame implements fontComponent {
         private ArrayList<BorrowedBook> fetchBorrowedBooksFromDatabase() {
             ArrayList<BorrowedBook> borrowedBooks = new ArrayList<>();
         
-            // Updated query to fetch all necessary columns for the constructor
-            String query = "SELECT b.ISBN, b.title, b.author, b.publicationDate, b.availableCopies, t.transactionDate AS borrowDate, t.dueDate " +
+            String query = "SELECT b.ISBN, b.title, b.author, b.publicationDate, b.availableCopies, " +
+                           "t.transactionDate AS borrowDate, t.dueDate " +
                            "FROM transactions t " +
                            "JOIN books b ON t.ISBN = b.ISBN " +
+                           "JOIN members m ON t.memberID = m.memberID " +
                            "WHERE t.transactionType = 'Borrow' " +
+                           "AND m.username = ? " +
                            "AND NOT EXISTS ( " +
                            "    SELECT 1 " +
                            "    FROM transactions t2 " +
@@ -215,29 +217,30 @@ public class MemberBorrowedBooks extends JFrame implements fontComponent {
                            ");";
         
             try (Connection connection = SQLiteDatabase.connect();
-                 Statement statement = connection.createStatement();
-                 ResultSet resultSet = statement.executeQuery(query)) {
+                 PreparedStatement statement = connection.prepareStatement(query)) {
+                
+                statement.setString(1, userName); // Set the username parameter
+                
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        String isbn = resultSet.getString("ISBN");
+                        String title = resultSet.getString("title");
+                        String author = resultSet.getString("author");
+                        String publicationDate = resultSet.getString("publicationDate");
+                        int availableCopies = resultSet.getInt("availableCopies");
+                        String borrowDate = resultSet.getString("borrowDate");
+                        String dueDate = resultSet.getString("dueDate");
         
-                while (resultSet.next()) {
-                    String isbn = resultSet.getString("ISBN");
-                    String title = resultSet.getString("title");
-                    String author = resultSet.getString("author");
-                    String publicationDate = resultSet.getString("publicationDate");
-                    int availableCopies = resultSet.getInt("availableCopies");
-                    String borrowDate = resultSet.getString("borrowDate");
-                    String dueDate = resultSet.getString("dueDate");
-        
-                    // Create a BorrowedBook object and add it to the list
-                    borrowedBooks.add(new BorrowedBook(title, author, isbn, publicationDate, availableCopies, borrowDate, dueDate));
+                        borrowedBooks.add(new BorrowedBook(title, author, isbn, publicationDate, availableCopies, borrowDate, dueDate));
+                    }
                 }
-        
             } catch (SQLException e) {
                 System.out.println("Error fetching borrowed books: " + e.getMessage());
             }
         
             return borrowedBooks;
         }
-        
+
         private int countBorrowedBooks() {
         // Implement the logic to count borrowed books from the database
         ArrayList<BorrowedBook> borrowedBooks = fetchBorrowedBooksFromDatabase();
