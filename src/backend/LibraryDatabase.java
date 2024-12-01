@@ -340,8 +340,44 @@ public class LibraryDatabase {
                 insertStmt.setString(3, originalTransactionID);      
                 
                 int rowsAffected = insertStmt.executeUpdate();
+
+                if ("Returned".equalsIgnoreCase(newTransactionType)) {
+                    returnBook(originalTransactionID);
+                }
                 
                 return rowsAffected > 0;
+            }
+        }
+
+        public static void returnBook(String transactionID) throws SQLException {
+            String updateTransactionQuery = "UPDATE transactions SET transactionType = 'Borrow', transactionDate = date('now') WHERE transactionID = ?";
+            String updateBookQuery = "UPDATE books SET availableCopies = availableCopies + 1 WHERE isbn = (SELECT isbn FROM transactions WHERE transactionID = ?)";
+
+            try (Connection connection = SQLiteDatabase.connect()) {
+                // Begin transaction
+                connection.setAutoCommit(false);
+
+                try (PreparedStatement updateTransactionStmt = connection.prepareStatement(updateTransactionQuery);
+                     PreparedStatement updateBookStmt = connection.prepareStatement(updateBookQuery)) {
+
+                    // Update transaction type to 'Returned'
+                    updateTransactionStmt.setString(1, transactionID);
+                    updateTransactionStmt.executeUpdate();
+
+                    // Increment book availability
+                    updateBookStmt.setString(1, transactionID);
+                    updateBookStmt.executeUpdate();
+
+                    // Commit transaction
+                    connection.commit();
+                } catch (SQLException e) {
+                    // Rollback in case of error
+                    connection.rollback();
+                    System.out.println("Return book error: " + e.getMessage());
+                    throw e; // Re-throw to allow calling method to handle
+                } finally {
+                    connection.setAutoCommit(true);
+                }
             }
         }
 

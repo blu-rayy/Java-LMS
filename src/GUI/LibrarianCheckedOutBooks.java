@@ -305,7 +305,6 @@ public class LibrarianCheckedOutBooks extends JFrame implements fontComponent {
                 boolean updateSuccess = LibraryDatabase.updateTransactionStatus(transactionID, newTransactionType, newTransactionID);
         
                 if (updateSuccess) {
-                    // Optional: Add success notification if needed
                     JOptionPane.showMessageDialog(this, 
                         "Transaction status updated successfully", 
                         "Update Successful", 
