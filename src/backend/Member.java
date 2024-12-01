@@ -7,7 +7,7 @@ public class Member extends Person implements LibraryItem {
     private final List<Book> borrowedBooks;
 
     public Member(String memberID, String name, String username, String email, String phoneNumber, String registrationDate, String password, String userType) {
-        super(memberID, name, username, email, phoneNumber, registrationDate, password, "Member");
+        super(memberID, name, username, email, phoneNumber, registrationDate, password, userType);
         this.borrowedBooks = new ArrayList<>();
     }
 

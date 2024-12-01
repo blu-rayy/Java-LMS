@@ -3,7 +3,7 @@ package backend;
 public class Librarian extends Person implements LibraryItem {
 
     public Librarian(String id, String name, String username, String email, String phoneNumber, String registrationDate, String password) {
-        super(id, name, username, email, phoneNumber, registrationDate, password, "Librarian"); // Set userType to "Librarian"
+        super(id, name, username, email, phoneNumber, registrationDate, password, "Librarian");
     }
 
     // performs a different behavior compared to Member.java 

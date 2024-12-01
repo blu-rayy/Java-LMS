@@ -45,7 +45,7 @@ public class LibrarianEditUsers extends JFrame implements fontComponent {
         titleLabel.setPreferredSize(new Dimension(300, 30));
 
         // Add icon beside title
-        ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\manageuserIconOrange.png");
+        ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\manageusersIconOrange.png");
         Image resizedTaskbarIcon = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         setIconImage(resizedTaskbarIcon);
         JLabel iconLabel = new JLabel(new ImageIcon(resizedTaskbarIcon));
@@ -150,7 +150,7 @@ public class LibrarianEditUsers extends JFrame implements fontComponent {
         dialogPanel.add(passwordField);
     
         dialogPanel.add(new JLabel("Role:"));
-        JComboBox<String> roleCombo = new JComboBox<>(new String[]{"Student", "Librarian", "Admin"});
+        JComboBox<String> roleCombo = new JComboBox<>(new String[]{"Student", "Librarian"});
         dialogPanel.add(roleCombo);
     
         JButton saveButton = new JButton("Save");

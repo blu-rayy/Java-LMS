@@ -50,7 +50,7 @@ public class LibrarianEditAuthor extends JFrame implements fontComponent {
         setIconImage(resizedTaskbarIcon);
         JLabel iconLabel = new JLabel(new ImageIcon(resizedTaskbarIcon));
         
-        JLabel CountLabel = new JLabel("Total Authors: " + LibraryDatabase.countBooks());
+        JLabel CountLabel = new JLabel("Total Authors: " + LibraryDatabase.countAuthors());
         CountLabel.setFont(TITLE_FONT14);
         CountLabel.setForeground(PRIMARY_COLOR);
 
