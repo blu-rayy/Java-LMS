@@ -343,7 +343,7 @@ public class ANPLMSGUI extends JFrame implements fontComponent {
                 member.setEmail(email);
                 member.setPhoneNumber(phoneNumber);
                 member.setPassword(password);
-                member.setUserType(isLibrarian ? "Librarian" : "User");
+                member.setUserType(isLibrarian ? "Librarian" : "Member");
 
                 LibraryDatabase.insertMember(member);
 
