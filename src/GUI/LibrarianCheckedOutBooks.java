@@ -76,10 +76,10 @@ public class LibrarianCheckedOutBooks extends JFrame implements fontComponent {
         });
 
         // Add icon beside title
-        ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\circulationIconOrange.png");
-        Image resizedIcon = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-        JLabel iconLabel = new JLabel(new ImageIcon(resizedIcon));
-        iconLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 8)); //padding
+        ImageIcon icon = new ImageIcon("Logos\\orangeIcons\\circulationIconOrange.png"); // Replace with the path to your icon
+        Image resizedTaskbarIcon = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        setIconImage(resizedTaskbarIcon);
+        JLabel iconLabel = new JLabel(new ImageIcon(resizedTaskbarIcon));
         
         //counter label top right
         counterLabel = new JLabel();
