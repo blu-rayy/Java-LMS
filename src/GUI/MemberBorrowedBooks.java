@@ -70,38 +70,37 @@ public class MemberBorrowedBooks extends JFrame implements fontComponent {
         titlePanel.add(bookCountLabel, BorderLayout.EAST);
 
         return titlePanel;
-    }
+        }
 
-    private JPanel createBookTablePanel() {
+        private JPanel createBookTablePanel() {
         JPanel tablePanel = new JPanel(new BorderLayout());
         tablePanel.setBackground(BACKGROUND_COLOR);
 
         // Define column names
         String[] columnNames = {
-            "ISBN", "Title", "Author", "Borrow Date", "Due Date", "Status"
+            "ISBN", "Title", "Author", "Borrow Date", "Due Date"
         };
 
         // Fetch borrowed books from the database
         ArrayList<Book> borrowedBooks = fetchBorrowedBooksFromDatabase();
 
         // Convert Book objects to table data
-        Object[][] data = new Object[borrowedBooks.size()][6];
+        Object[][] data = new Object[borrowedBooks.size()][5];
         for (int i = 0; i < borrowedBooks.size(); i++) {
             Book book = borrowedBooks.get(i);
             data[i] = new Object[]{
-                book.getISBN(), 
-                book.getTitle(), 
-                book.getAuthor(), 
-                //book.getBorrowDate(),
-                //book.getDueDate(),
-                //book.getStatus()
+            book.getISBN(), 
+            book.getTitle(), 
+            book.getAuthor(), 
+            //book.getBorrowDate(),
+            //book.getDueDate()
             };
         }
 
         tableModel = new DefaultTableModel(data, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Make table non-editable
+            return false; // Make table non-editable
             }
         };
 
@@ -125,9 +124,9 @@ public class MemberBorrowedBooks extends JFrame implements fontComponent {
 
         tablePanel.add(scrollPane, BorderLayout.CENTER);
         return tablePanel;
-    }
+        }
 
-    private JPanel createSearchAndActionPanel() {
+        private JPanel createSearchAndActionPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(BACKGROUND_COLOR);
 
@@ -197,47 +196,47 @@ public class MemberBorrowedBooks extends JFrame implements fontComponent {
         );
 
         rowSorter.setRowFilter(filter);
-    }
+        }
 
-    private ArrayList<Book> fetchBorrowedBooksFromDatabase() {
+        private ArrayList<Book> fetchBorrowedBooksFromDatabase() {
         ArrayList<Book> borrowedBooks = new ArrayList<>();
         
         // Corrected query
-        String query = "SELECT b.ISBN, b.title, b.author, b.publicationDate, b.availableCopies " +
-                       "FROM transactions t " +
-                       "JOIN books b ON t.ISBN = b.ISBN " +
-                       "WHERE t.transactionType = 'Borrow' " +
-                       "AND NOT EXISTS ( " +
-                       "    SELECT 1 " +
-                       "    FROM transactions t2 " +
-                       "    WHERE t2.ISBN = t.ISBN " +
-                       "    AND t2.memberID = t.memberID " +
-                       "    AND t2.transactionType = 'Returned' " +
-                       ");";
+        String query = "SELECT b.ISBN, b.title, b.author, t.transactionDate, t.dueDate " +
+                   "FROM transactions t " +
+                   "JOIN books b ON t.ISBN = b.ISBN " +
+                   "WHERE t.transactionType = 'Borrow' " +
+                   "AND NOT EXISTS ( " +
+                   "    SELECT 1 " +
+                   "    FROM transactions t2 " +
+                   "    WHERE t2.ISBN = t.ISBN " +
+                   "    AND t2.memberID = t.memberID " +
+                   "    AND t2.transactionType = 'Returned' " +
+                   ");";
         
         try (Connection connection = SQLiteDatabase.connect();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
         
             while (resultSet.next()) {
-                String isbn = resultSet.getString("ISBN");
-                String title = resultSet.getString("title");
-                String author = resultSet.getString("author");
-                String publicationDate = resultSet.getString("publicationDate");
-                int availableCopies = resultSet.getInt("availableCopies");
-    
-                // Create a Book object and add it to the list
-                borrowedBooks.add(new Book(title, author, isbn, publicationDate, availableCopies));
+            String isbn = resultSet.getString("ISBN");
+            String title = resultSet.getString("title");
+            String author = resultSet.getString("author");
+            String transactionDate = resultSet.getString("transactionDate");
+            int dueDate = resultSet.getInt("dueDate");
+        
+            // Create a Book object and add it to the list
+            borrowedBooks.add(new Book(title, author, isbn, transactionDate, dueDate));
             }
-    
+        
         } catch (SQLException e) {
             System.out.println("Error fetching borrowed books: " + e.getMessage());
         }
-    
+        
         return borrowedBooks;
-    }    
-    
-    private int countBorrowedBooks() {
+        }    
+        
+        private int countBorrowedBooks() {
         // Implement the logic to count borrowed books from the database
         ArrayList<Book> borrowedBooks = fetchBorrowedBooksFromDatabase();
         return borrowedBooks.size();
