@@ -67,7 +67,7 @@ public class Member_DashboardGUI extends JFrame implements fontComponent {
 
         // Mapping of button text to corresponding class names
         String[] navButtons = {"Books", "Authors"};
-        String[] classNames = {"BookList", "AuthorList"};
+        String[] classNames = {"BookList", "MemberAuthorList"};
 
         for (int i = 0; i < navButtons.length; i++) {
             JButton button = createNavButton(navButtons[i], classNames[i]);
