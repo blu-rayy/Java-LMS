@@ -17,7 +17,7 @@ public class MemberBorrowedBooks extends JFrame implements fontComponent {
     private TableRowSorter<DefaultTableModel> rowSorter;
 
     public MemberBorrowedBooks(String userName) {
-        this.userName = "erichiii";
+        this.userName = userName;
         initializeUI();
     }
 
@@ -155,6 +155,7 @@ public class MemberBorrowedBooks extends JFrame implements fontComponent {
         JButton returnButton = new JButton("Return Selected Book");
         returnButton.setBackground(PRIMARY_COLOR);
         returnButton.setForeground(Color.WHITE);
+        returnButton.addActionListener(e -> returnBookMessage());
         returnButton.setFont(PLAIN_FONT);
         //returnButton.addActionListener(this::returnSelectedBook);
 
@@ -263,6 +264,10 @@ public class MemberBorrowedBooks extends JFrame implements fontComponent {
 
         // Update book count label
         bookCountLabel.setText("Total Borrowed Books: " + borrowedBooks.size());
+    }
+
+    private void returnBookMessage() {
+        JOptionPane.showMessageDialog(this, "Please assist with a Librarian to return the selected book", "Return Book", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void main(String[] args) {

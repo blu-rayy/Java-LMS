@@ -16,7 +16,7 @@ public class MemberBorrowBooks extends JFrame implements fontComponent {
     private JTextField searchField;
 
     public MemberBorrowBooks(String userName) {
-        this.userName = "erichiii";
+        this.userName = userName;
         initializeUI();
     }
 

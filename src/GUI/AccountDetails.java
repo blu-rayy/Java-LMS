@@ -10,7 +10,7 @@ import javax.swing.*;
 public class AccountDetails extends JFrame implements fontComponent {
     public AccountDetails(String username) {
         // Fetch member details from database -- for testing purposes, i set a name
-        Member member = LibraryDatabase.getMemberDetails("erichiii");
+        Member member = LibraryDatabase.getMemberDetails(username);
         
         // Set up frame
         setTitle("Account Details");
