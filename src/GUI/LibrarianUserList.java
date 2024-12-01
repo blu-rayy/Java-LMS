@@ -128,7 +128,7 @@ public class LibrarianUserList extends JFrame implements fontComponent {
         searchButton.addActionListener(e -> performSearch(searchField.getText()));
 
         // Filter dropdown
-        String[] filterOptions = {"All", "Student", "Faculty", "Staff", "Librarian"};
+        String[] filterOptions = {"All", "Member", "Librarian"};
         JComboBox<String> filterComboBox = new JComboBox<>(filterOptions);
         filterComboBox.setFont(PLAIN_FONT);
         filterComboBox.addActionListener(e -> filterUsers((String) filterComboBox.getSelectedItem()));
