@@ -1,6 +1,5 @@
 package GUI;
 
-import backend.Book;
 import backend.BorrowedBook;
 import backend.SQLiteDatabase;
 import java.awt.*;
